@@ -4,4 +4,4 @@ io.on('connection', (client) => {
     console.log('Client connected.');
 });
 
-io.listen(3000);
+io.listen(process.env.PORT);

@@ -3,3 +3,6 @@
 
 # Misc
 .DS_Store
+
+# Environment
+.env
