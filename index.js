@@ -1,48 +1,67 @@
 const io = require('socket.io')(process.env.PORT, {
     serveClient: false,
-    pingInterval: 2000
 });
 
-io.on('connection', (clientSocket) => {
-    console.log(`Client connected with id ${clientSocket.id}`);
+io.on('connection', (socket) => {
 
-    clientSocket.on('disconnect', (reason) => {
-        console.log(`Client disconnected with id ${clientSocket.id}, reason: ${reason}`);
-    });
+    // Client event: start room
+    socket.on('event/start-room', () => {
+        // Generate a random room name string
+        const roomName = randomAalphanumeric(6);
 
-    clientSocket.emit('message', 'Welcome to the default namespace!');
-});
-
-// Game namespace
-const nspGame = io.of('/game');
-nspGame.on('connection', (clientSocket) => {
-    clientSocket.emit('message', 'Welcome to the /game namespace!');
-});
-
-// Chat namespace
-const nspChat = io.of('/chat');
-nspChat.on('connection', (clientSocket) => {
-    clientSocket.emit('message', 'Welcome to the /chat namespace!');
-
-    clientSocket.on('join-room', (roomName) => {
-        clientSocket.join(roomName, () => {
-            nspChat.to(roomName).emit('message', `
-                ${clientSocket.id} has joined ${roomName}
-            `);
+        // Join ("create") the room
+        socket.join(roomName, () => {
+            // Send the room name back to the client
+            socket.emit('event/joined-room', roomName);
         });
     });
 
-    clientSocket.on('leave-room', (roomName) => {
-        clientSocket.leave(roomName, () => {
-            nspChat.to(roomName).emit('message', `
-                ${clientSocket.id} has left ${roomName}
-            `);
+    // Client event: join room
+    socket.on('event/join-room', (roomName) => {
+        // Check if the room exists
+        if (io.sockets.adapter.rooms[roomName]) {
+            socket.join(roomName, () => {
+                // Send the room name back to the client
+                socket.emit('event/joined-room', roomName);
+            });
+        } else {
+            // Send a failure event back to the client
+            socket.emit('event/failed-join-room', roomName);
+        }
+    });
+
+
+    /* Basic connection events */
+
+    // Client connected
+    console.log(`Client connected (id: ${socket.id})`);
+
+    // Client disconnecting
+    socket.on('disconnecting', () => {
+        // Log that the client is disconnecting from each room they were in, if any.
+        Object.keys(socket.rooms).forEach((roomName) => {
+            if (roomName === socket.id) return;
+            console.log(`Client is disconnecting from room ${roomName} (id: ${socket.id})`);
         });
     });
 
-    clientSocket.on('disconnecting', () => {
-        Object.keys(clientSocket.rooms).forEach((roomName) => {
-            nspChat.to(roomName).emit('message', `${clientSocket.id} has disconnected.`)
-        });
+    // Client disconnected
+    socket.on('disconnect', () => {
+        console.log(`Client disconnected (id: ${socket.id})`);
     });
+
 });
+
+
+
+// Helper to return random alphanumeric string of length n
+function randomAalphanumeric(length) {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+
+    for (let i = 0; i < length; i++) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    return result;
+}
