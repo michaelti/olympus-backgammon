@@ -6,7 +6,7 @@ const useSocket = (url, options) => {
     const [isConnecting, setIsConnecting] = useState(true);
 
     const { current: socket } = useRef(
-        io(url, {...options, autoConnect: false})
+        io(url, { ...options, autoConnect: false })
     );
 
     useEffect(() => {
