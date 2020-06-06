@@ -7,6 +7,7 @@ import {
     InputGroup,
     InputGroupAddon
 } from 'reactstrap';
+import BackgammonBoard from './BoardUI/BackgammonBoard';
 
 function Main({ socket }) {  
     const [joinName, setJoinName] = useState('');
@@ -57,6 +58,10 @@ function Main({ socket }) {
                         </InputGroupAddon>
                     </InputGroup>
                 </Form>
+
+                <br className="my-3" />
+
+                <BackgammonBoard />
             </Container>
         </main>
     );
