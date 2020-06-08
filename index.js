@@ -1,8 +1,15 @@
 const io = require('socket.io')(process.env.PORT, {
     serveClient: false,
 });
+const clone = require('ramda.clone');
+const plakoto = require('./plakoto.js');
 
 io.on('connection', (socket) => {
+    let board = plakoto.Board();
+    let submoves = new Array();
+    board.initPlakoto();
+    let boardBackup = clone(board);
+    socket.emit('game/update-board', board);
 
     // Client event: start room
     socket.on('event/start-room', () => {
@@ -30,6 +37,35 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('game/submove', (from, to, callback) => {
+        if (board.trySubmove(from, to)) {
+            submoves.push(plakoto.Submove(from, to));
+        }
+        callback(board);
+    });
+
+    socket.on('game/apply-turn', (callback) => {
+        /* Validate the whole turn by passing the array of submoves to a method
+         * If the move is valid, end the player's turn
+         * Else, return an error and undo the partial move
+        */
+        if (boardBackup.isTurnValid(submoves)) {
+            board.turn = board.otherPlayer();
+            board.rollDice();
+            boardBackup = clone(board);
+        }
+        else {
+            board = clone(boardBackup);
+        }
+        submoves = [];
+        callback(board);
+    });
+
+    socket.on('game/undo', (callback) => {
+        submoves = [];
+        board = clone(boardBackup);
+        callback(board);
+    });
 
     /* Basic connection events */
 
