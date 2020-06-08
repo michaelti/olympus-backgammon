@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
     Container,
     Navbar,
@@ -7,21 +7,7 @@ import {
     NavbarText
 } from 'reactstrap';
 
-function Header({ socket, isConnected, isConnecting }) {  
-    const [roomName, setRoomName] = useState('');
-    
-    useEffect(() => {
-        // Receive successful joined room
-        socket.on('event/joined-room', (roomName) => {
-            setRoomName(roomName);
-        });
-
-        // Receive failed join room
-        socket.on('event/failed-join-room', (roomName) => {
-            console.log(`Failed to join room "${roomName}" because it does not exist.`);
-        });
-    }, [socket]);
-
+function Header({ roomName, isConnected, isConnecting }) {  
     return (
         <header>
             <Navbar color="light" light expand="xs">

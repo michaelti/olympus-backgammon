@@ -1,11 +1,29 @@
-import React from 'react';
-import usePlakoto from '../../hooks/usePlakoto';
+import React, { useState } from 'react';
 import Pip from './Pip';
 import Off from './Off';
 import Bar from './Bar';
 
-function BackgammonBoard() {
-    const [boardState, handleClickPip] = usePlakoto();
+function BackgammonBoard({ boardState, doSubmove }) {
+    const [moving, setMoving] = useState(false);
+    const [sourcePip, setSourcePip] = useState(undefined);
+
+    const handleClickPip = (clickedPip) => {
+        const clickedPipObj = boardState.pips[clickedPip];
+
+        if (!moving) {
+            if (clickedPipObj.size > 0) {
+                // Start a move
+                setMoving(true);
+                setSourcePip(clickedPip);
+            }
+        } else if (sourcePip !== clickedPip ) {
+            // Complete the started move
+            doSubmove(sourcePip, clickedPip);
+            setSourcePip(undefined);
+            setMoving(false);
+        }
+    };
+
 
     return (
         <svg viewBox="0 0 1500 1200" style={{ width: '100%' }}>
