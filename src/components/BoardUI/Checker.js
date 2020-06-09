@@ -1,4 +1,5 @@
 import React from 'react';
+import { Player } from '../../util.js';
 
 function Checker({ posX, posY, color }) {
     const translateX = posX + 'px';
@@ -7,7 +8,7 @@ function Checker({ posX, posY, color }) {
 
     let svg = null;
 
-    if (color === 1 /* white */) {
+    if (color === Player.white) {
         svg = (
             <svg width="100" height="100" viewBox="0 0 100 100">
                 <defs>
@@ -26,7 +27,7 @@ function Checker({ posX, posY, color }) {
                 <path d="M50,20A30,30,0,1,1,20,50,30,30,0,0,1,50,20M50,0a50,50,0,1,0,50,50A50,50,0,0,0,50,0Z" fill="url(#linear-gradient-3)"/>
             </svg>
         );
-    } else if (color === -1 /* black */ ) {
+    } else if (color === Player.black) {
         svg = (
             <svg width="100" height="100" viewBox="0 0 100 100">
                 <defs>
