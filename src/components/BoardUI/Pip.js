@@ -1,7 +1,7 @@
 import React from 'react';
 import Checker from './Checker';
 
-function Pip({ size, top, bot, posX, invertY, onClick }) {
+function Pip({ size, top, bot, posX, invertY, onClick, active }) {
 
     let checkers = Array(size);
 
@@ -28,6 +28,7 @@ function Pip({ size, top, bot, posX, invertY, onClick }) {
                         posX={posX}
                         posY={invertY ? (1100 - posY) : posY}
                         color={checker}
+                        active={active && i === (size - 1)}
                     />
                 );
             })}

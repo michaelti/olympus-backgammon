@@ -72,6 +72,7 @@ function BackgammonBoard({ boardState, doSubmove }) {
                         top={pip.top}
                         bot={pip.bot}
                         onClick={() => handleClickPip(i)}
+                        active={i === sourcePip}
                     />
                 );
             })}
