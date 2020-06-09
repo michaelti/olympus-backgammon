@@ -3,6 +3,7 @@ const io = require('socket.io')(process.env.PORT, {
 });
 const clone = require('ramda.clone');
 const plakoto = require('./plakoto.js');
+const util = require('./util.js');
 
 io.on('connection', (socket) => {
     let board = plakoto.Board();
@@ -14,7 +15,7 @@ io.on('connection', (socket) => {
     // Client event: start room
     socket.on('event/start-room', () => {
         // Generate a random room name string
-        const roomName = randomAalphanumeric(6);
+        const roomName = util.randomAlphanumeric(6);
 
         // Join ("create") the room
         socket.join(roomName, () => {
@@ -87,17 +88,3 @@ io.on('connection', (socket) => {
     });
 
 });
-
-
-
-// Helper to return random alphanumeric string of length n
-function randomAalphanumeric(length) {
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-
-    for (let i = 0; i < length; i++) {
-        result += chars[Math.floor(Math.random() * chars.length)];
-    }
-
-    return result;
-}
