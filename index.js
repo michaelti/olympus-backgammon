@@ -7,45 +7,50 @@ const util = require('./util.js');
 
 io.on('connection', (socket) => {
     let board = plakoto.Board();
-    let submoves = new Array();
-    board.initPlakoto();
     let boardBackup = clone(board);
-    socket.emit('game/update-board', board);
+    let submoves = new Array();
+    socketOnConnected();
 
-    // Client event: start room
-    socket.on('event/start-room', () => {
+    /* ROOM EVENT LISTENERS */
+
+    // Room event: start room
+    socket.on('event/start-room', (acknowledge) => {
         // Generate a random room name string
         const roomName = util.randomAlphanumeric(6);
 
         // Join ("create") the room
         socket.join(roomName, () => {
             // Send the room name back to the client
-            socket.emit('event/joined-room', roomName);
+            acknowledge({ ok: true, roomName });
         });
     });
 
-    // Client event: join room
-    socket.on('event/join-room', (roomName) => {
+    // Room event: join room
+    socket.on('event/join-room', (roomName, acknowledge) => {
         // Check if the room exists
         if (io.sockets.adapter.rooms[roomName]) {
             socket.join(roomName, () => {
                 // Send the room name back to the client
-                socket.emit('event/joined-room', roomName);
+                acknowledge({ ok: true, roomName });
             });
         } else {
             // Send a failure event back to the client
-            socket.emit('event/failed-join-room', roomName);
+            acknowledge({ ok: false, roomName });
         }
     });
 
-    socket.on('game/submove', (from, to, callback) => {
+    /* GAME EVENT LISTENERS */
+
+    // Game event: submove
+    socket.on('game/submove', (from, to) => {
         if (board.trySubmove(from, to)) {
             submoves.push(plakoto.Submove(from, to));
         }
-        callback(board);
+        sendUpdatedBoard(board);
     });
 
-    socket.on('game/apply-turn', (callback) => {
+    // Game event: apply turn
+    socket.on('game/apply-turn', () => {
         /* Validate the whole turn by passing the array of submoves to a method
          * If the move is valid, end the player's turn
          * Else, return an error and undo the partial move
@@ -59,19 +64,32 @@ io.on('connection', (socket) => {
             board = clone(boardBackup);
         }
         submoves = [];
-        callback(board);
+        sendUpdatedBoard(board);
     });
 
-    socket.on('game/undo', (callback) => {
+    // Game event: undo
+    socket.on('game/undo', () => {
         submoves = [];
         board = clone(boardBackup);
-        callback(board);
+        sendUpdatedBoard(board);
     });
 
-    /* Basic connection events */
+    /* GAME EVENT EMITTERS */
+
+    // Send an updated board object to the client(s)
+    function sendUpdatedBoard(board) {
+        socket.emit('game/update-board', board);
+    }
+
+    /* SOCKET CONNECTION EVENT LISTENERS */
 
     // Client connected
-    console.log(`Client connected (id: ${socket.id})`);
+    function socketOnConnected() {
+        console.log(`Client connected (id: ${socket.id})`);
+        board.initPlakoto();
+        boardBackup = clone(board);
+        sendUpdatedBoard(board);
+    }
 
     // Client disconnecting
     socket.on('disconnecting', () => {
