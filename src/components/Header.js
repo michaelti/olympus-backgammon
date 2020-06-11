@@ -1,13 +1,7 @@
-import React from 'react';
-import {
-    Container,
-    Navbar,
-    NavbarBrand,
-    Nav,
-    NavbarText
-} from 'reactstrap';
+import React from "react";
+import { Container, Navbar, NavbarBrand, Nav, NavbarText } from "reactstrap";
 
-function Header({ roomName, isConnected, isConnecting }) {  
+function Header({ roomName, isConnected, isConnecting }) {
     return (
         <header>
             <Navbar color="light" light expand="xs">
@@ -15,15 +9,14 @@ function Header({ roomName, isConnected, isConnecting }) {
                     <NavbarBrand>Olympus Backgammon</NavbarBrand>
                     <Nav className="ml-auto" navbar>
                         <NavbarText className="mr-3">
-                            Status: {
-                                isConnecting ? 'Connecting' :
-                                isConnected ? 'Connected' :
-                                'Disconnected'
-                            }
+                            Status:{" "}
+                            {isConnecting
+                                ? "Connecting"
+                                : isConnected
+                                ? "Connected"
+                                : "Disconnected"}
                         </NavbarText>
-                        <NavbarText>
-                            Room name: { roomName }
-                        </NavbarText>
+                        <NavbarText>Room name: {roomName}</NavbarText>
                     </Nav>
                 </Container>
             </Navbar>

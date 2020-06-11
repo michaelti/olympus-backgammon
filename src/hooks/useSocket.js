@@ -5,9 +5,7 @@ const useSocket = (url, options) => {
     const [isConnected, setIsConnected] = useState(false);
     const [isConnecting, setIsConnecting] = useState(true);
 
-    const { current: socket } = useRef(
-        io(url, { ...options, autoConnect: false })
-    );
+    const { current: socket } = useRef(io(url, { ...options, autoConnect: false }));
 
     useEffect(() => {
         socket.connect();
@@ -32,7 +30,7 @@ const useSocket = (url, options) => {
             socket.disconnect();
         };
     }, [socket]);
-    
+
     return [socket, isConnected, isConnecting];
 };
 

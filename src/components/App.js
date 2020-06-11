@@ -1,6 +1,6 @@
-import React from 'react';
-import GlobalStyles from '../styles/globalStyles';
-import SocketManager from './SocketManager';
+import React from "react";
+import GlobalStyles from "../styles/globalStyles";
+import SocketManager from "./SocketManager";
 
 function App() {
     return (

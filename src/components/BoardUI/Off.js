@@ -1,15 +1,15 @@
-import React from 'react';
-import Checker from './Checker';
+import React from "react";
+import Checker from "./Checker";
 
 function Off({ count, color, posX, invertY }) {
     const checkers = Array(count).fill(color);
 
-    const squishAmount = checkers.length > 6 ?
-        ((checkers.length - 6) * 100 / (checkers.length - 1)) : 0;
+    const squishAmount =
+        checkers.length > 6 ? ((checkers.length - 6) * 100) / (checkers.length - 1) : 0;
 
     return (
         <g>
-            <svg x={posX} y={invertY ? '50%' : '0'} width="100" height="600" viewBox="0 0 100 600">
+            <svg x={posX} y={invertY ? "50%" : "0"} width="100" height="600" viewBox="0 0 100 600">
                 <rect width="100" height="600" fill="#745138" />
             </svg>
 
@@ -19,7 +19,7 @@ function Off({ count, color, posX, invertY }) {
                     <Checker
                         key={i}
                         posX={posX}
-                        posY={invertY ? (1100 - posY) : posY}
+                        posY={invertY ? 1100 - posY : posY}
                         color={checker}
                     />
                 );
