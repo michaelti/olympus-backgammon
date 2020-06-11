@@ -1,11 +1,11 @@
-const io = require('socket.io')(process.env.PORT, {
+const io = require("socket.io")(process.env.PORT, {
     serveClient: false,
 });
-const clone = require('ramda.clone');
-const plakoto = require('./plakoto.js');
-const util = require('./util.js');
+const clone = require("ramda.clone");
+const plakoto = require("./plakoto.js");
+const util = require("./util.js");
 
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
     let board = plakoto.Board();
     let boardBackup = clone(board);
     let submoves = new Array();
@@ -14,7 +14,7 @@ io.on('connection', (socket) => {
     /* ROOM EVENT LISTENERS */
 
     // Room event: start room
-    socket.on('event/start-room', (acknowledge) => {
+    socket.on("event/start-room", (acknowledge) => {
         // Generate a random room name string
         const roomName = util.randomAlphanumeric(6);
 
@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     });
 
     // Room event: join room
-    socket.on('event/join-room', (roomName, acknowledge) => {
+    socket.on("event/join-room", (roomName, acknowledge) => {
         // Check if the room exists
         if (io.sockets.adapter.rooms[roomName]) {
             socket.join(roomName, () => {
@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
     /* GAME EVENT LISTENERS */
 
     // Game event: submove
-    socket.on('game/submove', (from, to) => {
+    socket.on("game/submove", (from, to) => {
         if (board.trySubmove(from, to)) {
             submoves.push(plakoto.Submove(from, to));
         }
@@ -50,17 +50,16 @@ io.on('connection', (socket) => {
     });
 
     // Game event: apply turn
-    socket.on('game/apply-turn', () => {
+    socket.on("game/apply-turn", () => {
         /* Validate the whole turn by passing the array of submoves to a method
          * If the move is valid, end the player's turn
          * Else, return an error and undo the partial move
-        */
+         */
         if (boardBackup.isTurnValid(submoves)) {
             board.turn = board.otherPlayer();
             board.rollDice();
             boardBackup = clone(board);
-        }
-        else {
+        } else {
             board = clone(boardBackup);
         }
         submoves = [];
@@ -68,7 +67,7 @@ io.on('connection', (socket) => {
     });
 
     // Game event: undo
-    socket.on('game/undo', () => {
+    socket.on("game/undo", () => {
         submoves = [];
         board = clone(boardBackup);
         sendUpdatedBoard(board);
@@ -78,7 +77,7 @@ io.on('connection', (socket) => {
 
     // Send an updated board object to the client(s)
     function sendUpdatedBoard(board) {
-        socket.emit('game/update-board', board);
+        socket.emit("game/update-board", board);
     }
 
     /* SOCKET CONNECTION EVENT LISTENERS */
@@ -92,7 +91,7 @@ io.on('connection', (socket) => {
     }
 
     // Client disconnecting
-    socket.on('disconnecting', () => {
+    socket.on("disconnecting", () => {
         // Log that the client is disconnecting from each room they were in, if any.
         Object.keys(socket.rooms).forEach((roomName) => {
             if (roomName === socket.id) return;
@@ -101,8 +100,7 @@ io.on('connection', (socket) => {
     });
 
     // Client disconnected
-    socket.on('disconnect', () => {
+    socket.on("disconnect", () => {
         console.log(`Client disconnected (id: ${socket.id})`);
     });
-
 });
