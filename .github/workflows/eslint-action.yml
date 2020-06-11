@@ -1,0 +1,16 @@
+name: reviewdog
+on: [pull_request]
+jobs:
+    eslint:
+        name: runner / eslint
+        runs-on: ubuntu-latest
+        steps:
+            # Checkout the git repository
+            - uses: actions/checkout@v1
+            # Install and cache npm packages
+            - uses: bahmutov/npm-install@v1
+            # Run eslint using reviewdog
+            - name: eslint
+              uses: reviewdog/action-eslint@v1
+              with:
+                  eslint_flags: "src/"
