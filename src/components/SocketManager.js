@@ -4,7 +4,7 @@ import Main from "./Main";
 import useSocket from "../hooks/useSocket";
 
 function SocketManager() {
-    const [socket, isConnected, isConnecting] = useSocket("ws://localhost:3001");
+    const [socket, isConnected, isConnecting] = useSocket(process.env.REACT_APP_BACKEND_URL);
 
     const [roomName, setRoomName] = useState("");
     const [boardState, setBoardState] = useState(null);
