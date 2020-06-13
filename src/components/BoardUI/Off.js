@@ -1,17 +1,16 @@
 import React from "react";
 import Checker from "./Checker";
+import OffSVG from "./svg/off.svg";
 
-function Off({ count, color, posX, invertY }) {
-    const checkers = Array(count).fill(color);
+function Off({ count, color, posX, invertY, disabled }) {
+    const checkers = !disabled ? Array(count).fill(color) : Array(0);
 
     const squishAmount =
         checkers.length > 6 ? ((checkers.length - 6) * 100) / (checkers.length - 1) : 0;
 
     return (
         <g>
-            <svg x={posX} y={invertY ? "50%" : "0"} width="100" height="600" viewBox="0 0 100 600">
-                <rect width="100" height="600" fill="#745138" />
-            </svg>
+            <image href={OffSVG} width="100" height="600" x={posX} y={invertY ? "50%" : "0"} />
 
             {checkers.map((checker, i) => {
                 const posY = i * (100 - squishAmount);

@@ -1,5 +1,6 @@
 import React from "react";
 import Checker from "./Checker";
+import BarSVG from "./svg/bar.svg";
 
 function Bar({ count, color, posX, invertY }) {
     const checkers = Array(count).fill(color);
@@ -9,9 +10,7 @@ function Bar({ count, color, posX, invertY }) {
 
     return (
         <g>
-            <svg x={posX} y={invertY ? "50%" : "0"} width="100" height="600" viewBox="0 0 100 600">
-                <rect width="100" height="600" fill="#745138" />
-            </svg>
+            <image href={BarSVG} width="100" height="600" x={posX} y={invertY ? "50%" : "0"} />
 
             {checkers.map((checker, i) => {
                 const posY = 500 - i * (100 - squishAmount);

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Pip from "./Pip";
 import Off from "./Off";
 import Bar from "./Bar";
+import BackgroundSVG from "./svg/background.svg";
+import { Player } from "../../util.js";
 
 function BackgammonBoard({ boardState, doSubmove }) {
     const [moving, setMoving] = useState(false);
@@ -26,16 +28,15 @@ function BackgammonBoard({ boardState, doSubmove }) {
 
     return (
         <svg viewBox="0 0 1500 1200" style={{ width: "100%" }}>
-            <rect className="background" width="1500" height="1200" fill="#402d26" />
+            <image href={BackgroundSVG} width="1500" height="1200" />
 
-            <Off posX={1400} invertY count={boardState.offWhite} color="white" />
-            <Off posX={0} invertY />
+            <Off posX={1400} invertY count={boardState.offWhite} color={Player.white} />
+            <Off posX={0} invertY disabled />
+            <Off posX={0} disabled />
+            <Off posX={1400} count={boardState.offBlack} color={Player.black} />
 
-            <Off posX={0} />
-            <Off posX={1400} count={boardState.offBlack} color="black" />
-
-            <Bar posX={700} invertY count={boardState.barWhite} color="white" />
-            <Bar posX={700} count={boardState.barBlack} color="black" />
+            <Bar posX={700} invertY count={boardState.barWhite} color={Player.white} />
+            <Bar posX={700} count={boardState.barBlack} color={Player.black} />
 
             {boardState.pips.map((pip, i) => {
                 if (i === 0) return null;
