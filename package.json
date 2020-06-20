@@ -9,7 +9,6 @@
     },
     "dependencies": {
         "dotenv": "^8.2.0",
-        "prompt-sync": "^4.2.0",
         "ramda.clone": "^0.26.1",
         "socket.io": "^2.3.0"
     },

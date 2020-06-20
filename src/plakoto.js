@@ -1,4 +1,3 @@
-const prompt = require("prompt-sync")({ sigint: true });
 const clone = require("ramda.clone");
 
 // Enum-like object
