@@ -26,14 +26,34 @@ function BackgammonBoard({ boardState, doSubmove }) {
         }
     };
 
+    const handleClickOff = (clickedOff) => {
+        if (moving) {
+            if (clickedOff === Player.white) doSubmove(sourcePip, 25);
+            if (clickedOff === Player.black) doSubmove(sourcePip, 0);
+            setSourcePip(undefined);
+            setMoving(false);
+        }
+    };
+
     return (
         <svg viewBox="0 0 1500 1200" style={{ width: "100%" }}>
             <image href={BackgroundSVG} width="1500" height="1200" />
 
-            <Off posX={1400} invertY count={boardState.offWhite} color={Player.white} />
+            <Off
+                posX={1400}
+                invertY
+                count={boardState.offBlack}
+                color={Player.black}
+                onClick={() => handleClickOff(Player.black)}
+            />
             <Off posX={0} invertY disabled />
             <Off posX={0} disabled />
-            <Off posX={1400} count={boardState.offBlack} color={Player.black} />
+            <Off
+                posX={1400}
+                count={boardState.offWhite}
+                color={Player.white}
+                onClick={() => handleClickOff(Player.white)}
+            />
 
             <Bar posX={700} invertY count={boardState.barWhite} color={Player.white} />
             <Bar posX={700} count={boardState.barBlack} color={Player.black} />
