@@ -16,6 +16,8 @@ const Pip = (size = 0, owner = Player.neither) => ({
 
 const Submove = (from, to) => ({ from, to });
 
+const range = (start, end, length = end - start + 1) => Array.from({ length }, (_, i) => start + i);
+
 const Board = () => ({
     turn: Player.neither,
     offWhite: 0,
@@ -38,10 +40,10 @@ const Board = () => ({
 
     rollDice() {
         this.dice = [Math.floor(Math.random() * 6) + 1, Math.floor(Math.random() * 6) + 1];
+        // Sort smallest to largest
+        if (this.dice[0] > this.dice[1]) this.dice.reverse();
         // Doubles
-        if (this.dice[0] === this.dice[1]) {
-            this.dice = this.dice.concat(this.dice);
-        }
+        if (this.dice[0] === this.dice[1]) this.dice = this.dice.concat(this.dice);
     },
 
     // Is the move valid?
@@ -49,22 +51,49 @@ const Board = () => ({
     // to:      Move to pip # <eg. 4>
     // return:  Returns a boolean
     isValid(from, to) {
-        if (from < 1 || from > 24 || to < 1 || to > 24) {
-            return false;
+        // Clamps "to" in range 0–25
+        to = to < 0 ? 0 : to > 25 ? 25 : to;
+        if (this.pips[from].top !== this.turn) return false;
+
+        // Bearing off
+        if (to === 25 || to === 0) {
+            if (this.turn === Player.white && from < 19) return false;
+            if (this.turn === Player.black && from > 6) return false;
+            // Range of all pips excluding the current player's home quadrant
+            const nonHomePips = this.turn === Player.white ? range(1, 18) : range(7, 24);
+            for (let i of nonHomePips) {
+                if (this.pips[i].top === this.turn || this.pips[i].bot === this.turn) return false;
+            }
+            // If bearing off from an non-exact number of pips
+            if (!this.dice.includes(Math.abs(from - to))) {
+                // Check if there's a big enough dice
+                if (this.dice[0] > Math.abs(from - to) || this.dice[1] > Math.abs(from - to)) {
+                    // Range of pips in the player's home quadrant that are further away than the pip they are trying to bear off of
+                    const farHomePips =
+                        this.turn === Player.white ? range(19, from - 1) : range(from + 1, 6);
+                    for (let i of farHomePips) {
+                        if (this.pips[i].top === this.turn || this.pips[i].bot === this.turn)
+                            return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
         }
-        if (this.pips[from].top !== this.turn) {
-            return false;
+        // Standard move
+        else {
+            if (from < 1 || from > 24 || to < 1 || to > 24) return false;
+            if (this.pips[to].top === this.otherPlayer() && this.pips[to].size > 1) return false;
+            if (!this.dice.includes(this.turn * (to - from))) return false;
         }
-        if (this.pips[to].top === this.otherPlayer() && this.pips[to].size > 1) {
-            return false;
-        }
-        if (!this.dice.includes(this.turn * (to - from))) {
-            return false;
-        }
+
         return true;
     },
 
     doSubmove(from, to) {
+        // Clamps "to" in range 0–25
+        to = to < 0 ? 0 : to > 25 ? 25 : to;
+
         // From pip
         if (this.pips[from].size === 1) {
             this.pips[from].top = Player.neither;
@@ -75,14 +104,20 @@ const Board = () => ({
         this.pips[from].size--;
 
         // To pip
-        if (this.pips[to].size === 0) {
-            this.pips[to].bot = this.turn;
+        if (to === 0 || to === 25) {
+            // Bearing off
+            if (this.turn === Player.white) this.offWhite++;
+            if (this.turn === Player.black) this.offBlack++;
+        } else {
+            if (this.pips[to].size === 0) {
+                this.pips[to].bot = this.turn;
+            }
+            this.pips[to].top = this.turn;
+            this.pips[to].size++;
         }
-        this.pips[to].top = this.turn;
-        this.pips[to].size++;
 
-        // Handle dice. NOTE: this will only work for 2 distinct values or 4 idencital values
-        if (this.dice[0] === Math.abs(from - to)) {
+        // Handle dice. NOTE: this will only work for 2 distinct values or 4 identical values
+        if (this.dice[0] >= Math.abs(from - to)) {
             this.dice.shift();
         } else {
             this.dice.pop();
@@ -138,28 +173,5 @@ const Board = () => ({
     },
 });
 
-function playPlakoto() {
-    let board = Board();
-    board.initPlakoto();
-    console.dir(board.pips);
-    let from, to;
-
-    while (true) {
-        while (board.dice.length > 0) {
-            console.log("Your dice are: " + board.dice);
-            console.log(board.allPossibleMoves());
-            from = prompt(`Player ${board.turn} move from: `);
-            to = prompt(`Player ${board.turn} move to  : `);
-            if (board.isValid(from, to)) {
-                board.doSubmove(from, to);
-                console.dir(board.pips);
-            }
-        }
-        board.turn = board.otherPlayer();
-        board.rollDice();
-    }
-}
-
-//playPlakoto();
 exports.Board = Board;
 exports.Submove = Submove;
