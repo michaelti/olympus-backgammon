@@ -21,7 +21,7 @@ function Pip({ size, top, bot, posX, invertY, onClick, active }) {
                 height="600"
                 x={posX}
                 y={invertY ? "-100%" : "0"}
-                transform={invertY ? "scale(1, -1)" : "none"}
+                transform={invertY ? "scale(1, -1)" : ""}
             />
 
             {checkers.map((checker, i) => {
