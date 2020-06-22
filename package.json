@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "nodemon --watch src/ --exec 'npm run lint && npm run start-server'",
-        "start-server": "node -r dotenv/config src/index.js",
+        "start-server": "node src/index.js",
         "lint": "eslint src/; exit 0"
     },
     "dependencies": {

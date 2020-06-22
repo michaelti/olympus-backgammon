@@ -1,3 +1,4 @@
+require("dotenv").config();
 const io = require("socket.io")(process.env.PORT, {
     serveClient: false,
 });
