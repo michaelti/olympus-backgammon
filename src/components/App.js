@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import GlobalStyles from "../styles/globalStyles";
-import SocketManager from "./SocketManager";
+import Header from "./Header";
+import Main from "./Main";
+import Game from "./Game";
 
 function App() {
+    const [roomName, setRoomName] = useState("");
+
     return (
         <div className="App">
             <GlobalStyles />
-            <SocketManager />
+            <Header roomName={roomName} />
+            <Main setRoomName={setRoomName} />
+            <Game />
         </div>
     );
 }
