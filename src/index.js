@@ -18,7 +18,7 @@ io.on("connection", (socket) => {
         // Generate a random room name string
         const roomName = util.randomAlphanumeric(6);
 
-        // Join ("create") the room
+        // Create ("join") the room
         socket.join(roomName, () => {
             // Leave previous room if already in one
             if (currentRoom && currentRoom.roomName !== roomName) {
@@ -29,14 +29,11 @@ io.on("connection", (socket) => {
             currentRoom = io.sockets.adapter.rooms[roomName];
             currentRoom.roomName = roomName;
 
-            // Initialize a board for the current room
+            // Initialize a game for the current room
             currentRoom.board = plakoto.Board();
             currentRoom.board.initPlakoto();
             currentRoom.boardBackup = clone(currentRoom.board);
             currentRoom.submoves = new Array();
-
-            // Broadcast the board to everyone in the room
-            sendUpdatedBoard(currentRoom.board);
 
             // Send the room name back to the client
             acknowledge({ ok: true, roomName });
