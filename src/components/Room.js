@@ -9,17 +9,20 @@ import Game from "./Game";
 function Room({ setRoomName }) {
     const { roomName } = useParams();
     const [player, setPlayer] = useState(undefined);
+    const [failedJoin, setFailedJoin] = useState(false);
 
     useEffect(() => {
         socketEmit("event/join-room", roomName, (acknowledgement) => {
             if (!acknowledgement.ok) {
-                console.log(`Failed to join room "${acknowledgement.roomName}".`);
+                setFailedJoin(true);
             } else {
                 setRoomName(acknowledgement.roomName);
                 setPlayer(acknowledgement.player);
             }
         });
     }, [roomName, setRoomName]);
+
+    if (failedJoin) return <Container className="py-5">Failed to join room.</Container>;
 
     return (
         <Container className="py-5">
