@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import { Container, Button, Input, Form, InputGroup, InputGroupAddon } from "reactstrap";
 import { socketEmit } from "../api";
 
 function Main({ setRoomName }) {
     const [joinName, setJoinName] = useState("");
+    const [shouldRedirectTo, setShouldRedirectTo] = useState(null);
 
     const handleChange = (event) => {
         setJoinName(event.target.value);
@@ -20,6 +22,7 @@ function Main({ setRoomName }) {
                 console.log(`Failed to start room "${acknowledgement.roomName}".`);
             } else {
                 setRoomName(acknowledgement.roomName);
+                setShouldRedirectTo(acknowledgement.roomName);
             }
         });
     };
@@ -30,6 +33,7 @@ function Main({ setRoomName }) {
                 console.log(`Failed to join room "${acknowledgement.roomName}".`);
             } else {
                 setRoomName(acknowledgement.roomName);
+                setShouldRedirectTo(acknowledgement.roomName);
             }
         });
     };
@@ -68,6 +72,8 @@ function Main({ setRoomName }) {
                     </InputGroupAddon>
                 </InputGroup>
             </Form>
+
+            {shouldRedirectTo === null ? null : <Redirect to={"/room/" + shouldRedirectTo} />}
         </Container>
     );
 }

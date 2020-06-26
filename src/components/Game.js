@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Container } from "reactstrap";
 import BackgammonBoard from "./BoardUI/BackgammonBoard";
 import BackgammonExtras from "./BoardUI/BackgammonExtras";
 import { useSocketOn, socketEmit } from "../api";
@@ -16,10 +15,10 @@ function Game() {
     const undoTurn = () => socketEmit("game/undo");
 
     return boardState === null ? null : (
-        <Container className="py-5">
+        <>
             <BackgammonExtras boardState={boardState} applyTurn={applyTurn} undoTurn={undoTurn} />
             <BackgammonBoard boardState={boardState} doSubmove={doSubmove} />
-        </Container>
+        </>
     );
 }
 
