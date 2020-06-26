@@ -1,11 +1,5 @@
 const clone = require("ramda.clone");
-
-// Enum-like object
-const Player = Object.freeze({
-    neither: 0,
-    white: 1,
-    black: -1,
-});
+const Player = require("./gameUtil").Player;
 
 const Pip = (size = 0, owner = Player.neither) => ({
     size: size,
@@ -28,7 +22,7 @@ const Board = () => ({
 
     // Initialize the board for a game of plakoto
     initPlakoto() {
-        this.turn = Player.black; // Later, players will roll to see who goes first
+        this.turn = Player.white; // Later, players will roll to see who goes first
         this.rollDice();
         for (let i = 0; i <= 24; i++) {
             this.pips[i] = Pip();
