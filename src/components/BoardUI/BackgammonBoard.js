@@ -5,7 +5,7 @@ import Bar from "./Bar";
 import BackgroundSVG from "./svg/background.svg";
 import { Player } from "../../util.js";
 
-function BackgammonBoard({ boardState, doSubmove }) {
+function BackgammonBoard({ boardState, doMove }) {
     const [moving, setMoving] = useState(false);
     const [sourcePip, setSourcePip] = useState(undefined);
 
@@ -20,7 +20,7 @@ function BackgammonBoard({ boardState, doSubmove }) {
             }
         } else if (sourcePip !== clickedPip) {
             // Complete the started move
-            doSubmove(sourcePip, clickedPip);
+            doMove(sourcePip, clickedPip);
             setSourcePip(undefined);
             setMoving(false);
         }
@@ -28,8 +28,8 @@ function BackgammonBoard({ boardState, doSubmove }) {
 
     const handleClickOff = (clickedOff) => {
         if (moving) {
-            if (clickedOff === Player.white) doSubmove(sourcePip, 25);
-            if (clickedOff === Player.black) doSubmove(sourcePip, 0);
+            if (clickedOff === Player.white) doMove(sourcePip, 25);
+            if (clickedOff === Player.black) doMove(sourcePip, 0);
             setSourcePip(undefined);
             setMoving(false);
         }

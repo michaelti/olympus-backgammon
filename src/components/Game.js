@@ -10,14 +10,14 @@ function Game() {
         setBoardState(board);
     });
 
-    const doSubmove = (from, to) => socketEmit("game/submove", from, to);
+    const doMove = (from, to) => socketEmit("game/move", from, to);
     const applyTurn = () => socketEmit("game/apply-turn");
     const undoTurn = () => socketEmit("game/undo");
 
     return boardState === null ? null : (
         <>
             <BackgammonExtras boardState={boardState} applyTurn={applyTurn} undoTurn={undoTurn} />
-            <BackgammonBoard boardState={boardState} doSubmove={doSubmove} />
+            <BackgammonBoard boardState={boardState} doMove={doMove} />
         </>
     );
 }
