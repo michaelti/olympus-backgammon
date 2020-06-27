@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
             currentRoom.board = plakoto.Board();
             currentRoom.board.initPlakoto();
             currentRoom.boardBackup = clone(currentRoom.board);
-            currentRoom.submoves = new Array();
+            currentRoom.moves = new Array();
 
             // Initialize a list of players for the current room
             currentRoom.players = {};
@@ -87,13 +87,13 @@ io.on("connection", (socket) => {
 
     /* GAME EVENT LISTENERS */
 
-    // Game event: submove
-    socket.on("game/submove", (from, to) => {
+    // Game event: move
+    socket.on("game/move", (from, to) => {
         if (!currentRoom) return;
         if (currentRoom.players[socket.id] !== currentRoom.board.turn) return;
 
-        if (currentRoom.board.trySubmove(from, to)) {
-            currentRoom.submoves.push(plakoto.Submove(from, to));
+        if (currentRoom.board.tryMove(from, to)) {
+            currentRoom.moves.push(plakoto.Move(from, to));
         }
         sendUpdatedBoard(currentRoom.board);
     });
@@ -103,18 +103,18 @@ io.on("connection", (socket) => {
         if (!currentRoom) return;
         if (currentRoom.players[socket.id] !== currentRoom.board.turn) return;
 
-        /* Validate the whole turn by passing the array of submoves to a method
-         * If the move is valid, end the player's turn
-         * Else, return an error and undo the partial move
+        /* Validate the whole turn by passing the array of moves to a method
+         * If the turn is valid, end the player's turn
+         * Else, return an error and undo the partial turn
          */
-        if (currentRoom.boardBackup.isTurnValid(currentRoom.submoves)) {
+        if (currentRoom.boardBackup.isTurnValid(currentRoom.moves)) {
             currentRoom.board.turn = currentRoom.board.otherPlayer();
             currentRoom.board.rollDice();
             currentRoom.boardBackup = clone(currentRoom.board);
         } else {
             currentRoom.board = clone(currentRoom.boardBackup);
         }
-        currentRoom.submoves = [];
+        currentRoom.moves = [];
         sendUpdatedBoard(currentRoom.board);
     });
 
@@ -123,7 +123,7 @@ io.on("connection", (socket) => {
         if (!currentRoom) return;
         if (currentRoom.players[socket.id] !== currentRoom.board.turn) return;
 
-        currentRoom.submoves = [];
+        currentRoom.moves = [];
         currentRoom.board = clone(currentRoom.boardBackup);
         sendUpdatedBoard(currentRoom.board);
     });

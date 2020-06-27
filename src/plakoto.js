@@ -7,7 +7,7 @@ const Pip = (size = 0, owner = Player.neither) => ({
     bot: owner,
 });
 
-const Submove = (from, to) => ({ from, to });
+const Move = (from, to) => ({ from, to });
 
 // Clamps "to" in range 0–25
 const clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
@@ -46,7 +46,7 @@ const Board = () => ({
     // from:    Move from pip # <eg. 1>
     // to:      Move to pip # <eg. 4>
     // return:  Returns a boolean
-    isValid(from, to) {
+    isMoveValid(from, to) {
         to = clamp(to);
         if (this.pips[from].top !== this.turn) return false;
 
@@ -85,7 +85,7 @@ const Board = () => ({
         return true;
     },
 
-    doSubmove(from, to) {
+    doMove(from, to) {
         to = clamp(to);
 
         // From pip
@@ -126,24 +126,24 @@ const Board = () => ({
     },
 
     // Returns 2D array
-    allPossibleMoves() {
+    allPossibleTurns() {
         if (this.dice.length === 0) return [];
         let ret = new Array();
         let uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
         for (const die of uniqueDice) {
             for (let pipIndex = 1; pipIndex <= 24; pipIndex++) {
                 if (this.pips[pipIndex].top === this.turn) {
-                    let currentMove = Submove(pipIndex, clamp(this.turn * die + Number(pipIndex)));
-                    if (this.isValid(currentMove.from, currentMove.to)) {
+                    let currentMove = Move(pipIndex, clamp(this.turn * die + Number(pipIndex)));
+                    if (this.isMoveValid(currentMove.from, currentMove.to)) {
                         // deep copy game board using ramda
                         let newBoard = clone(this);
-                        newBoard.doSubmove(currentMove.from, currentMove.to);
-                        let nextMoves = newBoard.allPossibleMoves();
-                        if (nextMoves.length) {
-                            for (const nextMove of nextMoves) {
-                                ret.push([currentMove, ...nextMove]);
-                                if ([currentMove, ...nextMove].length === 4)
-                                    throw "Possible move of length 4 detected";
+                        newBoard.doMove(currentMove.from, currentMove.to);
+                        let nextTurns = newBoard.allPossibleTurns();
+                        if (nextTurns.length) {
+                            for (const nextMoves of nextTurns) {
+                                ret.push([currentMove, ...nextMoves]);
+                                if ([currentMove, ...nextMoves].length === 4)
+                                    throw "Possible turn of length 4 detected";
                             }
                         } else {
                             ret.push([currentMove]);
@@ -156,9 +156,9 @@ const Board = () => ({
     },
 
     // Returns true if the move was successful
-    trySubmove(from, to) {
-        if (this.isValid(from, to)) {
-            this.doSubmove(from, to);
+    tryMove(from, to) {
+        if (this.isMoveValid(from, to)) {
+            this.doMove(from, to);
             return true;
         }
         return false;
@@ -168,7 +168,7 @@ const Board = () => ({
     isTurnValid(moves) {
         try {
             let maxTurnLength = 0;
-            const possibleTurns = this.allPossibleMoves();
+            const possibleTurns = this.allPossibleTurns();
             for (let turn of possibleTurns) {
                 if (turn.length > maxTurnLength) maxTurnLength = turn.length;
             }
@@ -177,7 +177,8 @@ const Board = () => ({
             // Validate single move turn uses the largest dice value possible
             if (maxTurnLength === 1 && this.dice.length === 2) {
                 const moveDistance = (m) => Math.abs(m.from - m.to);
-                // if the supplied move matches the small dice
+                // if the supplied move matches the smaller dice
+                // then check if there's a possible move with the larger dice
                 if (moveDistance(moves[0]) === this.dice[0]) {
                     for (let turn of possibleTurns) {
                         if (moveDistance(turn[0]) === this.dice[1]) return false;
@@ -193,4 +194,4 @@ const Board = () => ({
 });
 
 exports.Board = Board;
-exports.Submove = Submove;
+exports.Move = Move;
