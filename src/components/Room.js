@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import { socketEmit } from "../api";
 import { Container } from "reactstrap";
 import { Player } from "../util";
@@ -22,7 +22,7 @@ function Room({ setRoomName }) {
         });
     }, [roomName, setRoomName]);
 
-    if (failedJoin) return <Container className="py-5">Failed to join room.</Container>;
+    if (failedJoin) return <Redirect to="/" />;
 
     return (
         <Container className="py-5">
