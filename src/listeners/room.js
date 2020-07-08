@@ -1,39 +1,26 @@
-const plakoto = require("../plakoto.js");
-const clone = require("ramda.clone");
-const util = require("../util.js");
-const gameUtil = require("../gameUtil");
+const { randomAlphanumeric } = require("../util.js");
+const Room = require("../roomObj");
 
 /* ROOM EVENT LISTENERS */
 
-module.exports = function (socket, io) {
+module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
     // Room event: start room
     socket.on("event/start-room", (acknowledge) => {
         // Generate a random room name string
-        const roomName = util.randomAlphanumeric(6);
+        const roomName = randomAlphanumeric(6);
 
-        // Create ("join") the room
+        // Leave previous room if already in one that's not this one
+        if (socket.currentRoom && socket.currentRoom !== roomName) {
+            rooms[socket.currentRoom].removePlayer(socket.id);
+            socket.leave(socket.currentRoom);
+        }
+
         socket.join(roomName, () => {
-            // Leave previous room if already in one
-            if (socket.currentRoom && socket.currentRoom.roomName !== roomName) {
-                // Remove entry from the players object of the current room, if any.
-                if (socket.currentRoom.players) delete socket.currentRoom.players[socket.id];
-                socket.leave(socket.currentRoom.roomName);
-            }
-
-            // Set the current room reference
-            socket.currentRoom = io.sockets.adapter.rooms[roomName];
-            socket.currentRoom.roomName = roomName;
-
-            // Initialize a game for the current room
-            socket.currentRoom.board = plakoto.Board();
-            socket.currentRoom.board.initPlakoto();
-            socket.currentRoom.boardBackup = clone(socket.currentRoom.board);
-            socket.currentRoom.moves = new Array();
-
-            // Initialize a list of players for the current room
-            socket.currentRoom.players = {};
-
-            // Send the room name back to the client
+            // 1. Set the current room reference on this socket
+            // 2. Initialize the room object
+            // 3. Send an acknowledegment with room name back to the client
+            socket.currentRoom = roomName;
+            Object.assign(rooms[roomName], Room()).initRoom();
             acknowledge({ ok: true, roomName });
         });
     });
@@ -41,49 +28,30 @@ module.exports = function (socket, io) {
     // Room event: join room
     socket.on("event/join-room", (roomName, acknowledge) => {
         // Check if the room exists
-        if (io.sockets.adapter.rooms[roomName]) {
-            socket.join(roomName, () => {
-                // Leave previous room if already in one
-                if (socket.currentRoom && socket.currentRoom.roomName !== roomName) {
-                    // Remove entry from the players object of the current room, if any.
-                    if (socket.currentRoom.players) delete socket.currentRoom.players[socket.id];
-                    socket.leave(socket.currentRoom.roomName);
-                }
+        if (!rooms[roomName]) return acknowledge({ ok: false, roomName });
 
-                // Set the current room reference
-                socket.currentRoom = io.sockets.adapter.rooms[roomName];
-                socket.currentRoom.roomName = roomName;
-
-                // Add entry to the players list for this room, if there's space.
-                if (!socket.currentRoom.players[socket.id]) {
-                    if (Object.keys(socket.currentRoom.players).length < 2) {
-                        if (
-                            !Object.values(socket.currentRoom.players).includes(
-                                gameUtil.Player.white
-                            )
-                        ) {
-                            socket.currentRoom.players[socket.id] = gameUtil.Player.white;
-                        } else {
-                            socket.currentRoom.players[socket.id] = gameUtil.Player.black;
-                        }
-                    }
-                }
-
-                // Broadcast the board to everyone in the room
-                io.sockets
-                    .in(socket.currentRoom.roomName)
-                    .emit("game/update-board", socket.currentRoom.board);
-
-                // Send the room name back to the client
-                acknowledge({
-                    ok: true,
-                    roomName,
-                    player: socket.currentRoom.players[socket.id],
-                });
-            });
-        } else {
-            // Send a failure event back to the client
-            acknowledge({ ok: false, roomName });
+        // Leave previous room if already in one that's not this one
+        if (socket.currentRoom && socket.currentRoom !== roomName) {
+            rooms[socket.currentRoom].removePlayer(socket.id);
+            socket.leave(socket.currentRoom);
         }
+
+        socket.join(roomName, () => {
+            // 1. Set the current room reference on this socket
+            // 2. Add this player to the room object
+            // 3. Send an acknowledgement with room name back and player enum to the client
+            socket.currentRoom = roomName;
+            rooms[socket.currentRoom].addPlayer(socket.id);
+            acknowledge({
+                ok: true,
+                roomName,
+                player: rooms[socket.currentRoom].players[socket.id],
+            });
+
+            // Broadcast the board to everyone in the room
+            io.sockets
+                .in(socket.currentRoom)
+                .emit("game/update-board", rooms[socket.currentRoom].board);
+        });
     });
 };
