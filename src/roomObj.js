@@ -1,6 +1,6 @@
 const clone = require("ramda.clone");
-const plakoto = require("./plakoto.js");
-const { Player } = require("./gameUtil");
+const plakoto = require("./plakoto");
+const { Player, Move } = require("./gameUtil");
 
 // Base Room object
 const Room = () => ({
@@ -12,7 +12,7 @@ const Room = () => ({
     initRoom() {
         // Initialize a game
         this.board = plakoto.Board();
-        this.board.initPlakoto();
+        this.board.initGame();
         this.boardBackup = clone(this.board);
         this.moves = new Array();
 
@@ -43,7 +43,7 @@ const Room = () => ({
 
     gameMove(from, to) {
         if (this.board.tryMove(from, to)) {
-            this.moves.push(plakoto.Move(from, to));
+            this.moves.push(Move(from, to));
         }
     },
 
