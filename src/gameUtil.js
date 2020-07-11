@@ -46,6 +46,11 @@ exports.Board = () => ({
         }
         return false;
     },
+
+    // Is the board in a state where either player has won?
+    isGameWon() {
+        return this.offWhite === 15 || this.offBlack === 15 ? true : false;
+    },
 });
 
 exports.Pip = (size = 0, owner = Player.neither) => ({

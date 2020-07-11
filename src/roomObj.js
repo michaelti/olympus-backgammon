@@ -47,20 +47,24 @@ const Room = () => ({
         }
     },
 
+    // Returns the player who won the game: black, white, or neither
     gameApplyTurn() {
         /* Validate the whole turn by passing the array of moves to a method
          * If the turn is valid, end the player's turn
-         * Else, return an error and undo the partial turn
-         */
+         * Else, return an error and undo the partial turn */
         if (this.boardBackup.isTurnValid(this.moves)) {
+            if (this.board.isGameWon()) {
+                this.board.turn = Player.neither;
+                return this.board.turn;
+            }
             this.board.turn = this.board.otherPlayer();
             this.board.rollDice();
             this.boardBackup = clone(this.board);
+            this.moves = [];
         } else {
-            this.board = clone(this.boardBackup);
+            this.gameUndoTurn();
         }
-
-        this.moves = [];
+        return Player.neither;
     },
 
     gameUndoTurn() {
