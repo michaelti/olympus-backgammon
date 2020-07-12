@@ -54,17 +54,17 @@ const Room = () => ({
          * Else, return an error and undo the partial turn */
         if (this.boardBackup.isTurnValid(this.moves)) {
             if (this.board.isGameWon()) {
+                this.board.winner = this.board.turn;
                 this.board.turn = Player.neither;
-                return this.board.turn;
+            } else {
+                this.board.turn = this.board.otherPlayer();
+                this.board.rollDice();
+                this.boardBackup = clone(this.board);
+                this.moves = [];
             }
-            this.board.turn = this.board.otherPlayer();
-            this.board.rollDice();
-            this.boardBackup = clone(this.board);
-            this.moves = [];
         } else {
             this.gameUndoTurn();
         }
-        return Player.neither;
     },
 
     gameUndoTurn() {

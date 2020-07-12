@@ -19,14 +19,12 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         if (!socket.currentRoom) return;
         if (!rooms[socket.currentRoom].isPlayerTurn(socket.id)) return;
 
-        let winner = rooms[socket.currentRoom].gameApplyTurn();
+        rooms[socket.currentRoom].gameApplyTurn();
 
         // Broadcast the board to everyone in the room
         io.sockets
             .in(socket.currentRoom)
             .emit("game/update-board", rooms[socket.currentRoom].board);
-
-        if (winner) io.sockets.in(socket.currentRoom).emit("game/win", winner);
     });
 
     // Game event: undo

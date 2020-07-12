@@ -12,6 +12,7 @@ exports.Move = (from, to) => ({ from, to });
 
 exports.Board = () => ({
     turn: Player.neither,
+    winner: Player.neither,
     offWhite: 0,
     barWhite: 0,
     offBlack: 0,
