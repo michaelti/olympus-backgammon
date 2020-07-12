@@ -11,9 +11,7 @@ const Plakoto = () => ({
     initGame() {
         this.turn = Player.white; // Later, players will roll to see who goes first
         this.rollDice();
-        for (let i = 0; i <= 24; i++) {
-            this.pips[i] = Pip();
-        }
+
         this.pips[24] = Pip(15, Player.black); // Black moves towards pip 1 (decreasing)
         this.pips[1] = Pip(15, Player.white); // White moves towards pip 24 (increasing)
     },

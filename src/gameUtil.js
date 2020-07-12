@@ -5,6 +5,14 @@ const Player = Object.freeze({
     black: -1,
 });
 
+// Variant of backgammon
+exports.Variant = Object.freeze({
+    undefined: 0,
+    portes: 1,
+    plakoto: 2,
+    fevga: 3,
+});
+
 // Clamps "to" in range 0–25
 exports.clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
 
@@ -17,7 +25,7 @@ exports.Board = () => ({
     barWhite: 0,
     offBlack: 0,
     barBlack: 0,
-    pips: new Array(25),
+    pips: Array.from({ length: 25 }, Pip),
     diceRolled: new Array(2),
     dice: new Array(2),
 
@@ -54,10 +62,11 @@ exports.Board = () => ({
     },
 });
 
-exports.Pip = (size = 0, owner = Player.neither) => ({
+const Pip = (size = 0, owner = Player.neither) => ({
     size: size,
     top: owner,
     bot: owner,
 });
 
 exports.Player = Player;
+exports.Pip = Pip;

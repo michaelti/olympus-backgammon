@@ -1,5 +1,6 @@
 const { randomAlphanumeric } = require("../util.js");
-const Room = require("../roomObj");
+const { State, Room } = require("../roomObj");
+const { Variant, Player } = require("../gameUtil");
 
 /* ROOM EVENT LISTENERS */
 
@@ -20,7 +21,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
             // 2. Initialize the room object
             // 3. Send an acknowledegment with room name back to the client
             socket.currentRoom = roomName;
-            Object.assign(rooms[roomName], Room()).initRoom();
+            Object.assign(rooms[roomName], Room());
             acknowledge({ ok: true, roomName });
         });
     });
@@ -52,6 +53,27 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
             io.sockets
                 .in(socket.currentRoom)
                 .emit("game/update-board", rooms[socket.currentRoom].board);
+
+            // Broadcast the room state to everyone in the room
+            io.sockets.in(socket.currentRoom).emit("room/update-room", {
+                state: rooms[socket.currentRoom].state,
+            });
         });
+    });
+
+    // Room event: select variant
+    socket.on("room/select-variant", (variant, acknowledge) => {
+        if (!socket.currentRoom) return;
+        if (rooms[socket.currentRoom].players[socket.id] !== Player.white) return;
+        if (rooms[socket.currentRoom].state !== State.setup) return;
+        if (!Object.values(Variant).includes(variant)) return;
+
+        rooms[socket.currentRoom].startGame(variant);
+        acknowledge({ ok: true });
+
+        // Broadcast the board to everyone in the room
+        io.sockets
+            .in(socket.currentRoom)
+            .emit("game/update-board", rooms[socket.currentRoom].board);
     });
 };
