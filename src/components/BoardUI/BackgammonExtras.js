@@ -3,10 +3,14 @@ import { ListGroup, ListGroupItem, Button } from "reactstrap";
 import { Player } from "../../util";
 import Dice from "./Dice";
 
-function BackgammonExtras({ boardState: { turn, diceRolled, dice }, applyTurn, undoTurn }) {
+function BackgammonExtras({ boardState: { turn, winner, diceRolled, dice }, applyTurn, undoTurn }) {
     return (
         <ListGroup horizontal="lg">
-            <ListGroupItem>Turn: {Player.properties[turn].colorName}</ListGroupItem>
+            <ListGroupItem>
+                {winner
+                    ? `${Player.properties[winner].colorName} won!`
+                    : `${Player.properties[turn].colorName}’s turn`}
+            </ListGroupItem>
             <ListGroupItem>
                 <Dice initialDice={diceRolled} remainingDice={dice} />
             </ListGroupItem>
