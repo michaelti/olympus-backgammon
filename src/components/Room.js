@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useParams, Redirect } from "react-router-dom";
 import { useSocketOn, socketEmit } from "../api";
 import { Container } from "reactstrap";
-import { Player, RoomState } from "../util";
-import { Badge } from "reactstrap";
+import { Player, RoomStep } from "../util";
 import RoomSetup from "./RoomSetup";
 import Game from "./Game";
 
 function Room({ setRoomName }) {
     const { roomName } = useParams();
     const [player, setPlayer] = useState(undefined);
-    const [roomState, setRoomState] = useState(undefined);
+    const [roomState, setRoomState] = useState({});
     const [failedJoin, setFailedJoin] = useState(false);
 
     useEffect(() => {
@@ -25,18 +24,19 @@ function Room({ setRoomName }) {
     }, [roomName, setRoomName]);
 
     useSocketOn("room/update-room", (room) => {
-        setRoomState(room.state);
+        setRoomState(room);
     });
 
     if (failedJoin) return <Redirect to="/" />;
 
     return (
         <Container className="py-5">
-            <Badge className="mb-3">
-                {player ? `Playing as ${Player.properties[player].colorName}` : "Spectating"}
-            </Badge>
-            {player === Player.white && roomState === RoomState.setup ? <RoomSetup /> : null}
-            <Game />
+            <RoomSetup show={roomState.step === RoomStep.setup && player === Player.white} />
+            <Game
+                player={player}
+                roomStep={roomState.step}
+                startingRolls={roomState.startingRolls}
+            />
         </Container>
     );
 }

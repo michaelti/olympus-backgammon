@@ -10,7 +10,7 @@ import {
     ListGroupItem,
 } from "reactstrap";
 
-function RoomSetup() {
+function RoomSetup({ show }) {
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(true);
 
@@ -24,7 +24,7 @@ function RoomSetup() {
     };
 
     return (
-        <Modal isOpen={isModalOpen} size="lg">
+        <Modal isOpen={show && isModalOpen} size="lg">
             <ModalHeader>Which game would you like to play?</ModalHeader>
             <ModalBody>
                 <ListGroup horizontal>

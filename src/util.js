@@ -11,8 +11,7 @@ export const Player = Object.freeze({
 });
 
 // Room state enum to match the backend
-export const RoomState = Object.freeze({
-    undefined: 0,
+export const RoomStep = Object.freeze({
     setup: 1,
     startingRoll: 2,
     game: 3,

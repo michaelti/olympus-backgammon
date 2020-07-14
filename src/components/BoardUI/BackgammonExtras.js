@@ -3,9 +3,17 @@ import { ListGroup, ListGroupItem, Button } from "reactstrap";
 import { Player } from "../../util";
 import Dice from "./Dice";
 
-function BackgammonExtras({ boardState: { turn, winner, diceRolled, dice }, applyTurn, undoTurn }) {
+function BackgammonExtras({
+    boardState: { turn, winner, diceRolled, dice },
+    applyTurn,
+    undoTurn,
+    player,
+}) {
     return (
         <ListGroup horizontal="lg">
+            <ListGroupItem>
+                {player ? `Playing as ${Player.properties[player].colorName}` : "Spectating"}
+            </ListGroupItem>
             <ListGroupItem>
                 {winner
                     ? `${Player.properties[winner].colorName} won!`
