@@ -9,9 +9,6 @@ const Plakoto = () => ({
     // Implement Plakoto-specific methods and variables
     // Initialize the board for a game of plakoto
     initGame() {
-        this.turn = Player.white; // Later, players will roll to see who goes first
-        this.rollDice();
-
         this.pips[24] = Pip(15, Player.black); // Black moves towards pip 1 (decreasing)
         this.pips[1] = Pip(15, Player.white); // White moves towards pip 24 (increasing)
     },

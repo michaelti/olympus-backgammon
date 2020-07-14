@@ -1,9 +1,8 @@
 const clone = require("ramda.clone");
 const plakoto = require("./plakoto");
-const { Player, Variant, Move } = require("./gameUtil");
+const { Player, Variant, Move, rollDie } = require("./gameUtil");
 
-const State = Object.freeze({
-    undefined: 0,
+const Step = Object.freeze({
     setup: 1,
     startingRoll: 2,
     game: 3,
@@ -15,16 +14,41 @@ exports.Room = () => ({
     boardBackup: null,
     moves: null,
     players: {},
-    state: State.setup,
+    dice: { [Player.white]: undefined, [Player.black]: undefined },
+    step: Step.setup,
 
-    startGame(type) {
-        // Initialize a game
+    initGame(type) {
+        // Game type selector
         if (type === Variant.plakoto) this.board = plakoto.Board();
         else console.error("Only plakoto is currently available");
         this.board.initGame();
-        this.boardBackup = clone(this.board);
-        this.state = State.game;
         this.moves = new Array();
+        this.step = Step.startingRoll;
+    },
+
+    startGame(startingPlayer) {
+        this.board.turn = startingPlayer;
+        this.board.rollDice();
+        this.boardBackup = clone(this.board);
+        this.step = Step.game;
+    },
+
+    startingRoll(player) {
+        if (!this.dice[player]) this.dice[player] = rollDie();
+
+        // If both players have rolled and they are different values
+        if (this.dice[Player.white] > this.dice[Player.black]) {
+            this.startGame(Player.white);
+        } else if (this.dice[Player.black] > this.dice[Player.white]) {
+            this.startGame(Player.black);
+        }
+    },
+
+    // If the players roll the same number, clear the saved values so they can roll again
+    startingRollCleanup() {
+        if (this.dice[Player.white] === this.dice[Player.black]) {
+            this.dice = { [Player.white]: undefined, [Player.black]: undefined };
+        }
     },
 
     addPlayer(id) {
@@ -80,4 +104,4 @@ exports.Room = () => ({
     },
 });
 
-exports.State = State;
+exports.Step = Step;
