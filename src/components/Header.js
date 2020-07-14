@@ -1,11 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Navbar, NavbarBrand, Nav, NavbarText } from "reactstrap";
-import { useSocketStatus } from "../api";
+import ConnectionStatus from "./ConnectionStatus";
 
 function Header({ roomName }) {
-    const [isConnected, isConnecting] = useSocketStatus();
-
     return (
         <header>
             <Navbar color="light" light expand="xs">
@@ -14,16 +12,11 @@ function Header({ roomName }) {
                         Olympus Backgammon
                     </NavbarBrand>
                     <Nav className="ml-auto" navbar>
-                        <NavbarText className="mr-3">
-                            Status:{" "}
-                            {isConnecting
-                                ? "Connecting"
-                                : isConnected
-                                ? "Connected"
-                                : "Disconnected"}
-                        </NavbarText>
                         <NavbarText>
-                            Room name: <Link to={"/room/" + roomName}>{roomName}</Link>
+                            <Link to={"/room/" + roomName} className="mr-3">
+                                {roomName}
+                            </Link>
+                            <ConnectionStatus />
                         </NavbarText>
                     </Nav>
                 </Container>
