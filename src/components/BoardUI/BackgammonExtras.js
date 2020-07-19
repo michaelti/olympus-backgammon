@@ -15,9 +15,11 @@ function BackgammonExtras({
                 {player ? `Playing as ${Player.properties[player].colorName}` : "Spectating"}
             </ListGroupItem>
             <ListGroupItem>
-                {winner
+                {winner !== null
                     ? `${Player.properties[winner].colorName} won!`
-                    : `${Player.properties[turn].colorName}’s turn`}
+                    : turn !== null
+                    ? `${Player.properties[turn].colorName}’s turn`
+                    : null}
             </ListGroupItem>
             <ListGroupItem>
                 <Dice initialDice={diceRolled} remainingDice={dice} />
