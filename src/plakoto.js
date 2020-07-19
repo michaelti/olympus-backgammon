@@ -165,7 +165,7 @@ const Plakoto = () => ({
         }
 
         if (this.winner !== null) {
-            this.turn = this.neither;
+            this.turn = Player.neither;
             return true;
         }
         return false;
