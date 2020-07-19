@@ -4,7 +4,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
     // Game event: move
     socket.on("game/move", (from, to) => {
         if (!socket.currentRoom) return;
-        if (!rooms[socket.currentRoom].isPlayerTurn(socket.id)) return;
+        if (!rooms[socket.currentRoom].isPlayerTurn(socket.id) && !process.env.GAMEDEV) return;
 
         rooms[socket.currentRoom].gameMove(from, to);
 
@@ -17,7 +17,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
     // Game event: apply turn
     socket.on("game/apply-turn", () => {
         if (!socket.currentRoom) return;
-        if (!rooms[socket.currentRoom].isPlayerTurn(socket.id)) return;
+        if (!rooms[socket.currentRoom].isPlayerTurn(socket.id) && !process.env.GAMEDEV) return;
 
         rooms[socket.currentRoom].gameApplyTurn();
 
@@ -30,7 +30,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
     // Game event: undo
     socket.on("game/undo", () => {
         if (!socket.currentRoom) return;
-        if (!rooms[socket.currentRoom].isPlayerTurn(socket.id)) return;
+        if (!rooms[socket.currentRoom].isPlayerTurn(socket.id) && !process.env.GAMEDEV) return;
 
         rooms[socket.currentRoom].gameUndoTurn();
 

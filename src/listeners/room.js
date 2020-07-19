@@ -23,6 +23,12 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
             socket.currentRoom = roomName;
             Object.assign(rooms[roomName], Room());
             acknowledge({ ok: true, roomName });
+
+            // In game dev mode, start a game right away
+            if (process.env.GAMEDEV) {
+                rooms[roomName].initGame(Variant.plakoto);
+                rooms[roomName].startGame(Player.white);
+            }
         });
     });
 
