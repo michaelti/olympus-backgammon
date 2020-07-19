@@ -5,7 +5,7 @@ import Bar from "./Bar";
 import BackgroundSVG from "./svg/background.svg";
 import { Player } from "../../util.js";
 
-function BackgammonBoard({ boardState: { pips, offWhite, offBlack, barWhite, barBlack }, doMove }) {
+function BackgammonBoard({ boardState: { pips, off, bar }, doMove }) {
     const [moving, setMoving] = useState(false);
     const [sourcePip, setSourcePip] = useState(undefined);
 
@@ -42,7 +42,7 @@ function BackgammonBoard({ boardState: { pips, offWhite, offBlack, barWhite, bar
             <Off
                 posX={1400}
                 invertY
-                count={offBlack}
+                count={off[Player.black]}
                 color={Player.black}
                 onClick={() => handleClickOff(Player.black)}
             />
@@ -50,13 +50,13 @@ function BackgammonBoard({ boardState: { pips, offWhite, offBlack, barWhite, bar
             <Off posX={0} disabled />
             <Off
                 posX={1400}
-                count={offWhite}
+                count={off[Player.white]}
                 color={Player.white}
                 onClick={() => handleClickOff(Player.white)}
             />
 
-            <Bar posX={700} invertY count={barWhite} color={Player.white} />
-            <Bar posX={700} count={barBlack} color={Player.black} />
+            <Bar posX={700} invertY count={bar[Player.white]} color={Player.white} />
+            <Bar posX={700} count={bar[Player.black]} color={Player.black} />
 
             {pips.map((pip, i) => {
                 if (i === 0) return null;
