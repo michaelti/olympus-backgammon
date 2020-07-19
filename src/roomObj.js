@@ -84,10 +84,7 @@ exports.Room = () => ({
          * If the turn is valid, end the player's turn
          * Else, return an error and undo the partial turn */
         if (this.boardBackup.isTurnValid(this.moves)) {
-            if (this.board.isGameWon()) {
-                this.board.winner = this.board.turn;
-                this.board.turn = Player.neither;
-            } else {
+            if (!this.board.isGameWon()) {
                 this.board.turn = this.board.otherPlayer();
                 this.board.rollDice();
                 this.boardBackup = clone(this.board);

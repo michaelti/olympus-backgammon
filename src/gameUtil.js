@@ -18,13 +18,11 @@ exports.clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
 exports.Move = (from, to) => ({ from, to });
 
 exports.Board = () => ({
-    turn: Player.neither,
-    winner: Player.neither,
-    offWhite: 0,
-    barWhite: 0,
-    offBlack: 0,
-    barBlack: 0,
-    pips: Array.from({ length: 25 }, Pip),
+    turn: null,
+    winner: null,
+    off: { [Player.white]: 0, [Player.black]: 0 },
+    bar: { [Player.white]: 0, [Player.black]: 0 },
+    pips: new Array(25).fill().map(() => Pip()),
     diceRolled: new Array(2),
     dice: new Array(2),
 
@@ -57,7 +55,12 @@ exports.Board = () => ({
 
     // Is the board in a state where either player has won?
     isGameWon() {
-        return this.offWhite === 15 || this.offBlack === 15 ? true : false;
+        if (this.off[this.turn] === 15) {
+            this.winner = this.turn;
+            this.turn = Player.neither;
+            return true;
+        }
+        return false;
     },
 });
 
