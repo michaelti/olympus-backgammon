@@ -64,6 +64,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
             io.sockets.in(socket.currentRoom).emit("room/update-room", {
                 step: rooms[socket.currentRoom].step,
                 startingRolls: rooms[socket.currentRoom].dice,
+                variant: rooms[socket.currentRoom].variant,
             });
         });
     });
@@ -82,6 +83,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         io.sockets.in(socket.currentRoom).emit("room/update-room", {
             step: rooms[socket.currentRoom].step,
             startingRolls: rooms[socket.currentRoom].dice,
+            variant: rooms[socket.currentRoom].variant,
         });
 
         // Broadcast the board to everyone in the room
@@ -102,6 +104,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         io.sockets.in(socket.currentRoom).emit("room/update-room", {
             step: rooms[socket.currentRoom].step,
             startingRolls: rooms[socket.currentRoom].dice,
+            variant: rooms[socket.currentRoom].variant,
         });
 
         // Broadcast the board to everyone in the room

@@ -49,7 +49,7 @@ const Plakoto = () => ({
         // Standard move
         else {
             if (from < 1 || from > 24 || to < 1 || to > 24) return false;
-            if (this.pips[to].top === this.otherPlayer() && this.pips[to].size > 1) return false;
+            if (this.pips[to].top !== this.turn && this.pips[to].size > 1) return false;
             if (!this.dice.includes(this.turn * (to - from))) return false;
         }
 

@@ -12,6 +12,7 @@ const Step = Object.freeze({
 exports.Room = () => ({
     board: null,
     boardBackup: null,
+    variant: null,
     moves: null,
     players: {},
     dice: { [Player.white]: undefined, [Player.black]: undefined },
@@ -21,6 +22,7 @@ exports.Room = () => ({
         // Game type selector
         if (type === Variant.plakoto) this.board = plakoto.Board();
         else console.error("Only plakoto is currently available");
+        this.variant = type;
         this.board.initGame();
         this.moves = new Array();
         this.step = Step.startingRoll;
