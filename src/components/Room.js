@@ -36,6 +36,7 @@ function Room({ setRoomName }) {
                 player={player}
                 roomStep={roomState.step}
                 startingRolls={roomState.startingRolls}
+                variant={roomState.variant}
             />
         </Container>
     );

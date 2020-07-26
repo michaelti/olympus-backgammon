@@ -5,12 +5,13 @@ import BackgammonExtras from "./BoardUI/BackgammonExtras";
 import BackgammonOverlay from "./BoardUI/BackgammonOverlay";
 import { useSocketOn, socketEmit } from "../api";
 import { Player, RoomStep } from "../util";
+import { clamp, isMoveValid } from "../game";
 
 const BoardContainer = styled.div`
     position: relative;
 `;
 
-function Game({ player, roomStep, startingRolls }) {
+function Game({ player, roomStep, startingRolls, variant }) {
     const [boardState, setBoardState] = useState(null);
 
     useSocketOn("game/update-board", (board) => {
@@ -21,6 +22,19 @@ function Game({ player, roomStep, startingRolls }) {
     const applyTurn = () => socketEmit("game/apply-turn");
     const undoTurn = () => socketEmit("game/undo");
 
+    const getPossiblePips = (from) => {
+        let possiblePips = new Set();
+
+        for (const die of boardState.dice) {
+            const to = clamp(from + die * boardState.turn);
+            if (isMoveValid[variant](from, to, boardState)) {
+                possiblePips.add(to);
+            }
+        }
+
+        return possiblePips;
+    };
+
     return boardState === null ? null : (
         <>
             <BackgammonExtras
@@ -30,7 +44,11 @@ function Game({ player, roomStep, startingRolls }) {
                 player={player}
             />
             <BoardContainer>
-                <BackgammonBoard boardState={boardState} doMove={doMove} />
+                <BackgammonBoard
+                    boardState={boardState}
+                    doMove={doMove}
+                    getPossiblePips={getPossiblePips}
+                />
                 {roomStep === RoomStep.startingRoll ? (
                     <BackgammonOverlay
                         dieWhite={startingRolls[Player.white]}

@@ -9,6 +9,7 @@ import {
     ListGroup,
     ListGroupItem,
 } from "reactstrap";
+import { Variant } from "../util";
 
 function RoomSetup({ show }) {
     const [selectedVariant, setSelectedVariant] = useState(null);
@@ -29,27 +30,27 @@ function RoomSetup({ show }) {
             <ModalBody>
                 <ListGroup horizontal>
                     <ListGroupItem
-                        onClick={() => setSelectedVariant(1)}
-                        active={selectedVariant === 1}
+                        onClick={() => setSelectedVariant(Variant.portes)}
+                        active={selectedVariant === Variant.portes}
                         tag="button"
                         action
                         disabled>
-                        Portes
+                        {Variant.properties[Variant.portes].name}
                     </ListGroupItem>
                     <ListGroupItem
-                        onClick={() => setSelectedVariant(2)}
-                        active={selectedVariant === 2}
+                        onClick={() => setSelectedVariant(Variant.plakoto)}
+                        active={selectedVariant === Variant.plakoto}
                         tag="button"
                         action>
-                        Plakoto
+                        {Variant.properties[Variant.plakoto].name}
                     </ListGroupItem>
                     <ListGroupItem
-                        onClick={() => setSelectedVariant(3)}
-                        active={selectedVariant === 3}
+                        onClick={() => setSelectedVariant(Variant.fevga)}
+                        active={selectedVariant === Variant.fevga}
                         tag="button"
                         action
                         disabled>
-                        Fevga
+                        {Variant.properties[Variant.fevga].name}
                     </ListGroupItem>
                 </ListGroup>
             </ModalBody>

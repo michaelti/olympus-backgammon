@@ -5,9 +5,10 @@ import Bar from "./Bar";
 import BackgroundSVG from "./svg/background.svg";
 import { Player } from "../../util.js";
 
-function BackgammonBoard({ boardState: { pips, off, bar }, doMove }) {
+function BackgammonBoard({ boardState: { pips, off, bar }, doMove, getPossiblePips }) {
     const [moving, setMoving] = useState(false);
     const [sourcePip, setSourcePip] = useState(undefined);
+    const [highlightedPips, setHighlightedPips] = useState(null);
 
     const handleClickPip = (clickedPip) => {
         const clickedPipObj = pips[clickedPip];
@@ -17,10 +18,12 @@ function BackgammonBoard({ boardState: { pips, off, bar }, doMove }) {
                 // Start a move
                 setMoving(true);
                 setSourcePip(clickedPip);
+                setHighlightedPips(getPossiblePips(clickedPip));
             }
         } else if (sourcePip !== clickedPip) {
             // Complete the started move
             doMove(sourcePip, clickedPip);
+            setHighlightedPips(null);
             setSourcePip(undefined);
             setMoving(false);
         }
@@ -30,6 +33,7 @@ function BackgammonBoard({ boardState: { pips, off, bar }, doMove }) {
         if (moving) {
             if (clickedOff === Player.white) doMove(sourcePip, 25);
             if (clickedOff === Player.black) doMove(sourcePip, 0);
+            setHighlightedPips(null);
             setSourcePip(undefined);
             setMoving(false);
         }
@@ -45,6 +49,7 @@ function BackgammonBoard({ boardState: { pips, off, bar }, doMove }) {
                 count={off[Player.black]}
                 color={Player.black}
                 onClick={() => handleClickOff(Player.black)}
+                highlighted={highlightedPips?.has(0)}
             />
             <Off posX={0} invertY disabled />
             <Off posX={0} disabled />
@@ -53,6 +58,7 @@ function BackgammonBoard({ boardState: { pips, off, bar }, doMove }) {
                 count={off[Player.white]}
                 color={Player.white}
                 onClick={() => handleClickOff(Player.white)}
+                highlighted={highlightedPips?.has(25)}
             />
 
             <Bar posX={700} invertY count={bar[Player.white]} color={Player.white} />
@@ -93,6 +99,7 @@ function BackgammonBoard({ boardState: { pips, off, bar }, doMove }) {
                         bot={pip.bot}
                         onClick={() => handleClickPip(i)}
                         active={i === sourcePip}
+                        highlighted={highlightedPips?.has(i)}
                     />
                 );
             })}

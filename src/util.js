@@ -16,3 +16,15 @@ export const RoomStep = Object.freeze({
     startingRoll: 2,
     game: 3,
 });
+
+// Variant of backgammon enum to match the backend
+export const Variant = Object.freeze({
+    portes: 1,
+    plakoto: 2,
+    fevga: 3,
+    properties: {
+        "1": { name: "Portes" },
+        "2": { name: "Plakoto" },
+        "3": { name: "Fevga" },
+    },
+});
