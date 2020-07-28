@@ -5,27 +5,29 @@ import Bar from "./Bar";
 import BackgroundSVG from "./svg/background.svg";
 import { Player } from "../../util.js";
 
-function BackgammonBoard({ boardState: { pips, off, bar }, doMove, getPossiblePips }) {
+function BackgammonBoard({ boardState: { pips, off }, doMove, getPossiblePips }) {
     const [moving, setMoving] = useState(false);
     const [sourcePip, setSourcePip] = useState(undefined);
     const [highlightedPips, setHighlightedPips] = useState(null);
 
-    const handleClickPip = (clickedPip) => {
-        const clickedPipObj = pips[clickedPip];
+    const clearMove = () => {
+        setHighlightedPips(null);
+        setSourcePip(undefined);
+        setMoving(false);
+    };
 
+    const handleClickPip = (clickedPip) => {
         if (!moving) {
-            if (clickedPipObj.size > 0) {
-                // Start a move
+            // We're not moving; start a move
+            if (pips[clickedPip].size > 0) {
                 setMoving(true);
                 setSourcePip(clickedPip);
                 setHighlightedPips(getPossiblePips(clickedPip));
             }
-        } else if (sourcePip !== clickedPip) {
-            // Complete the started move
-            doMove(sourcePip, clickedPip);
-            setHighlightedPips(null);
-            setSourcePip(undefined);
-            setMoving(false);
+        } else {
+            // We are moving; complete a move (if it's not to the bar)
+            if (clickedPip !== 0 && clickedPip !== 25) doMove(sourcePip, clickedPip);
+            clearMove();
         }
     };
 
@@ -33,9 +35,7 @@ function BackgammonBoard({ boardState: { pips, off, bar }, doMove, getPossiblePi
         if (moving) {
             if (clickedOff === Player.white) doMove(sourcePip, 25);
             if (clickedOff === Player.black) doMove(sourcePip, 0);
-            setHighlightedPips(null);
-            setSourcePip(undefined);
-            setMoving(false);
+            clearMove();
         }
     };
 
@@ -61,11 +61,24 @@ function BackgammonBoard({ boardState: { pips, off, bar }, doMove, getPossiblePi
                 highlighted={highlightedPips?.has(25)}
             />
 
-            <Bar posX={700} invertY count={bar[Player.white]} color={Player.white} />
-            <Bar posX={700} count={bar[Player.black]} color={Player.black} />
+            <Bar
+                posX={700}
+                invertY
+                count={pips[0].size /* Special bar pip */}
+                color={Player.white}
+                onClick={() => handleClickPip(0)}
+                active={sourcePip === 0}
+            />
+            <Bar
+                posX={700}
+                count={pips[25].size /* Special bar pip */}
+                color={Player.black}
+                onClick={() => handleClickPip(25)}
+                active={sourcePip === 25}
+            />
 
             {pips.map((pip, i) => {
-                if (i === 0) return null;
+                if (i === 0 || i === 25) return null;
 
                 const pipQuadrant = Math.ceil((i / 24) * 4);
                 let [posX, invertY] = [0, false];

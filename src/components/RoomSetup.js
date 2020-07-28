@@ -33,8 +33,7 @@ function RoomSetup({ show }) {
                         onClick={() => setSelectedVariant(Variant.portes)}
                         active={selectedVariant === Variant.portes}
                         tag="button"
-                        action
-                        disabled>
+                        action>
                         {Variant.properties[Variant.portes].name}
                     </ListGroupItem>
                     <ListGroupItem
