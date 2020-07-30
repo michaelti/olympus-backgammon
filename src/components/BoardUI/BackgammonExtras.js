@@ -8,6 +8,7 @@ function BackgammonExtras({
     applyTurn,
     undoTurn,
     player,
+    isTurn,
 }) {
     return (
         <ListGroup horizontal="lg">
@@ -25,12 +26,12 @@ function BackgammonExtras({
                 <Dice initialDice={diceRolled} remainingDice={dice} />
             </ListGroupItem>
             <ListGroupItem>
-                <Button onClick={applyTurn} color="success">
-                    Submit turn
+                <Button onClick={applyTurn} color="success" className="mr-3" disabled={!isTurn}>
+                    Finish turn
                 </Button>
-            </ListGroupItem>
-            <ListGroupItem>
-                <Button onClick={undoTurn}>Undo</Button>
+                <Button onClick={undoTurn} disabled={!isTurn}>
+                    Undo
+                </Button>
             </ListGroupItem>
         </ListGroup>
     );

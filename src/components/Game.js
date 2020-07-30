@@ -42,10 +42,12 @@ function Game({ player, roomStep, startingRolls, variant }) {
                 applyTurn={applyTurn}
                 undoTurn={undoTurn}
                 player={player}
+                isTurn={!process.env.REACT_APP_GAMEDEV ? player === boardState.turn : true}
             />
             <BoardContainer>
                 <BackgammonBoard
                     boardState={boardState}
+                    isTurn={!process.env.REACT_APP_GAMEDEV ? player === boardState.turn : true}
                     doMove={doMove}
                     getPossiblePips={getPossiblePips}
                 />

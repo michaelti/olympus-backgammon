@@ -5,7 +5,7 @@ import Bar from "./Bar";
 import BackgroundSVG from "./svg/background.svg";
 import { Player } from "../../util.js";
 
-function BackgammonBoard({ boardState: { pips, off }, doMove, getPossiblePips }) {
+function BackgammonBoard({ boardState: { pips, off, turn }, isTurn, doMove, getPossiblePips }) {
     const [moving, setMoving] = useState(false);
     const [sourcePip, setSourcePip] = useState(undefined);
     const [highlightedPips, setHighlightedPips] = useState(null);
@@ -16,18 +16,26 @@ function BackgammonBoard({ boardState: { pips, off }, doMove, getPossiblePips })
         setMoving(false);
     };
 
+    const startMove = (from) => {
+        if (isTurn && pips[from].top === turn && pips[from].size > 0) {
+            setMoving(true);
+            setSourcePip(from);
+            setHighlightedPips(getPossiblePips(from));
+        }
+    };
+
     const handleClickPip = (clickedPip) => {
-        if (!moving) {
-            // We're not moving; start a move
-            if (pips[clickedPip].size > 0) {
-                setMoving(true);
-                setSourcePip(clickedPip);
-                setHighlightedPips(getPossiblePips(clickedPip));
+        if (!moving) startMove(clickedPip);
+        else {
+            // We are moving; complete the move if it's valid (and not to the bar)
+            if (highlightedPips.has(clickedPip) && clickedPip !== 0 && clickedPip !== 25) {
+                doMove(sourcePip, clickedPip);
+                clearMove();
+            } else {
+                // Try to start a new move if this one wasn't valid
+                clearMove();
+                startMove(clickedPip);
             }
-        } else {
-            // We are moving; complete a move (if it's not to the bar)
-            if (clickedPip !== 0 && clickedPip !== 25) doMove(sourcePip, clickedPip);
-            clearMove();
         }
     };
 
