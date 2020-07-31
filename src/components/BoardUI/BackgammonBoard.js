@@ -76,6 +76,7 @@ function BackgammonBoard({ boardState: { pips, off, turn }, isTurn, doMove, getP
                 color={Player.white}
                 onClick={() => handleClickPip(0)}
                 active={sourcePip === 0}
+                moveable={isTurn && pips[0].top === turn && pips[0].size > 0}
             />
             <Bar
                 posX={700}
@@ -83,6 +84,7 @@ function BackgammonBoard({ boardState: { pips, off, turn }, isTurn, doMove, getP
                 color={Player.black}
                 onClick={() => handleClickPip(25)}
                 active={sourcePip === 25}
+                moveable={isTurn && pips[25].top === turn && pips[25].size > 0}
             />
 
             {pips.map((pip, i) => {
@@ -121,6 +123,7 @@ function BackgammonBoard({ boardState: { pips, off, turn }, isTurn, doMove, getP
                         onClick={() => handleClickPip(i)}
                         active={i === sourcePip}
                         highlighted={highlightedPips?.has(i)}
+                        moveable={isTurn && pip.top === turn && pip.size > 0}
                     />
                 );
             })}

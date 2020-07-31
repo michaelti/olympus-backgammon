@@ -2,7 +2,7 @@ import React from "react";
 import Checker from "./Checker";
 import PipSVG from "./svg/pip.svg";
 
-function Pip({ size, top, bot, posX, invertY, onClick, active, highlighted }) {
+function Pip({ size, top, bot, posX, invertY, onClick, active, highlighted, moveable }) {
     let checkers = Array(size);
 
     if (checkers.length > 0) {
@@ -14,7 +14,7 @@ function Pip({ size, top, bot, posX, invertY, onClick, active, highlighted }) {
         checkers.length > 6 ? ((checkers.length - 6) * 100) / (checkers.length - 1) : 0;
 
     return (
-        <g onClick={onClick}>
+        <g onClick={onClick} style={moveable || highlighted ? { cursor: "pointer" } : {}}>
             {highlighted ? (
                 <rect
                     width="100"
