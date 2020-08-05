@@ -11,7 +11,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         // Broadcast the board to everyone in the room
         io.sockets
             .in(socket.currentRoom)
-            .emit("game/update-board", rooms[socket.currentRoom].board);
+            .emit("room/update-room", { board: rooms[socket.currentRoom].board });
     });
 
     // Game event: apply turn
@@ -24,7 +24,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         // Broadcast the board to everyone in the room
         io.sockets
             .in(socket.currentRoom)
-            .emit("game/update-board", rooms[socket.currentRoom].board);
+            .emit("room/update-room", { board: rooms[socket.currentRoom].board });
     });
 
     // Game event: undo
@@ -37,6 +37,6 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         // Broadcast the board to everyone in the room
         io.sockets
             .in(socket.currentRoom)
-            .emit("game/update-board", rooms[socket.currentRoom].board);
+            .emit("room/update-room", { board: rooms[socket.currentRoom].board });
     });
 };

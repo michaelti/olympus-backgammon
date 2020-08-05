@@ -55,16 +55,12 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
                 player: rooms[socket.currentRoom].players[socket.id],
             });
 
-            // Broadcast the board to everyone in the room
-            io.sockets
-                .in(socket.currentRoom)
-                .emit("game/update-board", rooms[socket.currentRoom].board);
-
-            // Broadcast the room step to everyone in the room
+            // Broadcast all relevant room properties to everyone in the room
             io.sockets.in(socket.currentRoom).emit("room/update-room", {
                 step: rooms[socket.currentRoom].step,
-                startingRolls: rooms[socket.currentRoom].dice,
+                dice: rooms[socket.currentRoom].dice,
                 variant: rooms[socket.currentRoom].variant,
+                board: rooms[socket.currentRoom].board,
             });
         });
     });
@@ -79,17 +75,12 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         rooms[socket.currentRoom].initGame(variant);
         acknowledge({ ok: true });
 
-        // Broadcast the room step to everyone in the room
+        // Broadcast the relevant room properties to everyone in the room
         io.sockets.in(socket.currentRoom).emit("room/update-room", {
             step: rooms[socket.currentRoom].step,
-            startingRolls: rooms[socket.currentRoom].dice,
             variant: rooms[socket.currentRoom].variant,
+            board: rooms[socket.currentRoom].board,
         });
-
-        // Broadcast the board to everyone in the room
-        io.sockets
-            .in(socket.currentRoom)
-            .emit("game/update-board", rooms[socket.currentRoom].board);
     });
 
     // Room event: roll to go first
@@ -100,17 +91,12 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
 
         rooms[socket.currentRoom].startingRoll(rooms[socket.currentRoom].players[socket.id]);
 
-        // Broadcast the room step to everyone in the room
+        // Broadcast the relevant room properties to everyone in the room
         io.sockets.in(socket.currentRoom).emit("room/update-room", {
             step: rooms[socket.currentRoom].step,
-            startingRolls: rooms[socket.currentRoom].dice,
-            variant: rooms[socket.currentRoom].variant,
+            dice: rooms[socket.currentRoom].dice,
+            board: rooms[socket.currentRoom].board,
         });
-
-        // Broadcast the board to everyone in the room
-        io.sockets
-            .in(socket.currentRoom)
-            .emit("game/update-board", rooms[socket.currentRoom].board);
 
         rooms[socket.currentRoom].startingRollCleanup();
     });
