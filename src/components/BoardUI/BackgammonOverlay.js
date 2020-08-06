@@ -29,26 +29,29 @@ const Overlay = styled.div`
     }
 `;
 
-function BackgammonOverlay({ dieWhite, dieBlack, player }) {
+function BackgammonOverlay({ dieWhite, dieBlack, dieDraw, player }) {
     const doStartingRoll = () => {
         socketEmit("room/starting-roll");
     };
 
+    const white = dieWhite || dieDraw;
+    const black = dieBlack || dieDraw;
+
     return (
         <Overlay>
             <div>
-                {dieWhite ? <Die number={dieWhite} /> : null}
-                {player === Player.white && (!dieWhite || dieWhite === dieBlack) ? (
+                {white ? <Die number={white} /> : null}
+                {player === Player.white && !dieWhite ? (
                     <Button onClick={doStartingRoll}>
-                        {!dieWhite ? "Roll to go first" : "Roll again"}
+                        {!dieDraw ? "Roll to go first" : "Roll again"}
                     </Button>
                 ) : null}
             </div>
             <div>
-                {dieBlack ? <Die number={dieBlack} /> : null}
-                {player === Player.black && (!dieBlack || dieWhite === dieBlack) ? (
+                {black ? <Die number={black} /> : null}
+                {player === Player.black && !dieBlack ? (
                     <Button onClick={doStartingRoll}>
-                        {!dieBlack ? "Roll to go first" : "Roll again"}
+                        {!dieDraw ? "Roll to go first" : "Roll again"}
                     </Button>
                 ) : null}
             </div>

@@ -13,19 +13,17 @@ import { Variant } from "../util";
 
 function RoomSetup({ show }) {
     const [selectedVariant, setSelectedVariant] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(true);
 
     const sendVariant = () => {
         socketEmit("room/select-variant", selectedVariant, (acknowledgement) => {
             if (acknowledgement.ok) {
                 setSelectedVariant(null);
-                setIsModalOpen(false);
             }
         });
     };
 
     return (
-        <Modal isOpen={show && isModalOpen} size="lg">
+        <Modal isOpen={show} size="lg">
             <ModalHeader>Which game would you like to play?</ModalHeader>
             <ModalBody>
                 <ListGroup horizontal>

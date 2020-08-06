@@ -49,6 +49,7 @@ function Game({ player, roomStep, startingRolls, variant, boardState }) {
                     <BackgammonOverlay
                         dieWhite={startingRolls[Player.white]}
                         dieBlack={startingRolls[Player.black]}
+                        dieDraw={startingRolls.draw}
                         player={player}
                     />
                 ) : null}
