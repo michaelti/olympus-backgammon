@@ -97,7 +97,5 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
             dice: rooms[socket.currentRoom].dice,
             board: rooms[socket.currentRoom].board,
         });
-
-        rooms[socket.currentRoom].startingRollCleanup();
     });
 };

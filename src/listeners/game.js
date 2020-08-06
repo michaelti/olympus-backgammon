@@ -25,6 +25,13 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         io.sockets
             .in(socket.currentRoom)
             .emit("room/update-room", { board: rooms[socket.currentRoom].board });
+
+        // Broadcast the room step if the game has ended
+        if (rooms[socket.currentRoom].board.winner !== null) {
+            io.sockets.in(socket.currentRoom).emit("room/update-room", {
+                step: rooms[socket.currentRoom].step,
+            });
+        }
     });
 
     // Game event: undo
