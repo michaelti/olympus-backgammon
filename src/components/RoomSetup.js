@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { socketEmit } from "../api";
+import CopyInput from "./UI/CopyInput";
 import {
     Modal,
     ModalHeader,
@@ -24,8 +25,12 @@ function RoomSetup({ show }) {
 
     return (
         <Modal isOpen={show} size="lg">
-            <ModalHeader>Which game would you like to play?</ModalHeader>
+            <ModalHeader>Start a new game</ModalHeader>
             <ModalBody>
+                <h6 className="mb-3">Share this link with your friend</h6>
+                <CopyInput value={window.location.href} />
+                <hr />
+                <h6 className="mb-3">Which game would you like to play?</h6>
                 <ListGroup horizontal>
                     <ListGroupItem
                         onClick={() => setSelectedVariant(Variant.portes)}
