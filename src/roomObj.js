@@ -1,6 +1,7 @@
 const clone = require("ramda.clone");
 const portes = require("./portes");
 const plakoto = require("./plakoto");
+const fevga = require("./fevga");
 const { Player, Variant, Move, rollDie } = require("./gameUtil");
 
 const Step = Object.freeze({
@@ -24,6 +25,7 @@ exports.Room = () => ({
         // Game type selector
         if (type === Variant.portes) this.board = portes.Board();
         else if (type === Variant.plakoto) this.board = plakoto.Board();
+        else if (type === Variant.fevga) this.board = fevga.Board();
         else console.error("This type is unavailable");
         this.variant = type;
         this.board.initGame();
