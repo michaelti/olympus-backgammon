@@ -5,7 +5,13 @@ import Bar from "./Bar";
 import BackgroundSVG from "./svg/background.svg";
 import { Player } from "../../util.js";
 
-function BackgammonBoard({ boardState: { pips, off, turn }, isTurn, doMove, getPossiblePips }) {
+function BackgammonBoard({
+    boardState: { pips, off, turn },
+    isTurn,
+    doMove,
+    getPossiblePips,
+    flipOffWhite,
+}) {
     const [moving, setMoving] = useState(false);
     const [sourcePip, setSourcePip] = useState(undefined);
     const [highlightedPips, setHighlightedPips] = useState(null);
@@ -60,9 +66,9 @@ function BackgammonBoard({ boardState: { pips, off, turn }, isTurn, doMove, getP
                 highlighted={highlightedPips?.has(0)}
             />
             <Off posX={0} invertY disabled />
-            <Off posX={0} disabled />
+            <Off posX={flipOffWhite ? 1400 : 0} disabled />
             <Off
-                posX={1400}
+                posX={flipOffWhite ? 0 : 1400}
                 count={off[Player.white]}
                 color={Player.white}
                 onClick={() => handleClickOff(Player.white)}

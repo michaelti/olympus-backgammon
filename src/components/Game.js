@@ -4,7 +4,7 @@ import BackgammonBoard from "./BoardUI/BackgammonBoard";
 import BackgammonExtras from "./BoardUI/BackgammonExtras";
 import BackgammonOverlay from "./BoardUI/BackgammonOverlay";
 import { socketEmit } from "../api";
-import { Player, RoomStep } from "../util";
+import { Player, RoomStep, Variant } from "../util";
 import { clamp, isMoveValid } from "../game";
 
 const BoardContainer = styled.div`
@@ -18,9 +18,18 @@ function Game({ player, roomStep, startingRolls, variant, boardState }) {
 
     const getPossiblePips = (from) => {
         let possiblePips = new Set();
+        let to;
 
         for (const die of boardState.dice) {
-            const to = clamp(from + die * boardState.turn);
+            if (variant === Variant.fevga) {
+                to = from - die;
+                if (boardState.turn === Player.white) {
+                    if (from >= 13 && to <= 12) to = 25;
+                    else if (to < 1) to += 24;
+                }
+            } else {
+                to = clamp(from + die * boardState.turn);
+            }
             if (isMoveValid[variant](from, to, boardState)) {
                 possiblePips.add(to);
             }
@@ -44,6 +53,7 @@ function Game({ player, roomStep, startingRolls, variant, boardState }) {
                     isTurn={!process.env.REACT_APP_GAMEDEV ? player === boardState.turn : true}
                     doMove={doMove}
                     getPossiblePips={getPossiblePips}
+                    flipOffWhite={variant === Variant.fevga}
                 />
                 {roomStep === RoomStep.startingRoll ? (
                     <BackgammonOverlay
