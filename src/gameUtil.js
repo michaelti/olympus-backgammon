@@ -16,6 +16,7 @@ exports.Variant = Object.freeze({
 exports.clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
 
 exports.Move = (from, to) => ({ from, to });
+exports.reverseMove = (move) => ({ from: move.to, to: move.from });
 
 exports.Board = () => ({
     turn: null,
@@ -24,6 +25,7 @@ exports.Board = () => ({
     pips: new Array(26).fill().map(() => Pip()),
     diceRolled: new Array(2),
     dice: new Array(2),
+    recentMove: {},
 
     rollDice() {
         this.diceRolled = [rollDie(), rollDie()];
@@ -41,15 +43,6 @@ exports.Board = () => ({
         if (this.turn === Player.black) return Player.white;
         if (this.turn === Player.white) return Player.black;
         return Player.neither;
-    },
-
-    // Returns true if the move was successful
-    tryMove(from, to) {
-        if (this.isMoveValid(from, to)) {
-            this.doMove(from, to);
-            return true;
-        }
-        return false;
     },
 
     // Is the board in a state where either player has won?

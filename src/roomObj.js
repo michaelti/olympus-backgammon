@@ -2,7 +2,7 @@ const clone = require("ramda.clone");
 const portes = require("./portes");
 const plakoto = require("./plakoto");
 const fevga = require("./fevga");
-const { Player, Variant, Move, rollDie } = require("./gameUtil");
+const { Player, Variant, reverseMove, rollDie } = require("./gameUtil");
 
 const Step = Object.freeze({
     setup: 1,
@@ -13,7 +13,7 @@ const Step = Object.freeze({
 // Base Room object
 exports.Room = () => ({
     board: null,
-    boardBackup: null,
+    boardBackups: null,
     variant: null,
     moves: null,
     players: {},
@@ -37,7 +37,7 @@ exports.Room = () => ({
     startGame(startingPlayer) {
         this.board.turn = startingPlayer;
         this.board.rollDice();
-        this.boardBackup = clone(this.board);
+        this.boardBackups = [clone(this.board)];
         this.step = Step.game;
         this.dice = {
             [Player.white]: undefined,
@@ -85,8 +85,20 @@ exports.Room = () => ({
     },
 
     gameMove(from, to) {
-        if (this.board.tryMove(from, to)) {
-            this.moves.push(Move(from, to));
+        if (this.board.isMoveValid(from, to)) {
+            this.boardBackups.push(clone(this.board));
+            this.board.doMove(from, to);
+            this.moves.push(this.board.recentMove);
+        }
+    },
+
+    gameUndoMove() {
+        if (this.moves.length > 0) {
+            const move = this.moves.pop();
+            const boardBackup = this.boardBackups.pop();
+            this.board = clone(boardBackup);
+            this.board.recentMove = reverseMove(move);
+            if (move.subMove) this.board.recentMove.subMove = reverseMove(move.subMove);
         }
     },
 
@@ -94,23 +106,19 @@ exports.Room = () => ({
         /* Validate the whole turn by passing the array of moves to a method
          * If the turn is valid, end the player's turn
          * Else, return an error and undo the partial turn */
-        if (this.boardBackup.isTurnValid(this.moves)) {
+        if (this.boardBackups[0].isTurnValid(this.moves)) {
             if (this.board.isGameWon()) {
                 this.step = Step.setup;
             } else {
                 this.board.turn = this.board.otherPlayer();
                 this.board.rollDice();
-                this.boardBackup = clone(this.board);
+                this.boardBackups = [clone(this.board)];
                 this.moves = [];
+                this.board.recentMove = {};
             }
         } else {
-            this.gameUndoTurn();
+            // TODO: Send a message with why this turn is invalid.
         }
-    },
-
-    gameUndoTurn() {
-        this.moves = [];
-        this.board = clone(this.boardBackup);
     },
 });
 

@@ -83,6 +83,7 @@ const Fevga = () => ({
 
     doMove(from, to) {
         to = clamp(to);
+        this.recentMove = Move(from, to);
 
         // From pip
         if (this.pips[from].size === 1) {

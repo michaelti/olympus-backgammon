@@ -78,6 +78,7 @@ const Portes = () => ({
 
     doMove(from, to) {
         to = clamp(to);
+        this.recentMove = Move(from, to);
 
         // From pip
         if (this.bar[this.turn].size > 0) {
@@ -97,8 +98,13 @@ const Portes = () => ({
             if (this.turn === Player.black) this.off[Player.black]++;
         } else {
             // Sending opponent to the bar
-            if (this.pips[to].bot === this.otherPlayer()) this.bar[this.otherPlayer()].size++;
-            else this.pips[to].size++;
+            if (this.pips[to].bot === this.otherPlayer()) {
+                this.bar[this.otherPlayer()].size++;
+                if (this.turn === Player.white) this.recentMove.subMove = Move(to, 25);
+                if (this.turn === Player.black) this.recentMove.subMove = Move(to, 0);
+            } else {
+                this.pips[to].size++;
+            }
             this.pips[to].top = this.turn;
             this.pips[to].bot = this.turn;
         }
