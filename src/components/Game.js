@@ -14,7 +14,8 @@ const BoardContainer = styled.div`
 function Game({ player, roomStep, startingRolls, variant, boardState }) {
     const doMove = (from, to) => socketEmit("game/move", from, to);
     const applyTurn = () => socketEmit("game/apply-turn");
-    const undoTurn = () => socketEmit("game/undo");
+    const undoTurn = () => socketEmit("game/undo-turn");
+    const undoMove = () => socketEmit("game/undo-move");
 
     const getPossiblePips = (from) => {
         let possiblePips = new Set();
@@ -44,6 +45,7 @@ function Game({ player, roomStep, startingRolls, variant, boardState }) {
                 boardState={boardState}
                 applyTurn={applyTurn}
                 undoTurn={undoTurn}
+                undoMove={undoMove}
                 player={player}
                 isTurn={!process.env.REACT_APP_GAMEDEV ? player === boardState.turn : true}
             />

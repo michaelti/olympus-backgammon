@@ -7,6 +7,7 @@ function BackgammonExtras({
     boardState: { turn, winner, diceRolled, dice },
     applyTurn,
     undoTurn,
+    undoMove,
     player,
     isTurn,
 }) {
@@ -29,8 +30,11 @@ function BackgammonExtras({
                 <Button onClick={applyTurn} color="success" className="mr-3" disabled={!isTurn}>
                     Finish turn
                 </Button>
-                <Button onClick={undoTurn} disabled={!isTurn}>
-                    Undo
+                <Button onClick={undoTurn} disabled={!isTurn} className="mr-1">
+                    Undo Turn
+                </Button>
+                <Button onClick={undoMove} disabled={!isTurn}>
+                    Undo Move
                 </Button>
             </ListGroupItem>
         </ListGroup>

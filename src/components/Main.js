@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { Container, Button, Input, Form, InputGroup, InputGroupAddon } from "reactstrap";
 import { socketEmit } from "../api";
@@ -37,6 +37,8 @@ function Main({ setRoomName }) {
             }
         });
     };
+
+    useEffect(process.env.REACT_APP_GAMEDEV ? startRoom : () => {}, []);
 
     return (
         <Container className="py-5">

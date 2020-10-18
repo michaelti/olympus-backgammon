@@ -4,6 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 export default createGlobalStyle`
     /** Height convenience for app and its parents **/
     html, body, #root, .App {
-        height: 100%;
+        min-height: 100%;
     }
 `;

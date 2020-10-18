@@ -1,12 +1,54 @@
 import React, { useState } from "react";
-import Pip from "./Pip";
-import Off from "./Off";
-import Bar from "./Bar";
-import BackgroundSVG from "./svg/background.svg";
 import { Player } from "../../util.js";
+import styled from "styled-components";
+import CheckerStack from "./CheckerStack";
+const Board = styled.div`
+    background: #402d26;
+    width: 100%;
+    height: 75vh;
+    display: grid;
+    grid-template-columns: repeat(15, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    grid-column-gap: 5px;
+    grid-template-areas:
+        "top-left p13 p14 p15 p16 p17 p18 top-mid p19 p20 p21 p22 p23 p24 top-right"
+        "bot-left p12 p11 p10 p9 p8 p7 bot-mid p6 p5 p4 p3 p2 p1 bot-right";
+`;
+
+const BoardChild = styled.div`
+    grid-area: ${(props) => props.gridArea};
+    background-color: ${(props) => props.canMoveTo && "gray"} !important;
+    cursor: ${(props) => (props.canMoveFrom || props.canMoveTo) && "pointer"};
+`;
+
+const Pip = styled(BoardChild)`
+    margin-top: ${(props) => props.reverse && "15px"};
+    margin-bottom: ${(props) => !props.reverse && "15px"};
+    position: relative;
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 600' preserveAspectRatio='none'%3E%3Cpolygon points='50 500 100 0 0 0 50 500' fill='%23f7d086'/%3E%3C/svg%3E");
+        background-size: 100% 100%;
+        transform: ${(props) => props.reverse && "scaleY(-1)"};
+    }
+`;
+
+const Bar = styled(BoardChild)`
+    background-color: #c49158;
+`;
+
+const Off = styled(BoardChild)`
+    background-color: #745138;
+`;
 
 function BackgammonBoard({
-    boardState: { pips, off, turn },
+    boardState: { pips, off, turn, recentMove },
     isTurn,
     doMove,
     getPossiblePips,
@@ -54,86 +96,78 @@ function BackgammonBoard({
     };
 
     return (
-        <svg viewBox="0 0 1500 1200" style={{ width: "100%" }}>
-            <image href={BackgroundSVG} width="1500" height="1200" />
-
-            <Off
-                posX={1400}
-                invertY
-                count={off[Player.black]}
-                color={Player.black}
-                onClick={() => handleClickOff(Player.black)}
-                highlighted={highlightedPips?.has(0)}
-            />
-            <Off posX={0} invertY disabled />
-            <Off posX={flipOffWhite ? 1400 : 0} disabled />
-            <Off
-                posX={flipOffWhite ? 0 : 1400}
-                count={off[Player.white]}
-                color={Player.white}
-                onClick={() => handleClickOff(Player.white)}
-                highlighted={highlightedPips?.has(25)}
-            />
-
-            <Bar
-                posX={700}
-                invertY
-                count={pips[0].size /* Special bar pip */}
-                color={Player.white}
-                onClick={() => handleClickPip(0)}
-                active={sourcePip === 0}
-                moveable={isTurn && pips[0].top === turn && pips[0].size > 0}
-            />
-            <Bar
-                posX={700}
-                count={pips[25].size /* Special bar pip */}
-                color={Player.black}
-                onClick={() => handleClickPip(25)}
-                active={sourcePip === 25}
-                moveable={isTurn && pips[25].top === turn && pips[25].size > 0}
-            />
-
+        <Board>
             {pips.map((pip, i) => {
-                if (i === 0 || i === 25) return null;
-
-                const pipQuadrant = Math.ceil((i / 24) * 4);
-                let [posX, invertY] = [0, false];
-
-                switch (pipQuadrant) {
-                    case 1:
-                        posX = 1400 - i * 100;
-                        invertY = true;
-                        break;
-                    case 2:
-                        posX = 700 - (i - 6) * 100;
-                        invertY = true;
-                        break;
-                    case 3:
-                        posX = (i - 12) * 100;
-                        break;
-                    case 4:
-                        posX = (i - 18) * 100 + 700;
-                        break;
-                    default:
-                        break;
-                }
+                if (i === 0 || i === 25)
+                    return (
+                        <Bar
+                            key={i}
+                            onClick={() => handleClickPip(i)}
+                            canMoveFrom={isTurn && pip.top === turn && pip.size > 0}
+                            gridArea={i === 0 ? "bot-mid" : "top-mid"}>
+                            <CheckerStack
+                                size={pip.size}
+                                top={pip.top}
+                                bot={pip.bot}
+                                reverse={i > 12}
+                                recentMove={recentMove}
+                                pipNum={i}
+                                isSource={i === sourcePip}
+                            />
+                        </Bar>
+                    );
 
                 return (
                     <Pip
                         key={i}
-                        posX={posX}
-                        invertY={invertY}
-                        size={pip.size}
-                        top={pip.top}
-                        bot={pip.bot}
                         onClick={() => handleClickPip(i)}
-                        active={i === sourcePip}
-                        highlighted={highlightedPips?.has(i)}
-                        moveable={isTurn && pip.top === turn && pip.size > 0}
-                    />
+                        canMoveTo={highlightedPips?.has(i)}
+                        canMoveFrom={isTurn && pip.top === turn && pip.size > 0}
+                        gridArea={"p" + i}
+                        reverse={i <= 12}>
+                        <CheckerStack
+                            size={pip.size}
+                            top={pip.top}
+                            bot={pip.bot}
+                            reverse={i <= 12}
+                            recentMove={recentMove}
+                            pipNum={i}
+                            isSource={i === sourcePip}
+                        />
+                    </Pip>
                 );
             })}
-        </svg>
+            {/* <!-- --> */}
+            <Off
+                gridArea={flipOffWhite ? "top-left" : "top-right"}
+                onClick={() => handleClickOff(Player.white)}
+                canMoveTo={highlightedPips?.has(25)}>
+                <CheckerStack
+                    size={off[Player.white]}
+                    top={Player.white}
+                    bot={Player.white}
+                    reverse={false}
+                    recentMove={recentMove}
+                    pipNum={25}
+                />
+            </Off>
+            <Off
+                gridArea="bot-right"
+                onClick={() => handleClickOff(Player.black)}
+                canMoveTo={highlightedPips?.has(0)}>
+                <CheckerStack
+                    size={off[Player.black]}
+                    top={Player.black}
+                    bot={Player.black}
+                    reverse={true}
+                    recentMove={recentMove}
+                    pipNum={0}
+                />
+            </Off>
+            {/* <!-- --> */}
+            <Off gridArea={flipOffWhite ? "top-right" : "top-left"}></Off>
+            <Off gridArea="bot-left"></Off>
+        </Board>
     );
 }
 
