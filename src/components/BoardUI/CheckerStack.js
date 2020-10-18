@@ -51,12 +51,23 @@ function CheckerStack({ size, top, bot, reverse, pipNum, recentMove, isSource })
                 position: "relative",
             };
         },
-        update: (item) => ({
-            top: reverse ? squishAmount * item.index : -squishAmount * item.index,
-            left: 0,
-            zIndex: 0,
-            position: "relative",
-        }),
+        enter: (item) => {
+            if (!divBounds.height) return; // Don't animate on the first render
+            return {
+                top: reverse ? squishAmount * item.index : -squishAmount * item.index,
+                left: 0,
+                zIndex: 0,
+                position: "relative",
+            };
+        },
+        update: (item) => {
+            return {
+                top: reverse ? squishAmount * item.index : -squishAmount * item.index,
+                left: 0,
+                zIndex: 0,
+                position: "relative",
+            };
+        },
         // Unmount instantly:
         leave: { visibility: "hidden" },
         config: (_key, state) => state === "leave" && { duration: 0 },
