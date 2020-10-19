@@ -79,7 +79,9 @@ function CheckerStack({ size, top, bot, reverse, pipNum, recentMove, isSource })
                 <animated.div
                     key={key}
                     style={props}
-                    ref={(el) => (domRefs[pipNum][item.color] = el)}>
+                    ref={(el) => {
+                        if (i === checkers.length - 1) domRefs[pipNum][item.color] = el;
+                    }}>
                     <Checker color={item.color} glow={isSource && i === checkers.length - 1} />
                 </animated.div>
             ))}
