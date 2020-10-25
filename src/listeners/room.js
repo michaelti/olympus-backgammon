@@ -60,6 +60,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
                 step: rooms[socket.currentRoom].step,
                 dice: rooms[socket.currentRoom].dice,
                 variant: rooms[socket.currentRoom].variant,
+                score: rooms[socket.currentRoom].score,
                 board: rooms[socket.currentRoom].board,
             });
         });

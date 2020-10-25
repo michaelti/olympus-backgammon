@@ -39,20 +39,22 @@ exports.Board = () => ({
     },
 
     // Returns the player who's turn it ISN'T
-    otherPlayer() {
-        if (this.turn === Player.black) return Player.white;
-        if (this.turn === Player.white) return Player.black;
+    otherPlayer(player = this.turn) {
+        if (player === Player.black) return Player.white;
+        if (player === Player.white) return Player.black;
         return Player.neither;
     },
 
     // Is the board in a state where either player has won?
+    // Returns the number of points won
     isGameWon() {
         if (this.off[this.turn] === 15) {
             this.winner = this.turn;
             this.turn = Player.neither;
-            return true;
+            // if the other player has born off 0 checkers, return 2 points
+            return this.off[this.otherPlayer(this.winner)] === 0 ? 2 : 1;
         }
-        return false;
+        return 0;
     },
 });
 

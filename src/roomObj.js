@@ -17,6 +17,7 @@ exports.Room = () => ({
     variant: null,
     moves: null,
     players: {},
+    score: { [Player.white]: 0, [Player.black]: 0, [Player.neither]: 0 },
     dice: { [Player.white]: undefined, [Player.black]: undefined, draw: null },
     step: Step.setup,
 
@@ -103,11 +104,14 @@ exports.Room = () => ({
     },
 
     gameApplyTurn() {
+        let points;
         /* Validate the whole turn by passing the array of moves to a method
          * If the turn is valid, end the player's turn
          * Else, return an error and undo the partial turn */
         if (this.boardBackups[0].isTurnValid(this.moves)) {
-            if (this.board.isGameWon()) {
+            points = this.board.isGameWon();
+            if (points) {
+                this.score[this.board.winner] += points;
                 this.step = Step.setup;
             } else {
                 this.board.turn = this.board.otherPlayer();
