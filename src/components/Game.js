@@ -11,7 +11,7 @@ const BoardContainer = styled.div`
     position: relative;
 `;
 
-function Game({ player, roomStep, startingRolls, variant, boardState }) {
+function Game({ player, roomStep, startingRolls, variant, boardState, score }) {
     const doMove = (from, to) => socketEmit("game/move", from, to);
     const applyTurn = () => socketEmit("game/apply-turn");
     const undoTurn = () => socketEmit("game/undo-turn");
@@ -48,6 +48,7 @@ function Game({ player, roomStep, startingRolls, variant, boardState }) {
                 undoMove={undoMove}
                 player={player}
                 isTurn={!process.env.REACT_APP_GAMEDEV ? player === boardState.turn : true}
+                score={score}
             />
             <BoardContainer>
                 <BackgammonBoard

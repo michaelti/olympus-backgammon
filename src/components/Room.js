@@ -41,6 +41,7 @@ function Room({ setRoomName }) {
                 startingRolls={roomState.dice}
                 variant={roomState.variant}
                 boardState={roomState.board || null}
+                score={roomState.score}
             />
         </Container>
     );

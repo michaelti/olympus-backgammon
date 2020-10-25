@@ -10,9 +10,13 @@ function BackgammonExtras({
     undoMove,
     player,
     isTurn,
+    score,
 }) {
     return (
         <ListGroup horizontal="lg">
+            <ListGroupItem>
+                {`Score: White ${score[Player.white]}–${score[Player.black]} Black`}
+            </ListGroupItem>
             <ListGroupItem>
                 {player ? `Playing as ${Player.properties[player].colorName}` : "Spectating"}
             </ListGroupItem>
