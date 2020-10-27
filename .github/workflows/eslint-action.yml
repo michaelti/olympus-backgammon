@@ -11,6 +11,6 @@ jobs:
             - uses: bahmutov/npm-install@v1
             # Run eslint using reviewdog
             - name: eslint
-              uses: reviewdog/action-eslint@v1
+              uses: reviewdog/action-eslint@v1.9
               with:
                   eslint_flags: "src/"
