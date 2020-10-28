@@ -128,8 +128,12 @@ const Plakoto = () => ({
             for (let turn of possibleTurns) {
                 if (turn.length > maxTurnLength) maxTurnLength = turn.length;
             }
-            // Validate turn length
-            if (maxTurnLength !== moves.length) return false;
+            // Validate turn length. Players must make as many moves as possible
+            if (maxTurnLength !== moves.length) {
+                // unless they have 14 checkers off and are bearing off their 15th (final)
+                if (!(this.off[this.turn] == 14 && (moves[0].to === 0 || moves[0].to === 25)))
+                    return false;
+            }
             // Validate single move turn uses the largest dice value possible
             if (maxTurnLength === 1 && this.dice.length === 2) {
                 const moveDistance = (m) => Math.abs(m.from - m.to);
