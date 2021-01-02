@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { useParams, Redirect } from "react-router-dom";
 import { useSocketOn, socketEmit } from "../api";
-import { Container } from "reactstrap";
 import { Player, RoomStep } from "../util";
 import RoomSetup from "./RoomSetup";
 import Game from "./Game";
 
-function Room({ setRoomName }) {
+function Room() {
     const { roomName } = useParams();
     const [player, setPlayer] = useState(undefined);
     const [failedJoin, setFailedJoin] = useState(false);
@@ -20,11 +19,10 @@ function Room({ setRoomName }) {
             if (!acknowledgement.ok) {
                 setFailedJoin(true);
             } else {
-                setRoomName(acknowledgement.roomName);
                 setPlayer(acknowledgement.player);
             }
         });
-    }, [roomName, setRoomName]);
+    }, [roomName]);
 
     useSocketOn("room/update-room", (room) => {
         updateRoomState(room);
@@ -33,7 +31,7 @@ function Room({ setRoomName }) {
     if (failedJoin) return <Redirect to="/" />;
 
     return (
-        <Container className="py-5">
+        <>
             <RoomSetup show={roomState.step === RoomStep.setup && player === Player.white} />
             <Game
                 player={player}
@@ -42,8 +40,9 @@ function Room({ setRoomName }) {
                 variant={roomState.variant}
                 boardState={roomState.board || null}
                 score={roomState.score}
+                roomName={roomName}
             />
-        </Container>
+        </>
     );
 }
 

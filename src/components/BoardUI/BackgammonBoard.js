@@ -2,16 +2,20 @@ import React, { useState } from "react";
 import { Player } from "../../util.js";
 import styled from "styled-components";
 import CheckerStack from "./CheckerStack";
+import Dice from "./Dice";
+import BoardButtons from "./BoardButtons";
+
 const Board = styled.div`
     background: #402d26;
     width: 100%;
-    height: 75vh;
+    height: 100vh;
     display: grid;
     grid-template-columns: repeat(15, minmax(0, 1fr));
-    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) 50px minmax(0, 1fr);
     grid-column-gap: 5px;
     grid-template-areas:
         "top-left p13 p14 p15 p16 p17 p18 top-mid p19 p20 p21 p22 p23 p24 top-right"
+        "mid-left ui-l ui-l ui-l ui-l ui-l ui-l mid-mid ui-r ui-r ui-r ui-r ui-r ui-r mid-right"
         "bot-left p12 p11 p10 p9 p8 p7 bot-mid p6 p5 p4 p3 p2 p1 bot-right";
 `;
 
@@ -48,11 +52,16 @@ const Off = styled(BoardChild)`
 `;
 
 function BackgammonBoard({
-    boardState: { pips, off, turn, recentMove },
+    boardState: { pips, off, turn, recentMove, dice, diceRolled },
     isTurn,
     doMove,
     getPossiblePips,
     flipOffWhite,
+    applyTurn,
+    undoMove,
+    startingRollW,
+    startingRollB,
+    gameInfoButton,
 }) {
     const [moving, setMoving] = useState(false);
     const [sourcePip, setSourcePip] = useState(undefined);
@@ -167,6 +176,27 @@ function BackgammonBoard({
             {/* <!-- --> */}
             <Off gridArea={flipOffWhite ? "top-right" : "top-left"}></Off>
             <Off gridArea="bot-left"></Off>
+            {/* <!-- UI --> */}
+            <Off gridArea="mid-left">{gameInfoButton}</Off>
+            <Off gridArea="mid-right"></Off>
+            <BoardChild gridArea="ui-l">
+                {startingRollW}
+                {turn === Player.white && <Dice initialDice={diceRolled} remainingDice={dice} />}
+            </BoardChild>
+            <BoardChild gridArea="ui-r">
+                {startingRollB}
+                {turn === Player.black && <Dice initialDice={diceRolled} remainingDice={dice} />}
+            </BoardChild>
+            <Bar gridArea="mid-mid">
+                {isTurn && (
+                    <BoardButtons
+                        applyTurn={applyTurn}
+                        undoMove={undoMove}
+                        canUndo={dice.length < diceRolled.length}
+                        shouldFinish={dice.length === 0}
+                    />
+                )}
+            </Bar>
         </Board>
     );
 }

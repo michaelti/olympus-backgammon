@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { Container, Button, Input, Form, InputGroup, InputGroupAddon } from "reactstrap";
 import { socketEmit } from "../api";
 
-function Main({ setRoomName }) {
+function Main() {
     const [joinName, setJoinName] = useState("");
     const [shouldRedirectTo, setShouldRedirectTo] = useState(null);
 
@@ -21,7 +21,6 @@ function Main({ setRoomName }) {
             if (!acknowledgement.ok) {
                 console.log(`Failed to start room "${acknowledgement.roomName}".`);
             } else {
-                setRoomName(acknowledgement.roomName);
                 setShouldRedirectTo(acknowledgement.roomName);
             }
         });
@@ -32,7 +31,6 @@ function Main({ setRoomName }) {
             if (!acknowledgement.ok) {
                 console.log(`Failed to join room "${acknowledgement.roomName}".`);
             } else {
-                setRoomName(acknowledgement.roomName);
                 setShouldRedirectTo(acknowledgement.roomName);
             }
         });

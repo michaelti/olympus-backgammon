@@ -8,7 +8,8 @@ import Dice5 from "./svg/dice/dice-5.svg";
 import Dice6 from "./svg/dice/dice-6.svg";
 
 const Img = styled.img`
-    height: 2em;
+    height: 100%;
+    width: auto;
     opacity: ${({ used }) => (used ? "0.5" : "1")};
 `;
 

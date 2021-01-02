@@ -3,13 +3,13 @@ import styled from "styled-components";
 import Die from "./Die";
 
 const Container = styled.div`
+    height: 100%;
     display: flex;
-    margin-left: -0.25em;
-    margin-right: -0.25em;
+    justify-content: center;
+    padding: 5px 0;
 
-    > * {
-        margin-left: 0.25em;
-        margin-right: 0.25em;
+    > *:not(:last-child) {
+        margin-right: 5px;
     }
 `;
 
