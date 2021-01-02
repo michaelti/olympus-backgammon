@@ -9,9 +9,9 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         rooms[socket.currentRoom].gameMove(from, to);
 
         // Broadcast the board to everyone in the room
-        io.sockets
-            .in(socket.currentRoom)
-            .emit("room/update-room", { board: rooms[socket.currentRoom].board });
+        io.sockets.in(socket.currentRoom).emit("room/update-room", {
+            board: rooms[socket.currentRoom].board.publicProperties(),
+        });
     });
 
     // Game event: apply turn
@@ -22,9 +22,9 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         rooms[socket.currentRoom].gameApplyTurn();
 
         // Broadcast the board to everyone in the room
-        io.sockets
-            .in(socket.currentRoom)
-            .emit("room/update-room", { board: rooms[socket.currentRoom].board });
+        io.sockets.in(socket.currentRoom).emit("room/update-room", {
+            board: rooms[socket.currentRoom].board.publicProperties(),
+        });
 
         // Broadcast the room step and score if the game has ended
         if (rooms[socket.currentRoom].board.winner !== null) {
@@ -44,9 +44,9 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
             rooms[socket.currentRoom].gameUndoMove();
 
             // Broadcast the board to everyone in the room
-            io.sockets
-                .in(socket.currentRoom)
-                .emit("room/update-room", { board: rooms[socket.currentRoom].board });
+            io.sockets.in(socket.currentRoom).emit("room/update-room", {
+                board: rooms[socket.currentRoom].board.publicProperties(),
+            });
         }
     });
 
@@ -58,8 +58,8 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         rooms[socket.currentRoom].gameUndoMove();
 
         // Broadcast the board to everyone in the room
-        io.sockets
-            .in(socket.currentRoom)
-            .emit("room/update-room", { board: rooms[socket.currentRoom].board });
+        io.sockets.in(socket.currentRoom).emit("room/update-room", {
+            board: rooms[socket.currentRoom].board.publicProperties(),
+        });
     });
 };

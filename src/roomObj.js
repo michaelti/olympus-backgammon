@@ -2,7 +2,7 @@ const clone = require("ramda.clone");
 const portes = require("./portes");
 const plakoto = require("./plakoto");
 const fevga = require("./fevga");
-const { Player, Variant, reverseMove, rollDie } = require("./gameUtil");
+const { Board, Player, Variant, reverseMove, rollDie } = require("./gameUtil");
 
 const Step = Object.freeze({
     setup: 1,
@@ -12,7 +12,7 @@ const Step = Object.freeze({
 
 // Base Room object
 exports.Room = () => ({
-    board: null,
+    board: Board(),
     boardBackups: null,
     variant: null,
     moves: null,
@@ -90,6 +90,8 @@ exports.Room = () => ({
             this.boardBackups.push(clone(this.board));
             this.board.doMove(from, to);
             this.moves.push(this.board.recentMove);
+            // Validate the whole turn by evaluating the staged moves on the original board
+            this.board.turnValidity = this.boardBackups[0].turnValidator(this.moves);
         }
     },
 
@@ -103,13 +105,11 @@ exports.Room = () => ({
         }
     },
 
+    // Frontend should ensure this function is only called if the turn is valid
     gameApplyTurn() {
-        let points;
-        /* Validate the whole turn by passing the array of moves to a method
-         * If the turn is valid, end the player's turn
-         * Else, return an error and undo the partial turn */
-        if (this.boardBackups[0].isTurnValid(this.moves)) {
-            points = this.board.isGameWon();
+        // Valid turns are positive numbers; invalid turns are negative
+        if (this.board.turnValidity > 0) {
+            const points = this.board.isGameWon();
             if (points) {
                 this.score[this.board.winner] += points;
                 this.step = Step.setup;
@@ -120,8 +120,6 @@ exports.Room = () => ({
                 this.moves = [];
                 this.board.recentMove = {};
             }
-        } else {
-            // TODO: Send a message with why this turn is invalid.
         }
     },
 });

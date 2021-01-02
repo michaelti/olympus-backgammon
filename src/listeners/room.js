@@ -61,7 +61,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
                 dice: rooms[socket.currentRoom].dice,
                 variant: rooms[socket.currentRoom].variant,
                 score: rooms[socket.currentRoom].score,
-                board: rooms[socket.currentRoom].board,
+                board: rooms[socket.currentRoom].board.publicProperties(),
             });
         });
     });
@@ -80,7 +80,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         io.sockets.in(socket.currentRoom).emit("room/update-room", {
             step: rooms[socket.currentRoom].step,
             variant: rooms[socket.currentRoom].variant,
-            board: rooms[socket.currentRoom].board,
+            board: rooms[socket.currentRoom].board.publicProperties(),
         });
     });
 
@@ -96,7 +96,7 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
         io.sockets.in(socket.currentRoom).emit("room/update-room", {
             step: rooms[socket.currentRoom].step,
             dice: rooms[socket.currentRoom].dice,
-            board: rooms[socket.currentRoom].board,
+            board: rooms[socket.currentRoom].board.publicProperties(),
         });
     });
 };

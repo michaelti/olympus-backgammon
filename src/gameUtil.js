@@ -8,6 +8,14 @@ const Player = Object.freeze({
     black: -1,
 });
 
+const TurnMessage = Object.freeze({
+    valid: 1,
+    validZero: 2,
+    invalid: 0,
+    invalidMoreMoves: -1,
+    invalidLongerMove: -2,
+});
+
 // Variant of backgammon
 exports.Variant = Object.freeze({
     portes: 1,
@@ -29,6 +37,26 @@ exports.Board = () => ({
     diceRolled: new Array(2),
     dice: new Array(2),
     recentMove: {},
+    possibleTurns: null,
+    maxTurnLength: 0,
+    turnValidity: TurnMessage.invalid,
+
+    publicProperties() {
+        return {
+            turn: this.turn,
+            winner: this.winner,
+            off: this.off,
+            pips: this.pips,
+            diceRolled: this.diceRolled,
+            dice: this.dice,
+            recentMove: this.recentMove,
+            turnValidity: this.turnValidity,
+            // Portes properties
+            bar: this.bar,
+            // Fevga properties
+            state: this.state,
+        };
+    },
 
     rollDice() {
         // Roll a 6-sided die, 2 times
@@ -40,6 +68,19 @@ exports.Board = () => ({
 
         // Sort smallest to largest
         this.dice = [...this.diceRolled].sort((a, b) => a - b);
+
+        this.maxTurnLength = 0;
+        this.turnValidity = TurnMessage.invalid;
+        try {
+            this.possibleTurns = this.allPossibleTurns();
+            for (const turn of this.possibleTurns) {
+                if (turn.length > this.maxTurnLength) this.maxTurnLength = turn.length;
+            }
+            if (this.maxTurnLength === 0) this.turnValidity = TurnMessage.validZero;
+        } catch (four) {
+            // Code optimization when there's a possible 4-move turn
+            this.maxTurnLength = 4;
+        }
     },
 
     // Returns the player who's turn it ISN'T
@@ -60,6 +101,9 @@ exports.Board = () => ({
         }
         return 0;
     },
+
+    // Dummy function, must be implemented by each backgammon variant
+    allPossibleTurns: () => null,
 });
 
 const Pip = (size = 0, owner = Player.neither) => ({
@@ -71,5 +115,6 @@ const Pip = (size = 0, owner = Player.neither) => ({
 const rollDie = () => random.die(6);
 
 exports.Player = Player;
+exports.TurnMessage = TurnMessage;
 exports.Pip = Pip;
 exports.rollDie = rollDie;

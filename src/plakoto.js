@@ -1,4 +1,4 @@
-const { Board, Pip, Move, Player, clamp } = require("./gameUtil");
+const { Board, Pip, Move, Player, TurnMessage, clamp } = require("./gameUtil");
 const clone = require("ramda.clone");
 const { range } = require("./util");
 
@@ -121,35 +121,26 @@ const Plakoto = () => ({
     },
 
     // Validates a turn of 0–4 moves
-    isTurnValid(moves) {
-        try {
-            let maxTurnLength = 0;
-            const possibleTurns = this.allPossibleTurns();
-            for (let turn of possibleTurns) {
-                if (turn.length > maxTurnLength) maxTurnLength = turn.length;
-            }
-            // Validate turn length. Players must make as many moves as possible
-            if (maxTurnLength !== moves.length) {
-                // unless they have 14 checkers off and are bearing off their 15th (final)
-                if (!(this.off[this.turn] == 14 && (moves[0].to === 0 || moves[0].to === 25)))
-                    return false;
-            }
-            // Validate single move turn uses the largest dice value possible
-            if (maxTurnLength === 1 && this.dice.length === 2) {
-                const moveDistance = (m) => Math.abs(m.from - m.to);
-                // if the supplied move matches the smaller dice
-                // then check if there's a possible move with the larger dice
-                if (moveDistance(moves[0]) === this.dice[0]) {
-                    for (let turn of possibleTurns) {
-                        if (moveDistance(turn[0]) === this.dice[1]) return false;
-                    }
+    turnValidator(moves) {
+        // Validate turn length. Players must make as many moves as possible
+        if (this.maxTurnLength !== moves.length) {
+            // unless they have 14 checkers off and are bearing off their 15th (final)
+            if (!(this.off[this.turn] == 14 && (moves[0].to === 0 || moves[0].to === 25)))
+                return TurnMessage.invalidMoreMoves;
+        }
+        // Validate single move turn uses the largest dice value possible
+        if (this.maxTurnLength === 1 && this.dice.length === 2) {
+            const moveDistance = (m) => Math.abs(m.from - m.to);
+            // if the supplied move matches the smaller dice
+            // then check if there's a possible move with the larger dice
+            if (moveDistance(moves[0]) === this.dice[0]) {
+                for (let turn of this.possibleTurns) {
+                    if (moveDistance(turn[0]) === this.dice[1])
+                        return TurnMessage.invalidLongerMove;
                 }
             }
-        } catch (four) {
-            // Code optimization when there's a possible 4 move turn
-            if (moves.length !== 4) return false;
         }
-        return true;
+        return TurnMessage.valid;
     },
 
     // Is the board in a state where the game is won?
