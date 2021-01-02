@@ -21,6 +21,8 @@ function Game({ player, roomStep, startingRolls, variant, boardState, score, roo
                 if (boardState.turn === Player.white) {
                     if (from >= 13 && to <= 12) to = 25;
                     else if (to < 1) to += 24;
+                } else {
+                    to = clamp(from - die);
                 }
             } else {
                 to = clamp(from + die * boardState.turn);
