@@ -9,6 +9,7 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     padding: 5px 0;
+    gap: 5px;
 `;
 
 function BackgammonStartingRoll({ player, color, startingRolls }) {

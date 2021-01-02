@@ -25,18 +25,31 @@ const StyledButton = styled.button`
 
     &:disabled {
         background-color: #f1d190;
-        pointer-events: none;
-        opacity: 0.5;
-
-        ::after {
-            opacity: 0;
+        cursor: not-allowed;
+        ::before {
+            opacity: 1;
         }
+    }
+
+    /* Disabled overlay */
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.33);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.15s;
     }
 
     &::after {
         content: attr(aria-label);
         position: absolute;
-        bottom: calc(100% + 5px);
+        bottom: calc(100% + 10px);
         left: 50%;
         transform: translateX(-50%);
         pointer-events: none;

@@ -4,6 +4,7 @@ import { useSocketOn, socketEmit } from "../api";
 import { Player, RoomStep } from "../util";
 import RoomSetup from "./RoomSetup";
 import Game from "./Game";
+import ScoreScreen from "./ScoreScreen";
 
 function Room() {
     const { roomName } = useParams();
@@ -32,7 +33,13 @@ function Room() {
 
     return (
         <>
-            <RoomSetup show={roomState.step === RoomStep.setup && player === Player.white} />
+            <RoomSetup
+                show={roomState.step === RoomStep.setup}
+                scoreScreen={
+                    <ScoreScreen winner={roomState.board?.winner} score={roomState.score} />
+                }
+                isHost={player === Player.white}
+            />
             <Game
                 player={player}
                 roomStep={roomState.step}

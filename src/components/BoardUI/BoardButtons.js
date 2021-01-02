@@ -1,6 +1,7 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import Button from "./Button";
+import { TurnMessage } from "../../util";
 
 const Buttons = styled.div`
     height: 100%;
@@ -16,18 +17,15 @@ const Buttons = styled.div`
 const BoardButton = styled(Button)`
     font-weight: bold;
     padding: 0 0.5em;
-
-    ${(props) =>
-        props.highlight &&
-        css`
-            background-color: #ffffff;
-        `}
 `;
 
-function BoardButtons({ applyTurn, undoMove, canUndo, shouldFinish }) {
+function BoardButtons({ applyTurn, undoMove, canUndo, turnValidity }) {
     return (
         <Buttons>
-            <BoardButton onClick={applyTurn} highlight={shouldFinish} label="Finish turn">
+            <BoardButton
+                onClick={applyTurn}
+                disabled={turnValidity <= 0}
+                label={TurnMessage.properties[turnValidity].text}>
                 &#10003;
             </BoardButton>
             <BoardButton onClick={undoMove} disabled={!canUndo} label="Undo move">

@@ -52,7 +52,7 @@ const Off = styled(BoardChild)`
 `;
 
 function BackgammonBoard({
-    boardState: { pips, off, turn, recentMove, dice, diceRolled },
+    boardState: { pips, off, turn, recentMove, dice, diceRolled, turnValidity },
     isTurn,
     doMove,
     getPossiblePips,
@@ -193,7 +193,7 @@ function BackgammonBoard({
                         applyTurn={applyTurn}
                         undoMove={undoMove}
                         canUndo={dice.length < diceRolled.length}
-                        shouldFinish={dice.length === 0}
+                        turnValidity={turnValidity}
                     />
                 )}
             </Bar>
