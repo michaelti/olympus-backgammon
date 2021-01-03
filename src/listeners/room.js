@@ -1,4 +1,4 @@
-const { randomAlphanumeric } = require("../util.js");
+const { randomNumeric } = require("../util.js");
 const { Step, Room } = require("../roomObj");
 const { Variant, Player } = require("../gameUtil");
 
@@ -7,8 +7,9 @@ const { Variant, Player } = require("../gameUtil");
 module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
     // Room event: start room
     socket.on("event/start-room", (acknowledge) => {
-        // Generate a random room name string
-        const roomName = randomAlphanumeric(6);
+        // Generate a random, unique room name string
+        let roomName = randomNumeric(4);
+        while (roomName in rooms) roomName = randomNumeric(5);
 
         // Leave previous room if already in one that's not this one
         if (socket.currentRoom && socket.currentRoom !== roomName) {
