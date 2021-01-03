@@ -109,7 +109,7 @@ exports.Room = () => ({
     gameApplyTurn() {
         // Valid turns are positive numbers; invalid turns are negative
         if (this.board.turnValidity > 0) {
-            const points = this.board.isGameWon();
+            const points = this.board.isGameOver();
             if (points) {
                 this.score[this.board.winner] += points;
                 this.step = Step.setup;
