@@ -7,6 +7,7 @@
     "description": "Game logic for Olympus Backgammon project",
     "main": "index.js",
     "scripts": {
+        "start": "nodemon --watch src/ --exec 'npm run lint'",
         "lint": "eslint src/; exit 0"
     },
     "repository": {
@@ -30,6 +31,7 @@
         "eslint-config-prettier": "^6.11.0",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-prettier": "^3.1.4",
+        "nodemon": "^2.0.4",
         "prettier": "2.0.5"
     },
     "eslintConfig": {
@@ -38,5 +40,10 @@
             "plugin:node/recommended",
             "plugin:prettier/recommended"
         ]
+    },
+    "nodemonConfig": {
+        "events": {
+            "start": "node -e 'console.clear()'"
+        }
     }
 }
