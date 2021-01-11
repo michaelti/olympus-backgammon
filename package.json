@@ -1,19 +1,22 @@
 {
-  "name": "olympus-bg",
-  "version": "1.0.0",
-  "description": "Game logic for Olympus Backgammon project",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/michaelti/olympus-bg.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/michaelti/olympus-bg/issues"
-  },
-  "homepage": "https://github.com/michaelti/olympus-bg#readme"
+    "name": "olympus-bg",
+    "version": "1.0.0",
+    "engines": {
+        "node": ">=14.4.0"
+    },
+    "description": "Game logic for Olympus Backgammon project",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/michaelti/olympus-bg.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/michaelti/olympus-bg/issues"
+    },
+    "homepage": "https://github.com/michaelti/olympus-bg#readme"
 }
