@@ -112,7 +112,7 @@ exports.Board = () => ({
         // Validate turn length. Players must make as many moves as possible
         if (this.maxTurnLength !== moves.length) {
             // unless they have 14 checkers off and are bearing off their 15th (final)
-            if (!(this.off[this.turn] == 14 && (moves[0].to === 0 || moves[0].to === 25)))
+            if (!(this.off[this.turn] === 14 && (moves[0].to === 0 || moves[0].to === 25)))
                 return TurnMessage.invalidMoreMoves;
         }
         // Validate single move turn uses the largest dice value possible
