@@ -122,7 +122,7 @@ const Fevga = () => ({
     // Returns 2D array of Move objects
     allPossibleTurns() {
         if (this.dice.length === 0) return [];
-        let allTurns = new Array();
+        let allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
         for (const die of uniqueDice) {
             for (let pipIndex = 1; pipIndex <= 24; pipIndex++) {

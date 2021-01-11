@@ -7,7 +7,7 @@ const Portes = () => ({
     ...Board(),
 
     // Implement Portes-specific methods and variables
-    bar: new Object(),
+    bar: {},
 
     // Initialize the board for a game of portes
     initGame() {
@@ -117,7 +117,7 @@ const Portes = () => ({
     // Returns 2D array of Move objects
     allPossibleTurns() {
         if (this.dice.length === 0) return [];
-        let allTurns = new Array();
+        let allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
         for (const die of uniqueDice) {
             for (let pipIndex = 0; pipIndex <= 25; pipIndex++) {

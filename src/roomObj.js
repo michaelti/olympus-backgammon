@@ -30,7 +30,7 @@ exports.Room = () => ({
         else console.error("This type is unavailable");
         this.variant = type;
         this.board.initGame();
-        this.moves = new Array();
+        this.moves = [];
         if (prevWinner) this.startGame(prevWinner);
         else this.step = Step.startingRoll;
     },

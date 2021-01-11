@@ -90,7 +90,7 @@ const Plakoto = () => ({
     // Returns 2D array of Move objects
     allPossibleTurns() {
         if (this.dice.length === 0) return [];
-        let allTurns = new Array();
+        let allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
         for (const die of uniqueDice) {
             for (let pipIndex = 1; pipIndex <= 24; pipIndex++) {
@@ -128,7 +128,7 @@ const Plakoto = () => ({
             this.turn = Player.neither;
             return 1;
         }
-        // Player has beared off all of their checkers
+        // Player has borne off all of their checkers
         else if (this.off[this.turn] === 15) {
             this.winner = this.turn;
             this.turn = Player.neither;
