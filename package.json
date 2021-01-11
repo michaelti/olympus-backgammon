@@ -25,7 +25,10 @@
         "printWidth": 100,
         "jsxBracketSameLine": true
     },
-    "dependencies": {},
+    "dependencies": {
+        "ramda.clone": "^0.26.1",
+        "random-js": "^2.1.0"
+    },
     "devDependencies": {
         "eslint": "^7.5.0",
         "eslint-config-prettier": "^6.11.0",
