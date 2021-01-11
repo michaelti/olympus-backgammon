@@ -7,7 +7,7 @@
     "description": "Game logic for Olympus Backgammon project",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "lint": "eslint src/; exit 0"
     },
     "repository": {
         "type": "git",
@@ -26,6 +26,17 @@
     },
     "dependencies": {},
     "devDependencies": {
+        "eslint": "^7.5.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^3.1.4",
         "prettier": "2.0.5"
+    },
+    "eslintConfig": {
+        "extends": [
+            "eslint:recommended",
+            "plugin:node/recommended",
+            "plugin:prettier/recommended"
+        ]
     }
 }
