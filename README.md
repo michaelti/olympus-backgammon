@@ -7,3 +7,7 @@ Game logic module for the work-in-progress Olympus Backgammon project. To be ins
 1. Install the module: `npm install https://github.com/michaelti/olympus-bg`
 
 Further steps coming soon
+
+## Development
+
+Instructions for [npm link](https://docs.npmjs.com/cli/v6/commands/npm-link)
