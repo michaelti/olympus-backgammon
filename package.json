@@ -18,5 +18,14 @@
     "bugs": {
         "url": "https://github.com/michaelti/olympus-bg/issues"
     },
-    "homepage": "https://github.com/michaelti/olympus-bg#readme"
+    "homepage": "https://github.com/michaelti/olympus-bg#readme",
+    "prettier": {
+        "tabWidth": 4,
+        "printWidth": 100,
+        "jsxBracketSameLine": true
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "prettier": "2.0.5"
+    }
 }
