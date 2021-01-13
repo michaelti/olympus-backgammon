@@ -1,8 +1,14 @@
 const clone = require("ramda.clone");
-const portes = require("./portes");
-const plakoto = require("./plakoto");
-const fevga = require("./fevga");
-const { Board, Player, Variant, reverseMove, rollDie } = require("./gameUtil");
+const {
+    Board,
+    Player,
+    Variant,
+    reverseMove,
+    rollDie,
+    portes,
+    plakoto,
+    fevga,
+} = require("olympus-bg");
 
 const Step = Object.freeze({
     setup: 1,

@@ -1,6 +1,6 @@
 const { randomNumeric } = require("../util.js");
 const { Step, Room } = require("../roomObj");
-const { Variant, Player } = require("../gameUtil");
+const { Variant, Player } = require("olympus-bg");
 
 /* ROOM EVENT LISTENERS */
 

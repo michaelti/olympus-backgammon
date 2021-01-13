@@ -6,14 +6,14 @@
     },
     "private": true,
     "scripts": {
-        "start": "nodemon --watch src/ --exec 'npm run lint && npm run start-server'",
+        "start": "nodemon --exec 'npm run lint && npm run start-server'",
         "start-server": "node src/index.js",
         "lint": "eslint src/; exit 0"
     },
     "dependencies": {
         "dotenv": "^8.2.0",
+        "olympus-bg": "git+https://github.com/michaelti/olympus-bg.git",
         "ramda.clone": "^0.26.1",
-        "random-js": "^2.1.0",
         "socket.io": "^2.3.0"
     },
     "devDependencies": {
@@ -34,7 +34,10 @@
     "nodemonConfig": {
         "events": {
             "start": "node -e 'console.clear()'"
-        }
+        },
+        "ignoreRoot": [
+            ".git"
+        ]
     },
     "prettier": {
         "tabWidth": 4,
