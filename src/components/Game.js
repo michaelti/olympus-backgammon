@@ -3,7 +3,7 @@ import BackgammonBoard from "./BoardUI/BackgammonBoard";
 import BackgammonStartingRoll from "./BoardUI/BackgammonStartingRoll";
 import { socketEmit } from "../api";
 import { Player, RoomStep, Variant } from "../util";
-import { clamp, isMoveValid } from "../game";
+import { isMoveValid } from "../game";
 import GameInfoButton from "./BoardUI/GameInfoButton";
 
 function Game({ player, roomStep, startingRolls, variant, boardState, score, roomName }) {
@@ -14,6 +14,8 @@ function Game({ player, roomStep, startingRolls, variant, boardState, score, roo
     const getPossiblePips = (from) => {
         let possiblePips = new Set();
         let to;
+
+        const clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
 
         for (const die of boardState.dice) {
             if (variant === Variant.fevga) {
