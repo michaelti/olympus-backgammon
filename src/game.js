@@ -1,9 +1,13 @@
 import { portes, plakoto, fevga } from "olympus-bg";
-import { Variant } from "./util";
+import { Variant, Player } from "./util";
+import clone from "ramda.clone";
 
-export const isMoveValid = {
-    [Variant.portes]: (from, to, board) => ({ ...portes.Board(), ...board }.isMoveValid(from, to)),
-    [Variant.fevga]: (from, to, board) => ({ ...fevga.Board(), ...board }.isMoveValid(from, to)),
-    [Variant.plakoto]: (from, to, board) =>
-        ({ ...plakoto.Board(), ...board }.isMoveValid(from, to)),
+export const cloneBoard = {
+    [Variant.portes]: (boardState) => {
+        const board = { ...portes.Board(), ...clone(boardState) };
+        board.bar = { [Player.black]: board.pips[25], [Player.white]: board.pips[0] };
+        return board;
+    },
+    [Variant.plakoto]: (boardState) => ({ ...plakoto.Board(), ...clone(boardState) }),
+    [Variant.fevga]: (boardState) => ({ ...fevga.Board(), ...clone(boardState) }),
 };
