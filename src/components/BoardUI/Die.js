@@ -1,29 +1,69 @@
 import React from "react";
 import styled from "styled-components";
-import Dice1 from "./svg/dice/dice-1.svg";
-import Dice2 from "./svg/dice/dice-2.svg";
-import Dice3 from "./svg/dice/dice-3.svg";
-import Dice4 from "./svg/dice/dice-4.svg";
-import Dice5 from "./svg/dice/dice-5.svg";
-import Dice6 from "./svg/dice/dice-6.svg";
 
-const Img = styled.img`
+const Svg = styled.svg`
     height: 100%;
     width: auto;
     opacity: ${({ used }) => (used ? "0.5" : "1")};
+    transition: opacity 0.15s;
 `;
 
-function Die({ number, used, className }) {
+function Die({ number, used }) {
     const diceSVGs = {
-        1: Dice1,
-        2: Dice2,
-        3: Dice3,
-        4: Dice4,
-        5: Dice5,
-        6: Dice6,
+        1: (
+            <g>
+                <circle cx="278" cy="278" r="70" />
+            </g>
+        ),
+        2: (
+            <g>
+                <circle cx="440" cy="440" r="70" />
+                <circle cx="117" cy="117" r="70" />
+            </g>
+        ),
+        3: (
+            <g>
+                <circle cx="440" cy="440" r="70" />
+                <circle cx="117" cy="117" r="70" />
+                <circle cx="278.5" cy="278.5" r="70" />
+            </g>
+        ),
+        4: (
+            <g>
+                <circle cx="440" cy="440" r="70" />
+                <circle cx="117" cy="117" r="70" />
+                <circle cx="117" cy="440" r="70" />
+                <circle cx="440" cy="117" r="70" />
+            </g>
+        ),
+        5: (
+            <g>
+                <circle cx="440" cy="440" r="70" />
+                <circle cx="117" cy="117" r="70" />
+                <circle cx="117" cy="440" r="70" />
+                <circle cx="440" cy="117" r="70" />
+                <circle cx="278.5" cy="278.5" r="70" />
+            </g>
+        ),
+        6: (
+            <g>
+                <circle cx="440" cy="440" r="70" />
+                <circle cx="117" cy="117" r="70" />
+                <circle cx="117" cy="440" r="70" />
+                <circle cx="440" cy="117" r="70" />
+                <circle cx="117" cy="278.5" r="70" />
+                <circle cx="440" cy="278.5" r="70" />
+            </g>
+        ),
     };
 
-    return <Img className={className} src={diceSVGs[number]} alt={number} used={used} />;
+    return (
+        <Svg viewBox="0 0 557 557" used={used}>
+            <rect x="0" y="0" rx="70" ry="70" width="557" height="557" fill="#fff" />
+            <title>{number}</title>
+            {diceSVGs[number]}
+        </Svg>
+    );
 }
 
 export default Die;
