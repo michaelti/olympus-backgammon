@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { useParams, Redirect } from "react-router-dom";
-import { useSocketOn, socketEmit } from "../api";
-import { Player, RoomStep } from "../util";
-import RoomSetup from "./RoomSetup";
-import Game from "./Game";
-import ScoreScreen from "./ScoreScreen";
+import { useSocketOn, socketEmit } from "../../api";
+import { Player, RoomStep } from "../../util";
+import RoomSetup from "../RoomSetup";
+import Game from "../Game";
+import ScoreScreen from "../ScoreScreen";
 
 function Room() {
     const { roomName } = useParams();
