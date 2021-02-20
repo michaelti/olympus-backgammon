@@ -26,10 +26,10 @@ exports.Variant = Object.freeze({
 // Clamps "to" in range 0–25
 exports.clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
 
-// Returns the distance between two pips (1–6)
+// Returns the distance between two pips (1–12)
 const pipDistance = function (from, to) {
     const dist = Math.abs(to - from);
-    return dist <= 6 ? dist : 24 - dist;
+    return dist <= 12 ? dist : 24 - dist;
 };
 exports.Move = (from, to) => ({ from, to });
 exports.reverseMove = (move) => ({ from: move.to, to: move.from });
@@ -56,8 +56,6 @@ exports.Board = () => ({
             dice: this.dice,
             recentMove: this.recentMove,
             turnValidity: this.turnValidity,
-            // Portes properties
-            bar: this.bar,
             // Fevga properties
             state: this.state,
         };
