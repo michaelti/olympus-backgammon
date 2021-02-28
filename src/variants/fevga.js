@@ -120,7 +120,7 @@ const Fevga = () => ({
     },
 
     // Returns 2D array of Move objects
-    allPossibleTurns() {
+    allPossibleTurns(isBot) {
         if (this.dice.length === 0) return [];
         let allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
@@ -140,9 +140,17 @@ const Fevga = () => ({
                         const nextTurns = newBoard.allPossibleTurns();
                         if (nextTurns.length) {
                             for (const nextMoves of nextTurns) {
-                                allTurns.push([currentMove, ...nextMoves]);
-                                if ([currentMove, ...nextMoves].length === 4)
-                                    throw "Possible turn of length 4 detected";
+                                const turn = [currentMove, ...nextMoves];
+                                allTurns.push(turn);
+                                if (turn.length === 4) {
+                                    if (isBot) {
+                                        const destinations = turn.map((move) => move.to);
+                                        const string = destinations.sort().join("");
+                                        this.uniqueTurns.set(string, turn);
+                                    } else {
+                                        throw "Possible turn of length 4 detected";
+                                    }
+                                }
                             }
                         } else {
                             allTurns.push([currentMove]);

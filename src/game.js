@@ -45,6 +45,8 @@ exports.Board = () => ({
     possibleTurns: null,
     maxTurnLength: 0,
     turnValidity: TurnMessage.invalid,
+    // Property used by bot
+    uniqueTurns: null,
 
     publicProperties() {
         return {
@@ -75,6 +77,7 @@ exports.Board = () => ({
         this.maxTurnLength = 0;
         this.turnValidity = TurnMessage.invalid;
         try {
+            this.possibleTurns = null;
             this.possibleTurns = this.allPossibleTurns();
             for (const turn of this.possibleTurns) {
                 if (turn.length > this.maxTurnLength) this.maxTurnLength = turn.length;
