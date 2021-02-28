@@ -31,8 +31,8 @@ function StartForm() {
         joinRoom(joinName);
     };
 
-    const startRoom = () => {
-        socketEmit("event/start-room", (acknowledgement) => {
+    const startRoom = (options) => {
+        socketEmit("event/start-room", { ...options }, (acknowledgement) => {
             if (!acknowledgement.ok) {
                 console.log(`Failed to start room "${acknowledgement.roomName}".`);
             } else {
@@ -68,8 +68,12 @@ function StartForm() {
                 invalid={failedToJoin}
             />
             <Button color="secondary">Join game</Button>
-            <Button onClick={startRoom} color="primary">
+            <Button onClick={() => startRoom()} color="primary">
                 Host game
+            </Button>
+
+            <Button onClick={() => startRoom({ withBot: true })} color="primary">
+                Play vs. computer
             </Button>
 
             {shouldRedirectTo === null ? null : <Redirect to={"/room/" + shouldRedirectTo} />}
