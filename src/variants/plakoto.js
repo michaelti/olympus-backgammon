@@ -1,12 +1,10 @@
-const { Board, Pip, Move, Player, clamp, pipDistance } = require("../game");
-const clone = require("ramda.clone");
-const { range } = require("../util");
+const { Board } = require("../game");
+const { range, Pip, Move, Player, clamp, pipDistance } = require("../util");
 
 const Plakoto = () => ({
     // Inherit from generic board
     ...Board(),
 
-    // Implement Plakoto-specific methods and variables
     // Initialize the board for a game of plakoto
     initGame() {
         this.pips[24] = Pip(15, Player.black); // Black moves towards pip 1 (decreasing)
@@ -85,44 +83,6 @@ const Plakoto = () => ({
         // Handle dice. NOTE: this will only work for 2 distinct values or 4 identical values
         if (this.dice[0] >= pipDistance(from, to)) this.dice.shift();
         else this.dice.pop();
-    },
-
-    // Returns 2D array of Move objects
-    allPossibleTurns(isBot) {
-        if (this.dice.length === 0) return [];
-        let allTurns = [];
-        const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
-        for (const die of uniqueDice) {
-            for (let pipIndex = 1; pipIndex <= 24; pipIndex++) {
-                if (this.pips[pipIndex].top === this.turn) {
-                    const currentMove = Move(pipIndex, clamp(this.turn * die + pipIndex));
-                    if (this.isMoveValid(currentMove.from, currentMove.to)) {
-                        // deep copy game board using ramda
-                        let newBoard = clone(this);
-                        newBoard.doMove(currentMove.from, currentMove.to);
-                        const nextTurns = newBoard.allPossibleTurns();
-                        if (nextTurns.length) {
-                            for (const nextMoves of nextTurns) {
-                                const turn = [currentMove, ...nextMoves];
-                                allTurns.push(turn);
-                                if (turn.length === 4) {
-                                    if (isBot) {
-                                        const destinations = turn.map((move) => move.to);
-                                        const string = destinations.sort().join("");
-                                        this.uniqueTurns.set(string, turn);
-                                    } else {
-                                        throw "Possible turn of length 4 detected";
-                                    }
-                                }
-                            }
-                        } else {
-                            allTurns.push([currentMove]);
-                        }
-                    }
-                }
-            }
-        }
-        return allTurns;
     },
 
     // Is the board in a state where the game has just ended?

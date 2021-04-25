@@ -1,6 +1,5 @@
-const { Board, Pip, Move, Player, clamp, pipDistance } = require("../game");
-const clone = require("ramda.clone");
-const { range } = require("../util");
+const { Board } = require("../game");
+const { range, Pip, Move, Player, clamp, pipDistance } = require("../util");
 const State = Object.freeze({ start: 1, firstAway: 2, default: 3 });
 
 const Fevga = () => ({
@@ -119,47 +118,14 @@ const Fevga = () => ({
         }
     },
 
-    // Returns 2D array of Move objects
-    allPossibleTurns(isBot) {
-        if (this.dice.length === 0) return [];
-        let allTurns = [];
-        const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
-        for (const die of uniqueDice) {
-            for (let pipIndex = 1; pipIndex <= 24; pipIndex++) {
-                if (this.pips[pipIndex].top === this.turn) {
-                    let temp = pipIndex - die;
-                    if (this.turn === Player.white) {
-                        if (pipIndex >= 13 && temp <= 12) temp = 25;
-                        if (temp < 1) temp += 24;
-                    }
-                    const currentMove = Move(pipIndex, clamp(temp));
-                    if (this.isMoveValid(currentMove.from, currentMove.to)) {
-                        // deep copy game board using ramda
-                        let newBoard = clone(this);
-                        newBoard.doMove(currentMove.from, currentMove.to);
-                        const nextTurns = newBoard.allPossibleTurns();
-                        if (nextTurns.length) {
-                            for (const nextMoves of nextTurns) {
-                                const turn = [currentMove, ...nextMoves];
-                                allTurns.push(turn);
-                                if (turn.length === 4) {
-                                    if (isBot) {
-                                        const destinations = turn.map((move) => move.to);
-                                        const string = destinations.sort().join("");
-                                        this.uniqueTurns.set(string, turn);
-                                    } else {
-                                        throw "Possible turn of length 4 detected";
-                                    }
-                                }
-                            }
-                        } else {
-                            allTurns.push([currentMove]);
-                        }
-                    }
-                }
-            }
+    // Calculates destination pip of a move
+    getDestination(start, die) {
+        let end = start - die;
+        if (this.turn === Player.white) {
+            if (start >= 13 && end <= 12) end = 25;
+            if (end < 1) end += 24;
         }
-        return allTurns;
+        return clamp(end);
     },
 });
 

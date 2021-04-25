@@ -1,38 +1,5 @@
-const { Random, MersenneTwister19937 } = require("random-js");
-const random = new Random(MersenneTwister19937.autoSeed());
-
-// Enum-like object
-const Player = Object.freeze({
-    neither: 0,
-    white: 1,
-    black: -1,
-});
-
-const TurnMessage = Object.freeze({
-    valid: 1,
-    validZero: 2,
-    invalid: 0,
-    invalidMoreMoves: -1,
-    invalidLongerMove: -2,
-});
-
-// Variant of backgammon
-exports.Variant = Object.freeze({
-    portes: 1,
-    plakoto: 2,
-    fevga: 3,
-});
-
-// Clamps "to" in range 0–25
-exports.clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
-
-// Returns the distance between two pips (1–12)
-const pipDistance = function (from, to) {
-    const dist = Math.abs(to - from);
-    return dist <= 12 ? dist : 24 - dist;
-};
-exports.Move = (from, to) => ({ from, to });
-exports.reverseMove = (move) => ({ from: move.to, to: move.from });
+const { Move, Pip, Player, TurnMessage, clamp, random, pipDistance } = require("./util");
+const clone = require("ramda.clone");
 
 exports.Board = () => ({
     turn: null,
@@ -45,6 +12,8 @@ exports.Board = () => ({
     possibleTurns: null,
     maxTurnLength: 0,
     turnValidity: TurnMessage.invalid,
+    firstPip: 1,
+    lastPip: 24,
     // Property used by bot
     uniqueTurns: null,
 
@@ -74,19 +43,15 @@ exports.Board = () => ({
         // Sort smallest to largest
         this.dice = [...this.diceRolled].sort((a, b) => a - b);
 
+        // Set to null first to ensure garbage collection
+        this.possibleTurns = null;
+        this.possibleTurns = this.allPossibleTurns();
+
         this.maxTurnLength = 0;
-        this.turnValidity = TurnMessage.invalid;
-        try {
-            this.possibleTurns = null;
-            this.possibleTurns = this.allPossibleTurns();
-            for (const turn of this.possibleTurns) {
-                if (turn.length > this.maxTurnLength) this.maxTurnLength = turn.length;
-            }
-            if (this.maxTurnLength === 0) this.turnValidity = TurnMessage.validZero;
-        } catch (four) {
-            // Code optimization when there's a possible 4-move turn
-            this.maxTurnLength = 4;
+        for (const turn of this.possibleTurns) {
+            if (turn.length > this.maxTurnLength) this.maxTurnLength = turn.length;
         }
+        this.turnValidity = this.maxTurnLength === 0 ? TurnMessage.validZero : TurnMessage.invalid;
     },
 
     // Returns the player who's turn it ISN'T
@@ -130,20 +95,43 @@ exports.Board = () => ({
         return TurnMessage.valid;
     },
 
-    // Dummy function, must be implemented by each backgammon variant
-    allPossibleTurns: () => null,
+    // Calculates destination pip of a move
+    getDestination(start, die) {
+        return clamp(this.turn * die + start);
+    },
+
+    // Returns a 2D array of Move objects
+    allPossibleTurns(isBot) {
+        if (this.dice.length === 0) return [];
+        let allTurns = [];
+        const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
+        for (const die of uniqueDice) {
+            for (let pipStart = this.firstPip; pipStart <= this.lastPip; pipStart++) {
+                if (this.pips[pipStart].top === this.turn) {
+                    const pipEnd = this.getDestination(pipStart, die);
+                    const currentMove = Move(pipStart, pipEnd);
+                    if (this.isMoveValid(currentMove.from, currentMove.to)) {
+                        // deep copy game board using ramda
+                        let newBoard = clone(this);
+                        newBoard.doMove(currentMove.from, currentMove.to);
+                        const nextTurns = newBoard.allPossibleTurns();
+                        if (nextTurns.length) {
+                            for (const nextMoves of nextTurns) {
+                                const turn = [currentMove, ...nextMoves];
+                                allTurns.push(turn);
+                                if (isBot && turn.length === 4) {
+                                    const destinations = turn.map((move) => move.to);
+                                    const string = destinations.sort().join("");
+                                    this.uniqueTurns.set(string, turn);
+                                }
+                            }
+                        } else {
+                            allTurns.push([currentMove]);
+                        }
+                    }
+                }
+            }
+        }
+        return allTurns;
+    },
 });
-
-const Pip = (size = 0, owner = Player.neither) => ({
-    size: size,
-    top: owner,
-    bot: owner,
-});
-
-const rollDie = () => random.die(6);
-
-exports.Player = Player;
-exports.TurnMessage = TurnMessage;
-exports.pipDistance = pipDistance;
-exports.Pip = Pip;
-exports.rollDie = rollDie;
