@@ -1,38 +1,48 @@
 name: reviewdog
 on: [pull_request]
 jobs:
-    eslint:
-        name: runner / eslint
+    eslint-frontend:
+        name: eslint / frontend
         runs-on: ubuntu-latest
         steps:
             # Checkout the git repository
             - uses: actions/checkout@v2
             # Install and cache npm packages
-            - name: install/frontend
-              uses: bahmutov/npm-install@v1
+            - uses: bahmutov/npm-install@v1
               with:
                   working-directory: frontend
-            - name: install/backend
-              uses: bahmutov/npm-install@v1
-              with:
-                  working-directory: backend
-            - name: install/olympus-bg
-              uses: bahmutov/npm-install@v1
-              with:
-                  working-directory: olympus-bg
             # Run eslint using reviewdog
-            - name: eslint/frontend
-              uses: reviewdog/action-eslint@v1
+            - uses: reviewdog/action-eslint@v1
               with:
                   workdir: "frontend"
                   eslint_flags: "src/"
-            - name: eslint/backend
-              uses: reviewdog/action-eslint@v1
+    eslint-backend:
+        name: eslint / backend
+        runs-on: ubuntu-latest
+        steps:
+            # Checkout the git repository
+            - uses: actions/checkout@v2
+            # Install and cache npm packages
+            - uses: bahmutov/npm-install@v1
+              with:
+                  working-directory: backend
+            # Run eslint using reviewdog
+            - uses: reviewdog/action-eslint@v1
               with:
                   workdir: "backend"
                   eslint_flags: "src/"
-            - name: eslint/olympus-bg
-              uses: reviewdog/action-eslint@v1
+    eslint-olympus-bg:
+        name: eslint / olympus-bg
+        runs-on: ubuntu-latest
+        steps:
+            # Checkout the git repository
+            - uses: actions/checkout@v2
+            # Install and cache npm packages
+            - uses: bahmutov/npm-install@v1
+              with:
+                  working-directory: olympus-bg
+            # Run eslint using reviewdog
+            - uses: reviewdog/action-eslint@v1
               with:
                   workdir: "olympus-bg"
                   eslint_flags: "src/"
