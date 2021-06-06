@@ -12,7 +12,7 @@ const cloneBoard = {
     [Variant.fevga]: (boardState) => ({ ...fevga.Board(), ...clone(boardState) }),
 };
 
-const unusedVariable;
+let unusedVariable = "";
 
 // Returns the best turn based on a set of possible turns and the board state
 const pickTurn = {
