@@ -8,28 +8,31 @@ jobs:
             # Checkout the git repository
             - uses: actions/checkout@v1
             # Install and cache npm packages
-            - uses: bahmutov/npm-install@v1
+            - name: install/frontend
+              uses: bahmutov/npm-install@v1
               with:
                   working-directory: frontend
-            - uses: bahmutov/npm-install@v1
+            - name: install/backend
+              uses: bahmutov/npm-install@v1
               with:
                   working-directory: backend
-            - uses: bahmutov/npm-install@v1
+            - name: install/olympus-bg
+              uses: bahmutov/npm-install@v1
               with:
                   working-directory: olympus-bg
             # Run eslint using reviewdog
             - name: eslint/frontend
               uses: reviewdog/action-eslint@v1
               with:
-                  working-directory: frontend
+                  workdir: "frontend"
                   eslint_flags: "src/"
             - name: eslint/backend
               uses: reviewdog/action-eslint@v1
               with:
-                  working-directory: backend
+                  workdir: "backend"
                   eslint_flags: "src/"
             - name: eslint/olympus-bg
               uses: reviewdog/action-eslint@v1
               with:
-                  working-directory: olympus-bg
+                  workdir: "olympus-bg"
                   eslint_flags: "src/"
