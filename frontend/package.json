@@ -8,7 +8,7 @@
         "@testing-library/react": "^9.5.0",
         "@testing-library/user-event": "^7.2.1",
         "bootstrap": "^4.5.0",
-        "olympus-bg": "git+https://github.com/michaelti/olympus-bg.git",
+        "olympus-bg": "file:../olympus-bg",
         "ramda.clone": "^0.26.1",
         "react": "^16.13.1",
         "react-app-polyfill": "^1.0.6",
