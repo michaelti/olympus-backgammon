@@ -6,7 +6,20 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             # Checkout the git repository
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v2
+            # Install and cache npm packages
+            - name: install/frontend
+              uses: bahmutov/npm-install@v1
+              with:
+                  working-directory: frontend
+            - name: install/backend
+              uses: bahmutov/npm-install@v1
+              with:
+                  working-directory: backend
+            - name: install/olympus-bg
+              uses: bahmutov/npm-install@v1
+              with:
+                  working-directory: olympus-bg
             # Run eslint using reviewdog
             - name: eslint/frontend
               uses: reviewdog/action-eslint@v1
