@@ -1,0 +1,26 @@
+{
+    "name": "olympus-backgammon",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "concurrently 'npm:frontend' 'npm:backend' 'npm:olympus-bg'",
+        "frontend": "npm start --prefix frontend",
+        "backend": "npm start --prefix backend",
+        "olympus-bg": "npm start --prefix olympus-bg"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/michaelti/olympus-backgammon.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/michaelti/olympus-backgammon/issues"
+    },
+    "homepage": "https://github.com/michaelti/olympus-backgammon#readme",
+    "devDependencies": {
+        "concurrently": "^6.2.0"
+    }
+}
