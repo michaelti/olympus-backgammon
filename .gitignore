@@ -1,8 +1,11 @@
 # Dependencies
-/node_modules
+node_modules
 
 # Misc
 .DS_Store
 
 # Environment
 .env
+
+# Production
+/frontend/build
