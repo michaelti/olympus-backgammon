@@ -1,0 +1,52 @@
+{
+    "name": "olympus-bg",
+    "version": "1.0.4",
+    "engines": {
+        "node": ">=14.4.0"
+    },
+    "description": "Game logic for Olympus Backgammon project",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "nodemon --watch src/ --exec 'npm run lint'",
+        "lint": "eslint src/; exit 0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/michaelti/olympus-bg.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/michaelti/olympus-bg/issues"
+    },
+    "homepage": "https://github.com/michaelti/olympus-bg#readme",
+    "prettier": {
+        "tabWidth": 4,
+        "printWidth": 100,
+        "jsxBracketSameLine": true
+    },
+    "dependencies": {
+        "ramda.clone": "^0.26.1",
+        "random-js": "^2.1.0"
+    },
+    "devDependencies": {
+        "eslint": "^7.5.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "nodemon": "^2.0.4",
+        "prettier": "2.0.5"
+    },
+    "eslintConfig": {
+        "extends": [
+            "eslint:recommended",
+            "plugin:node/recommended",
+            "plugin:prettier/recommended"
+        ]
+    },
+    "nodemonConfig": {
+        "events": {
+            "start": "node -e 'console.clear()'"
+        }
+    }
+}
