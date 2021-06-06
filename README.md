@@ -51,7 +51,7 @@ Both players roll a die to go first. To make a move, click on one of your checke
 
 ## Development
 
-This repository contains three projects: frontend, backend, and olympus-bg. They can be run separately or concurrently using the following steps:
+This repository contains three projects: [frontend](https://github.com/michaelti/olympus-backgammon/tree/main/frontend), [backend](https://github.com/michaelti/olympus-backgammon/tree/main/backend), and [olympus-bg](https://github.com/michaelti/olympus-backgammon/tree/main/olympus-bg). They can be run separately or concurrently using the following steps:
 
 1. Install all dependencies: `npm install`
 2. Run all projects: `npm start`
