@@ -12,7 +12,7 @@
     },
     "dependencies": {
         "dotenv": "^8.2.0",
-        "olympus-bg": "git+https://github.com/michaelti/olympus-bg.git",
+        "olympus-bg": "file:../olympus-bg",
         "ramda.clone": "^0.26.1",
         "socket.io": "^2.3.0",
         "socket.io-client": "^2.3.0"
