@@ -36,8 +36,9 @@
         "events": {
             "start": "node -e 'console.clear()'"
         },
-        "ignoreRoot": [
-            ".git"
+        "watch": [
+            ".",
+            "../olympus-bg"
         ]
     },
     "prettier": {
