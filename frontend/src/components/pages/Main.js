@@ -65,7 +65,7 @@ function Main() {
             </div>
             <Aside>
                 <a
-                    href="https://github.com/michaelti/olympus-backgammon-frontend"
+                    href="https://github.com/michaelti/olympus-backgammon"
                     target="_blank"
                     rel="noopener noreferrer">
                     <svg role="img" viewBox="0 0 24 24" width="24" fill="currentColor">
