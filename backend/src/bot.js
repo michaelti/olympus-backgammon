@@ -55,25 +55,33 @@ function rankBoard(board) {
         }
     }
 
-    board.pips.forEach((pip, i) => {
-        // An open checker deducts points based on distance it could be sent back
-        if (pip.top === board.turn && pip.size === 1) {
-            for (let j = i - 1; j >= 0; j--) {
-                // If a white checker exists ahead
-                if (board.pips[j].top === Player.white && board.pips[j].size > 0) {
-                    rank -= 24 - i;
-                    break;
+    if (isEndGame) {
+        // While in endgame, the prioritly should be moving all checkers to home quadrant
+        board.pips.forEach((pip, i) => {
+            // A penalty of 1 point per space from home is applied
+            let spacesFromHome = i < 6 ? 0 : i - 6;
+            if (pip.top === board.turn) rank -= pip.size * spacesFromHome;
+        });
+    } else {
+        board.pips.forEach((pip, i) => {
+            // An open checker deducts points based on distance it could be sent back
+            if (pip.top === board.turn && pip.size === 1) {
+                for (let j = i - 1; j >= 0; j--) {
+                    // If a white checker exists ahead
+                    if (board.pips[j].top === Player.white && board.pips[j].size > 0) {
+                        rank -= 24 - i;
+                        break;
+                    }
                 }
             }
-        }
 
-        // A closed door while not in the endgame
-        if (pip.top === board.turn && pip.size > 1 && !isEndGame) rank += 5;
-    });
+            // A closed door (i.e. a stack of 2 or more)
+            if (pip.top === board.turn && pip.size > 1) rank += 5;
+        });
 
-    // If we send the opponent to the bar
-    rank += board.pips[0].size * 20;
-
+        // If we send the opponent to the bar
+        rank += board.pips[0].size * 20;
+    }
     // If we bear off
     rank += board.off[Player.black] * 20;
 
