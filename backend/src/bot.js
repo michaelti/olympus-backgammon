@@ -1,5 +1,5 @@
 const io = require("socket.io-client");
-const { portes, plakoto, fevga, Variant } = require("olympus-bg");
+const { portes, plakoto, fevga, Variant, Player } = require("olympus-bg");
 const clone = require("ramda.clone");
 const { Step } = require("./roomObj");
 
@@ -46,34 +46,44 @@ function rankBoard(board) {
     let isEndGame = true;
     // The "endgame" is when there is no possibility of either player being sent to the bar
     for (let i = 25; i >= 0; i--) {
-        if (board.pips[i].top === -1) sawBlack = true;
-        else if (board.pips[i].top === 1 && sawBlack) {
+        // Skip empty pips
+        if (board.pips[i].size === 0) continue;
+        else if (board.pips[i].top === Player.black) sawBlack = true;
+        else if (board.pips[i].top === Player.white && sawBlack) {
             isEndGame = false;
             break;
         }
     }
 
-    board.pips.forEach((pip, i) => {
-        // An open checker deducts points based on distance it could be sent back
-        if (pip.top === board.turn && pip.size === 1) {
-            for (let j = i - 1; j >= 0; j--) {
-                // If a white checker exists ahead
-                if (board.pips[j].top === 1 && board.pips[j].size > 0) {
-                    rank -= 24 - i;
-                    break;
+    if (isEndGame) {
+        // While in endgame, the prioritly should be moving all checkers to home quadrant
+        board.pips.forEach((pip, i) => {
+            // A penalty of 1 point per space from home is applied
+            let spacesFromHome = i < 6 ? 0 : i - 6;
+            if (pip.top === board.turn) rank -= pip.size * spacesFromHome;
+        });
+    } else {
+        board.pips.forEach((pip, i) => {
+            // An open checker deducts points based on distance it could be sent back
+            if (pip.top === board.turn && pip.size === 1) {
+                for (let j = i - 1; j >= 0; j--) {
+                    // If a white checker exists ahead
+                    if (board.pips[j].top === Player.white && board.pips[j].size > 0) {
+                        rank -= 24 - i;
+                        break;
+                    }
                 }
             }
-        }
 
-        // A closed door while not in the endgame
-        if (pip.top === board.turn && pip.size > 1 && !isEndGame) rank += 5;
-    });
+            // A closed door (i.e. a stack of 2 or more)
+            if (pip.top === board.turn && pip.size > 1) rank += 5;
+        });
 
-    // If we send the opponent to the bar
-    rank += board.pips[0].size * 20;
-
+        // If we send the opponent to the bar
+        rank += board.pips[0].size * 20;
+    }
     // If we bear off
-    rank += board.off[-1] * 20;
+    rank += board.off[Player.black] * 20;
 
     return rank;
 }
