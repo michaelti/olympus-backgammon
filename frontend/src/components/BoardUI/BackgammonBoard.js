@@ -4,9 +4,12 @@ import styled from "styled-components";
 import CheckerStack from "./CheckerStack";
 import Dice from "./Dice";
 import BoardButtons from "./BoardButtons";
+import woodTexture from "../../assets/wood-texture.jpg";
 
 const Board = styled.div`
     background: #402d26;
+    background-image: url(${woodTexture});
+    background-position: center;
     width: 100%;
     height: 100vh;
     display: grid;
@@ -44,11 +47,17 @@ const Pip = styled(BoardChild)`
 `;
 
 const Bar = styled(BoardChild)`
-    background-color: #c49158;
+    background-color: #402d26;
+    background-image: url(${woodTexture});
+    background-position: center;
+    background-blend-mode: screen;
 `;
 
 const Off = styled(BoardChild)`
-    background-color: #745138;
+    background-color: #402d26;
+    background-image: url(${woodTexture});
+    background-position: center;
+    background-blend-mode: screen;
 `;
 
 function BackgammonBoard({
