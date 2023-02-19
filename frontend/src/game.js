@@ -1,5 +1,6 @@
 import { portes, plakoto, fevga } from "olympus-bg";
-import { Variant } from "./util";
+import { Variant
+} from "./util";
 import clone from "ramda.clone";
 
 export const cloneBoard = {
