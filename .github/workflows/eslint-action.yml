@@ -23,10 +23,6 @@ jobs:
         steps:
             # Checkout the git repository
             - uses: actions/checkout@v2
-            # Install and cache npm packages
-            - uses: bahmutov/npm-install@v1
-              with:
-                  working-directory: backend
             # Run eslint using reviewdog
             - uses: reviewdog/action-eslint@v1
               with:
