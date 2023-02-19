@@ -20,17 +20,10 @@ jobs:
         name: eslint / backend
         runs-on: ubuntu-latest
         steps:
-            # Checkout the git repository
-            - uses: actions/checkout@v2
-            # Install and cache npm packages
-            - uses: bahmutov/npm-install@v1
-              with:
-                  working-directory: backend
-            # Run eslint using reviewdog
-            - uses: reviewdog/action-eslint@v1
-              with:
-                  workdir: "backend"
-                  eslint_flags: "src/"
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+            - run: npm install --prefix backend
+            - run: npm run lint --prefix backend
     eslint-olympus-bg:
         name: eslint / olympus-bg
         runs-on: ubuntu-latest
