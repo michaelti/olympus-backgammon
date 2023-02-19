@@ -7,6 +7,5 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
-            - working-directory: backend
-            - run: npm install
-            - run: npm run lint 
+            - run: npm install --prefix backend
+            - run: npm run lint --prefix backend
