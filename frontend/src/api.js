@@ -9,7 +9,7 @@ let socketStatus = {
 };
 
 // Initialize the global socket
-const socket = io(process.env.REACT_APP_BACKEND_URL);
+const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 // Initialize global socket connection event listeners
 socket.on("connect", () => {

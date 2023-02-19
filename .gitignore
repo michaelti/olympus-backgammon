@@ -8,4 +8,4 @@ node_modules
 .env
 
 # Production
-/frontend/build
+/frontend/dist
