@@ -5,9 +5,8 @@ jobs:
         name: eslint / backend
         runs-on: ubuntu-latest
         steps:
-            # Checkout the git repository
             - uses: actions/checkout@v3
-            # Install and cache npm packages
+            - working-directory: backend
             - uses: actions/setup-node@v3
             - run: npm install
-            - run: npm run lint --prefix backend
+            - run: npm run lint 
