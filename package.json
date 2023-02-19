@@ -6,7 +6,7 @@
     "scripts": {
         "start": "concurrently 'npm:frontend' 'npm:backend' 'npm:olympus-bg'",
         "postinstall": "(cd frontend && npm install); (cd backend && npm install); (cd olympus-bg && npm install)",
-        "frontend": "npm start --prefix frontend",
+        "frontend": "npm run dev --prefix frontend",
         "backend": "npm start --prefix backend",
         "olympus-bg": "npm start --prefix olympus-bg"
     },
