@@ -8,9 +8,10 @@ jobs:
             # Checkout the git repository
             - uses: actions/checkout@v2
             # Install and cache npm packages
-            - uses: bahmutov/npm-install@v1
+            - uses: actions/setup-node@v3
               with:
                   working-directory: frontend
+            - run: npm ci
             # Run eslint using reviewdog
             - uses: reviewdog/action-eslint@v1
               with:
