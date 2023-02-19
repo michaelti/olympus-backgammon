@@ -1,45 +1,13 @@
 name: reviewdog
 on: [pull_request]
 jobs:
-    eslint-frontend:
-        name: eslint / frontend
-        runs-on: ubuntu-latest
-        steps:
-            # Checkout the git repository
-            - uses: actions/checkout@v2
-            # Install and cache npm packages
-            - uses: actions/setup-node@v3
-              with:
-                  working-directory: frontend
-            - run: npm ci
-            # Run eslint using reviewdog
-            - uses: reviewdog/action-eslint@v1
-              with:
-                  workdir: "frontend"
-                  eslint_flags: "src/"
     eslint-backend:
         name: eslint / backend
         runs-on: ubuntu-latest
         steps:
             # Checkout the git repository
-            - uses: actions/checkout@v2
-            # Run eslint using reviewdog
-            - uses: reviewdog/action-eslint@v1
-              with:
-                  workdir: "./backend/"
-                  eslint_flags: "src/"
-    eslint-olympus-bg:
-        name: eslint / olympus-bg
-        runs-on: ubuntu-latest
-        steps:
-            # Checkout the git repository
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             # Install and cache npm packages
-            - uses: bahmutov/npm-install@v1
-              with:
-                  working-directory: olympus-bg
-            # Run eslint using reviewdog
-            - uses: reviewdog/action-eslint@v1
-              with:
-                  workdir: "olympus-bg"
-                  eslint_flags: "src/"
+            - uses: actions/setup-node@v3
+            - run: npm install
+            - run: npm run lint --prefix backend
