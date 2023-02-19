@@ -9,6 +9,7 @@ export default defineConfig({
     plugins: [react()],
     optimizeDeps: {
         include: ["olympus-bg"],
+        global: "globalThis",
     },
     build: {
         commonjsOptions: {
