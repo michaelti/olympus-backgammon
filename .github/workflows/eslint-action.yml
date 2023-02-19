@@ -26,7 +26,7 @@ jobs:
             # Run eslint using reviewdog
             - uses: reviewdog/action-eslint@v1
               with:
-                  workdir: "backend"
+                  workdir: "./backend/"
                   eslint_flags: "src/"
     eslint-olympus-bg:
         name: eslint / olympus-bg
