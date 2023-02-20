@@ -1,17 +1,17 @@
-const { Random, MersenneTwister19937 } = require("random-js");
-exports.random = new Random(MersenneTwister19937.autoSeed());
+import { Random, MersenneTwister19937 } from "random-js";
+export const random = new Random(MersenneTwister19937.autoSeed());
 
 // ENUMS //
 
 // Player ID
-exports.Player = Object.freeze({
+export const Player = Object.freeze({
     neither: 0,
     white: 1,
     black: -1,
 });
 
 // Turn validity message. Values greater than 0 are valid.
-exports.TurnMessage = Object.freeze({
+export const TurnMessage = Object.freeze({
     valid: 1,
     validZero: 2,
     invalid: 0,
@@ -20,7 +20,7 @@ exports.TurnMessage = Object.freeze({
 });
 
 // Variant of backgammon
-exports.Variant = Object.freeze({
+export const Variant = Object.freeze({
     portes: 1,
     plakoto: 2,
     fevga: 3,
@@ -30,23 +30,27 @@ exports.Variant = Object.freeze({
 
 // Returns value clamped to the inclusive range of 0–25
 // Ex: (-3) => 0; (15) => 15; (29) => 25
-exports.clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
+export const clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
 
 // Returns the distance between two pips (1–12)
-exports.pipDistance = function (from, to) {
+export const pipDistance = function (from, to) {
     const dist = Math.abs(to - from);
     return dist <= 12 ? dist : 24 - dist;
 };
 
-exports.rollDie = () => this.random.die(6);
+export const rollDie = () => random.die(6);
 
 // OBJECT FACTORIES //
 
-exports.Move = (from, to) => ({ from, to });
+export const Move = (from, to) => ({ from, to });
 
-exports.Pip = (size = 0, owner = this.Player.neither) => ({ size: size, top: owner, bot: owner });
+export const Pip = (size = 0, owner = Player.neither) => ({
+    size: size,
+    top: owner,
+    bot: owner,
+});
 
-exports.reverseMove = (move) => ({ from: move.to, to: move.from });
+export const reverseMove = (move) => ({ from: move.to, to: move.from });
 
-exports.range = (start, end, length = end - start + 1) =>
+export const range = (start, end, length = end - start + 1) =>
     Array.from({ length }, (_, i) => start + i);

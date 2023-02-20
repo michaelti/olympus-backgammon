@@ -7,12 +7,4 @@ export default defineConfig({
         open: "/",
     },
     plugins: [react()],
-    optimizeDeps: {
-        include: ["olympus-bg"],
-    },
-    build: {
-        commonjsOptions: {
-            include: [/olympus-bg/, /node_modules/],
-        },
-    },
 });

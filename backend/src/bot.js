@@ -1,7 +1,7 @@
-const io = require("socket.io-client");
-const { portes, plakoto, fevga, Variant, Player } = require("olympus-bg");
-const clone = require("ramda.clone");
-const { Step } = require("./roomObj");
+import io from "socket.io-client";
+import { portes, plakoto, fevga, Variant, Player } from "olympus-bg";
+import clone from "ramda.clone";
+import { Step } from "./roomObj.js";
 
 const think = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
@@ -179,4 +179,4 @@ function Bot(roomName) {
     });
 }
 
-module.exports = Bot;
+export default Bot;

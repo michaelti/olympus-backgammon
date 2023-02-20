@@ -1,9 +1,9 @@
-const { Board } = require("../game");
-const { range, Pip, Move, Player, clamp, pipDistance } = require("../util");
+import { Board as GenericBoard } from "../game.js";
+import { range, Pip, Move, Player, clamp, pipDistance } from "../util.js";
 
 const Portes = () => ({
     // Inherit from generic board
-    ...Board(),
+    ...GenericBoard(),
 
     // Portes-specific properties
     firstPip: 0,
@@ -114,4 +114,4 @@ const Portes = () => ({
     },
 });
 
-exports.Board = Portes;
+export const Board = Portes;

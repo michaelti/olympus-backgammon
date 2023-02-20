@@ -1,10 +1,10 @@
-const { Board } = require("../game");
-const { range, Pip, Move, Player, clamp, pipDistance } = require("../util");
+import { Board as GenericBoard } from "../game.js";
+import { range, Pip, Move, Player, clamp, pipDistance } from "../util.js";
 const State = Object.freeze({ start: 1, firstAway: 2, default: 3 });
 
 const Fevga = () => ({
     // Inherit from generic board
-    ...Board(),
+    ...GenericBoard(),
 
     // Implement Fevga-specific methods and variables
     state: { [Player.white]: State.start, [Player.black]: State.start },
@@ -129,4 +129,4 @@ const Fevga = () => ({
     },
 });
 
-exports.Board = Fevga;
+export const Board = Fevga;
