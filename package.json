@@ -11,9 +11,7 @@
         "install:olympus-bg": "npm install --prefix olympus-bg",
         "dev:frontend": "npm run dev --prefix frontend",
         "dev:backend": "npm start --prefix backend",
-        "dev:olympus-bg": "npm start --prefix olympus-bg",
-        "build:frontend": "npm run build --prefix frontend",
-        "serve:backend": "npm run start-server --prefix backend"
+        "dev:olympus-bg": "npm start --prefix olympus-bg"
     },
     "repository": {
         "type": "git",

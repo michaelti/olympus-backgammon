@@ -1,0 +1,11 @@
+# Dependencies
+node_modules
+
+# Misc
+.DS_Store
+
+# Environment
+.env
+
+# Production
+/frontend/dist
