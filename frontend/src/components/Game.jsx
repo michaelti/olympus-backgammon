@@ -72,7 +72,7 @@ function Game({ player, roomStep, startingRolls, variant, boardState, score, roo
     return boardState === null ? null : (
         <BackgammonBoard
             boardState={boardState}
-            isTurn={!process.env.REACT_APP_GAMEDEV ? player === boardState.turn : true}
+            isTurn={!import.meta.env.VITE_GAMEDEV ? player === boardState.turn : true}
             doMove={doMove}
             getPossiblePips={getPossiblePips}
             flipOffWhite={variant === Variant.fevga}

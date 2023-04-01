@@ -1,6 +1,6 @@
 /* SOCKET CONNECTION EVENT LISTENERS */
 
-module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
+export default function (socket, io, rooms = io.sockets.adapter.rooms) {
     // Client connected
     console.log(`Client connected (id: ${socket.id})`);
 
@@ -22,4 +22,4 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
     socket.on("disconnect", () => {
         console.log(`Client disconnected (id: ${socket.id})`);
     });
-};
+}

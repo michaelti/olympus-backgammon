@@ -5,9 +5,9 @@ React frontend for the work-in-progress Olympus Backgammon project. Connects to 
 ### Development
 
 1. Install dependencies: `npm install`
-2. Run the start script: `npm start`
+2. Run the start script: `npm run dev`
 
-Be sure to create a local `.env` file in the project root with the key `REACT_APP_BACKEND_URL` pointing to the backend server.
+Be sure to create a local `.env` file in the project root with the key `VITE_BACKEND_URL` pointing to the backend server.
 
 ### Deployment
 

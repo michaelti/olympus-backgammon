@@ -1,6 +1,6 @@
 /* GAME EVENT LISTENERS */
 
-module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
+export default function (socket, io, rooms = io.sockets.adapter.rooms) {
     // Game event: move
     socket.on("game/move", (from, to) => {
         if (!socket.currentRoom) return;
@@ -62,4 +62,4 @@ module.exports = function (socket, io, rooms = io.sockets.adapter.rooms) {
             board: rooms[socket.currentRoom].board.publicProperties(),
         });
     });
-};
+}

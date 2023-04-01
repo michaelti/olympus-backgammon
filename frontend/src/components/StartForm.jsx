@@ -53,7 +53,7 @@ function StartForm() {
     };
 
     // Automatically start a game when in game dev mode
-    useEffect(process.env.REACT_APP_GAMEDEV ? startRoom : () => {}, []);
+    useEffect(import.meta.env.VITE_GAMEDEV ? startRoom : () => {}, []);
 
     return (
         <Form onSubmit={handleSubmit}>

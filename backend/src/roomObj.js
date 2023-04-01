@@ -1,14 +1,5 @@
-const clone = require("ramda.clone");
-const {
-    Board,
-    Player,
-    Variant,
-    reverseMove,
-    rollDie,
-    portes,
-    plakoto,
-    fevga,
-} = require("olympus-bg");
+import clone from "ramda.clone";
+import { Board, Player, Variant, reverseMove, rollDie, portes, plakoto, fevga } from "olympus-bg";
 
 const Step = Object.freeze({
     setup: 1,
@@ -17,7 +8,7 @@ const Step = Object.freeze({
 });
 
 // Base Room object
-exports.Room = () => ({
+export const Room = () => ({
     board: Board(),
     boardBackups: null,
     variant: null,
@@ -130,4 +121,4 @@ exports.Room = () => ({
     },
 });
 
-exports.Step = Step;
+export { Step };

@@ -4,6 +4,7 @@
     "engines": {
         "node": ">=14.4.0"
     },
+    "type": "module",
     "description": "Game logic for Olympus Backgammon project",
     "main": "src/index.js",
     "scripts": {

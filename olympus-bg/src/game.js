@@ -1,7 +1,7 @@
-const { Move, Pip, Player, TurnMessage, clamp, random, pipDistance } = require("./util");
-const clone = require("ramda.clone");
+import { Move, Pip, Player, TurnMessage, clamp, random, pipDistance } from "./util.js";
+import clone from "ramda.clone";
 
-exports.Board = () => ({
+export const Board = () => ({
     turn: null,
     winner: null,
     off: { [Player.white]: 0, [Player.black]: 0 },

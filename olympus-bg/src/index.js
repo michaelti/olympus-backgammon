@@ -1,12 +1,7 @@
-const { Variant, Player, reverseMove, rollDie } = require("./util");
-const { Board } = require("./game");
+import { Variant, Player, reverseMove, rollDie } from "./util.js";
+import { Board } from "./game.js";
+import * as portes from "./variants/portes.js";
+import * as plakoto from "./variants/plakoto.js";
+import * as fevga from "./variants/fevga.js";
 
-exports.Variant = Variant;
-exports.Player = Player;
-exports.reverseMove = reverseMove;
-exports.rollDie = rollDie;
-exports.Board = Board;
-
-exports.portes = require("./variants/portes");
-exports.plakoto = require("./variants/plakoto");
-exports.fevga = require("./variants/fevga");
+export { Variant, Player, reverseMove, rollDie, Board, portes, plakoto, fevga };
