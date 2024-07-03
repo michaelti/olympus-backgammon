@@ -1,8 +1,6 @@
 # Olympus Backgammon
 
-Portes, Plakoto, and Fevga are three Greek variants of backgammon commonly played together as Tavli. Olympus Backgammon allows players to play these games against their friends online or against a computer. Games can be set up in seconds at [olympus-backgammon.com](https://olympus-backgammon.com) on desktop or on mobile.
-
-![reviewdog](https://github.com/michaelti/olympus-backgammon/workflows/reviewdog/badge.svg)
+Portes, Plakoto, and Fevga are three Greek variants of backgammon commonly played together as Tavli. Olympus Backgammon allows players to play these games against their friends online or against a computer. Games can be set up at [backgammon.app.michaelti.ca](https://backgammon.app.michaelti.ca) on desktop or mobile.
 
 <p align="center">
   <img src="https://i.imgur.com/Eu20s3V.png" alt="Portes game in progress" width="738">
