@@ -9,3 +9,4 @@ node_modules
 
 # Production
 /frontend/dist
+/olympus-bg/dist

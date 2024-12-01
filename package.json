@@ -4,14 +4,14 @@
     "description": "",
     "main": "",
     "scripts": {
-        "start": "concurrently 'npm run dev:frontend' 'npm run dev:backend' 'npm run dev:olympus-bg'",
+        "start": "concurrently --names frontend,backend,olympus-bg 'npm run dev:frontend' 'npm run dev:backend' 'npm run dev:olympus-bg'",
         "postinstall": "npm run install:frontend && npm run install:backend && npm run install:olympus-bg",
         "install:frontend": "npm install --prefix frontend",
         "install:backend": "npm install --prefix backend",
         "install:olympus-bg": "npm install --prefix olympus-bg",
         "dev:frontend": "npm run dev --prefix frontend",
         "dev:backend": "npm start --prefix backend",
-        "dev:olympus-bg": "npm start --prefix olympus-bg"
+        "dev:olympus-bg": "npm run dev --prefix olympus-bg"
     },
     "repository": {
         "type": "git",
