@@ -8,8 +8,8 @@
     "description": "Game logic for Olympus Backgammon project",
     "main": "dist/index.js",
     "scripts": {
-        "dev": "tsc-watch --onCompilationComplete 'npm run lint'",
-        "lint": "eslint src/",
+        "dev": "tsc-watch --silent --onCompilationComplete 'npm run lint'",
+        "lint": "eslint src/ ; tsc --noEmit",
         "build": "tsc"
     },
     "repository": {
