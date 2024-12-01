@@ -2,8 +2,8 @@ FROM node:alpine AS build
 WORKDIR /app/olympus-bg
 COPY ./olympus-bg/package.json ./olympus-bg/package-lock.json ./
 RUN npm install
-RUN npm run build
 COPY ./olympus-bg/ .
+RUN npm run build
 WORKDIR /app/frontend
 COPY ./frontend/package.json ./frontend/package-lock.json ./
 RUN npm install
