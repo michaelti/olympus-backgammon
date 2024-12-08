@@ -77,8 +77,9 @@ export const Board = () => ({
         if (this.off[this.turn] === 15) {
             this.winner = this.turn;
             this.turn = Player.neither;
-            // if the other player has born off 0 checkers, return 2 points
-            return this.off[this.otherPlayer(this.winner)] === 0 ? 2 : 1;
+            // if the other player has borne off 0 checkers, return 2 points
+            const loser = this.otherPlayer(this.winner);
+            return this.off[loser] === 0 ? 2 : 1;
         }
         return 0;
     },
