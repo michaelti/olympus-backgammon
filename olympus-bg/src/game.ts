@@ -1,5 +1,6 @@
 import { Move, Pip, Player, TurnMessage, clamp, random, pipDistance } from "./util.js";
-import clone from "ramda.clone";
+// import clone from "ramda.clone";
+import { clone } from "ramda";
 
 export const Board = () => ({
     turn: null,
