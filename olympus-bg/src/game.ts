@@ -103,7 +103,7 @@ export const Board = () => ({
     // Returns a 2D array of Move objects
     allPossibleTurns(isBot) {
         if (this.dice.length === 0) return [];
-        let allTurns = [];
+        const allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
         for (const die of uniqueDice) {
             for (let pipStart = this.firstPip; pipStart <= this.lastPip; pipStart++) {
@@ -112,7 +112,7 @@ export const Board = () => ({
                     const currentMove = Move(pipStart, pipEnd);
                     if (this.isMoveValid(currentMove.from, currentMove.to)) {
                         // deep copy game board using ramda
-                        let newBoard = clone(this);
+                        const newBoard = clone(this);
                         newBoard.doMove(currentMove.from, currentMove.to);
                         const nextTurns = newBoard.allPossibleTurns();
                         if (nextTurns.length) {
