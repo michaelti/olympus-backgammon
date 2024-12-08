@@ -54,3 +54,4 @@ export const reverseMove = (move) => ({ from: move.to, to: move.from });
 
 export const range = (start, end, length = end - start + 1) =>
     Array.from({ length }, (_, i) => start + i);
+

@@ -6,10 +6,11 @@
     },
     "type": "module",
     "description": "Game logic for Olympus Backgammon project",
-    "main": "src/index.js",
+    "main": "dist/index.js",
     "scripts": {
-        "start": "nodemon --watch src/ --exec 'npm run lint'",
-        "lint": "eslint src/; exit 0"
+        "dev": "tsc-watch --silent --onCompilationComplete 'npm run lint'",
+        "lint": "eslint src/ ; tsc --noEmit",
+        "build": "tsc"
     },
     "repository": {
         "type": "git",
@@ -31,23 +32,12 @@
         "random-js": "^2.1.0"
     },
     "devDependencies": {
-        "eslint": "^7.5.0",
-        "eslint-config-prettier": "^6.11.0",
-        "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-prettier": "^3.1.4",
-        "nodemon": "^2.0.4",
-        "prettier": "2.0.5"
-    },
-    "eslintConfig": {
-        "extends": [
-            "eslint:recommended",
-            "plugin:node/recommended",
-            "plugin:prettier/recommended"
-        ]
-    },
-    "nodemonConfig": {
-        "events": {
-            "start": "node -e 'console.clear()'"
-        }
+        "eslint": "^9.16.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "prettier": "3.4.1",
+        "tsc-watch": "^6.2.1",
+        "typescript": "^5.7.2",
+        "typescript-eslint": "^8.16.0"
     }
 }
