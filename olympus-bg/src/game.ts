@@ -2,21 +2,30 @@ import { Move, Pip, Player, TurnMessage, clamp, random, pipDistance } from "./ut
 // import clone from "ramda.clone";
 import { clone } from "ramda";
 
+type Move = {
+    from: number;
+    to: number;
+};
+
+type Turn = Move[];
+
 export const Board = () => ({
     turn: null,
     winner: null,
     off: { [Player.white]: 0, [Player.black]: 0 },
-    pips: new Array(26).fill().map(() => Pip()),
+    pips: new Array(26).fill(undefined).map(() => Pip()),
     diceRolled: new Array(2),
     dice: new Array(2),
     recentMove: {},
-    possibleTurns: null,
+    possibleTurns: null as Turn[] | null,
     maxTurnLength: 0,
     turnValidity: TurnMessage.invalid,
     firstPip: 1,
     lastPip: 24,
     // Property used by bot
     uniqueTurns: null,
+    // Fevga properties
+    state: undefined,
 
     publicProperties() {
         return {
@@ -46,7 +55,7 @@ export const Board = () => ({
 
         // Set to null first to ensure garbage collection
         this.possibleTurns = null;
-        this.possibleTurns = this.allPossibleTurns();
+        this.possibleTurns = this.allPossibleTurns(false);
 
         this.maxTurnLength = 0;
         for (const turn of this.possibleTurns) {
@@ -102,7 +111,7 @@ export const Board = () => ({
     },
 
     // Returns a 2D array of Move objects
-    allPossibleTurns(isBot) {
+    allPossibleTurns(isBot: boolean): Turn[] {
         if (this.dice.length === 0) return [];
         const allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;

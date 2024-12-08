@@ -4,27 +4,28 @@ export const random = new Random(MersenneTwister19937.autoSeed());
 // ENUMS //
 
 // Player ID
-export const Player = Object.freeze({
-    neither: 0,
-    white: 1,
-    black: -1,
-});
+
+export enum Player {
+    neither = 0,
+    white = 1,
+    black = -1,
+}
 
 // Turn validity message. Values greater than 0 are valid.
-export const TurnMessage = Object.freeze({
-    valid: 1,
-    validZero: 2,
-    invalid: 0,
-    invalidMoreMoves: -1,
-    invalidLongerMove: -2,
-});
+export enum TurnMessage {
+    valid = 1,
+    validZero = 2,
+    invalid = 0,
+    invalidMoreMoves = -1,
+    invalidLongerMove = -2,
+}
 
 // Variant of backgammon
-export const Variant = Object.freeze({
-    portes: 1,
-    plakoto: 2,
-    fevga: 3,
-});
+export enum Variant {
+    portes = 1,
+    plakoto = 2,
+    fevga = 3,
+}
 
 // FUNCTIONS //
 
