@@ -7,17 +7,19 @@ type Move = {
     to: number;
 };
 
-type Turn = Move[];
+type Turns = Move[];
+
+type Turn = Player.black | Player.white;
 
 export const Board = () => ({
-    turn: null,
-    winner: null,
+    turn: Player.black as Turn,
+    winner: Player.neither as Player,
     off: { [Player.white]: 0, [Player.black]: 0 },
     pips: new Array(26).fill(undefined).map(() => Pip()),
     diceRolled: new Array(2),
     dice: new Array(2),
     recentMove: {},
-    possibleTurns: null as Turn[] | null,
+    possibleTurns: null as Turns[] | null,
     maxTurnLength: 0,
     turnValidity: TurnMessage.invalid,
     firstPip: 1,
@@ -65,10 +67,11 @@ export const Board = () => ({
     },
 
     // Returns the player who's turn it ISN'T
-    otherPlayer(player = this.turn) {
+    otherPlayer(player?: Turn): Turn {
+        if (!player) player = this.turn;
+
         if (player === Player.black) return Player.white;
-        if (player === Player.white) return Player.black;
-        return Player.neither;
+        else return Player.black;
     },
 
     // Is the board in a state where either player has won?
@@ -76,7 +79,6 @@ export const Board = () => ({
     isGameOver() {
         if (this.off[this.turn] === 15) {
             this.winner = this.turn;
-            this.turn = Player.neither;
             // if the other player has borne off 0 checkers, return 2 points
             const loser = this.otherPlayer(this.winner);
             return this.off[loser] === 0 ? 2 : 1;
@@ -112,7 +114,7 @@ export const Board = () => ({
     },
 
     // Returns a 2D array of Move objects
-    allPossibleTurns(isBot: boolean): Turn[] {
+    allPossibleTurns(isBot: boolean): Turns[] {
         if (this.dice.length === 0) return [];
         const allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
