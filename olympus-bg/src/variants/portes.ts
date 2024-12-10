@@ -27,7 +27,7 @@ const Portes = () => ({
     // from:    Move from pip # <eg. 1>
     // to:      Move to pip # <eg. 4>
     // return:  Returns a boolean
-    isMoveValid(from, to) {
+    isMoveValid(from: number, to: number): boolean {
         to = clamp(to);
         const bar = this.turn === Player.white ? 0 : 25;
         if (this.pips[from].top !== this.turn) return false;
@@ -73,7 +73,7 @@ const Portes = () => ({
         return true;
     },
 
-    doMove(from, to) {
+    doMove(from: number, to: number) {
         to = clamp(to);
         const bar = this.turn === Player.white ? 0 : 25;
         const otherBar = this.turn === Player.white ? 25 : 0;

@@ -15,7 +15,7 @@ const Plakoto = () => ({
     // from:    Move from pip # <eg. 1>
     // to:      Move to pip # <eg. 4>
     // return:  Returns a boolean
-    isMoveValid(from, to) {
+    isMoveValid(from: number, to: number): boolean {
         to = clamp(to);
         if (this.pips[from].top !== this.turn) return false;
 
@@ -54,7 +54,7 @@ const Plakoto = () => ({
         return true;
     },
 
-    doMove(from, to) {
+    doMove(from: number, to: number) {
         to = clamp(to);
         this.recentMove = Move(from, to);
 
@@ -87,7 +87,7 @@ const Plakoto = () => ({
 
     // Is the board in a state where the game has just ended?
     // Returns the number of points won
-    isGameOver() {
+    isGameOver(): number {
         const home = { [Player.white]: this.pips[1], [Player.black]: this.pips[24] };
 
         // Both player's starting checkers have been trapped: game is a draw

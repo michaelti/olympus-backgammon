@@ -27,14 +27,19 @@ export enum Variant {
     fevga = 3,
 }
 
+export type Moves = {
+    from: number;
+    to: number;
+};
+
 // FUNCTIONS //
 
 // Returns value clamped to the inclusive range of 0–25
 // Ex: (-3) => 0; (15) => 15; (29) => 25
-export const clamp = (to) => (to < 0 ? 0 : to > 25 ? 25 : to);
+export const clamp = (to: number) => (to < 0 ? 0 : to > 25 ? 25 : to);
 
 // Returns the distance between two pips (1–12)
-export const pipDistance = function (from, to) {
+export const pipDistance = function (from: number, to: number) {
     const dist = Math.abs(to - from);
     return dist <= 12 ? dist : 24 - dist;
 };
@@ -43,7 +48,7 @@ export const rollDie = () => random.die(6);
 
 // OBJECT FACTORIES //
 
-export const Move = (from, to) => ({ from, to });
+export const Move = (from: number, to: number) => ({ from, to });
 
 export const Pip = (size = 0, owner = Player.neither) => ({
     size: size,
@@ -51,7 +56,7 @@ export const Pip = (size = 0, owner = Player.neither) => ({
     bot: owner,
 });
 
-export const reverseMove = (move) => ({ from: move.to, to: move.from });
+export const reverseMove = (move: Moves) => ({ from: move.to, to: move.from });
 
-export const range = (start, end, length = end - start + 1) =>
+export const range = (start: number, end: number, length = end - start + 1) =>
     Array.from({ length }, (_, i) => start + i);

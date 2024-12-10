@@ -1,13 +1,8 @@
-import { Move, Pip, Player, TurnMessage, clamp, random, pipDistance } from "./util.js";
+import { Move, Moves, Pip, Player, TurnMessage, clamp, random, pipDistance } from "./util.js";
 // import clone from "ramda.clone";
 import { clone } from "ramda";
 
-type Move = {
-    from: number;
-    to: number;
-};
-
-type Turns = Move[];
+type Turns = Moves[];
 
 type Turn = Player.black | Player.white;
 
@@ -76,7 +71,7 @@ export const Board = () => ({
 
     // Is the board in a state where either player has won?
     // Returns the number of points won
-    isGameOver() {
+    isGameOver(): number {
         if (this.off[this.turn] === 15) {
             this.winner = this.turn;
             // if the other player has borne off 0 checkers, return 2 points
@@ -87,7 +82,7 @@ export const Board = () => ({
     },
 
     // Validates a turn of 0–4 moves
-    turnValidator(moves) {
+    turnValidator(moves: Turns): TurnMessage {
         // Validate turn length. Players must make as many moves as possible
         if (this.maxTurnLength !== moves.length) {
             // unless they have 14 checkers off and are bearing off their 15th (final)
@@ -109,7 +104,7 @@ export const Board = () => ({
     },
 
     // Calculates destination pip of a move
-    getDestination(start, die) {
+    getDestination(start: number, die: number): number {
         return clamp(this.turn * die + start);
     },
 

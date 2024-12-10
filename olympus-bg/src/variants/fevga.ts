@@ -19,7 +19,7 @@ const Fevga = () => ({
     // from:    Move from pip # <eg. 1>
     // to:      Move to pip # <eg. 4>
     // return:  Returns a boolean
-    isMoveValid(from, to) {
+    isMoveValid(from: number, to: number): boolean {
         to = clamp(to);
         if (this.pips[from].top !== this.turn) return false;
 
@@ -78,7 +78,7 @@ const Fevga = () => ({
         return true;
     },
 
-    doMove(from, to) {
+    doMove(from: number, to: number) {
         to = clamp(to);
         this.recentMove = Move(from, to);
 
@@ -119,7 +119,7 @@ const Fevga = () => ({
     },
 
     // Calculates destination pip of a move
-    getDestination(start, die) {
+    getDestination(start: number, die: number): number {
         let end = start - die;
         if (this.turn === Player.white) {
             if (start >= 13 && end <= 12) end = 25;
