@@ -120,7 +120,7 @@ export const Board = () => ({
     },
 
     // Returns a 2D array of Move objects
-    allPossibleTurns(isBot: boolean): Turn[] {
+    allPossibleTurns(isBot?: boolean): Turn[] {
         if (this.dice.length === 0) return [];
         const allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
