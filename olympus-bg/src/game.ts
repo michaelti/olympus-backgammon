@@ -5,8 +5,8 @@ import { clone } from "ramda";
 type Turn = Moves[];
 
 export const Board = () => ({
-    turn: Player.neither as Player,
-    winner: Player.neither as Player,
+    turn: null as Player | null,
+    winner: null as Player | null,
     off: { [Player.white]: 0, [Player.black]: 0 },
     pips: new Array(26).fill(undefined).map(() => Pip()),
     diceRolled: new Array(2),
@@ -60,17 +60,23 @@ export const Board = () => ({
     },
 
     // Returns the player who's turn it ISN'T
-    otherPlayer(player?: Player): Player {
-        if (!player) player = this.turn;
+    otherPlayer(player?: Player.white | Player.black): Player.white | Player.black {
+        if (player === undefined) {
+            if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+            if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+            player = this.turn;
+        }
 
         if (player === Player.black) return Player.white;
-        if (player === Player.white) return Player.black;
-        return Player.neither;
+        else return Player.black;
     },
 
     // Is the board in a state where either player has won?
     // Returns the number of points won
     isGameOver(): number {
+        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+
         if (this.off[this.turn] === 15) {
             this.winner = this.turn;
             this.turn = Player.neither;
@@ -83,6 +89,10 @@ export const Board = () => ({
 
     // Validates a turn of 0–4 moves
     turnValidator(moves: Turn): TurnMessage {
+        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+        if (this.possibleTurns === null) throw "this.possibleTurns musn't be null"; // TODO: appeasing typescript
+
         // Validate turn length. Players must make as many moves as possible
         if (this.maxTurnLength !== moves.length) {
             // unless they have 14 checkers off and are bearing off their 15th (final)
@@ -105,6 +115,7 @@ export const Board = () => ({
 
     // Calculates destination pip of a move
     getDestination(start: number, die: number): number {
+        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
         return clamp(this.turn * die + start);
     },
 

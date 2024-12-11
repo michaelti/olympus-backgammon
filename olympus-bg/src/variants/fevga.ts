@@ -1,6 +1,10 @@
 import { Board as GenericBoard } from "../game.js";
 import { range, Pip, Move, Player, clamp, pipDistance } from "../util.js";
-const State = Object.freeze({ start: 1, firstAway: 2, default: 3 });
+enum State {
+    start = 1,
+    firstAway = 2,
+    default = 3,
+}
 
 const Fevga = () => ({
     // Inherit from generic board
@@ -20,6 +24,9 @@ const Fevga = () => ({
     // to:      Move to pip # <eg. 4>
     // return:  Returns a boolean
     isMoveValid(from: number, to: number): boolean {
+        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+
         to = clamp(to);
         if (this.pips[from].top !== this.turn) return false;
 
@@ -79,6 +86,9 @@ const Fevga = () => ({
     },
 
     doMove(from: number, to: number) {
+        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+
         to = clamp(to);
         this.recentMove = Move(from, to);
 

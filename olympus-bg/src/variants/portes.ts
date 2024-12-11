@@ -74,6 +74,8 @@ const Portes = () => ({
     },
 
     doMove(from: number, to: number) {
+        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+
         to = clamp(to);
         const bar = this.turn === Player.white ? 0 : 25;
         const otherBar = this.turn === Player.white ? 25 : 0;

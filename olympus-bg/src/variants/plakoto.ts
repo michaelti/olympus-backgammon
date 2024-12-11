@@ -55,6 +55,8 @@ const Plakoto = () => ({
     },
 
     doMove(from: number, to: number) {
+        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+
         to = clamp(to);
         this.recentMove = Move(from, to);
 
@@ -88,6 +90,9 @@ const Plakoto = () => ({
     // Is the board in a state where the game has just ended?
     // Returns the number of points won
     isGameOver(): number {
+        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+
         const home = { [Player.white]: this.pips[1], [Player.black]: this.pips[24] };
 
         // Both player's starting checkers have been trapped: game is a draw
