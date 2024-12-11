@@ -2,19 +2,17 @@ import { Move, Moves, Pip, Player, TurnMessage, clamp, random, pipDistance } fro
 // import clone from "ramda.clone";
 import { clone } from "ramda";
 
-type Turns = Moves[];
-
-type Turn = Player.black | Player.white;
+type Turn = Moves[];
 
 export const Board = () => ({
-    turn: Player.black as Turn,
+    turn: Player.neither as Player,
     winner: Player.neither as Player,
     off: { [Player.white]: 0, [Player.black]: 0 },
     pips: new Array(26).fill(undefined).map(() => Pip()),
     diceRolled: new Array(2),
     dice: new Array(2),
     recentMove: {},
-    possibleTurns: null as Turns[] | null,
+    possibleTurns: null as Turn[] | null,
     maxTurnLength: 0,
     turnValidity: TurnMessage.invalid,
     firstPip: 1,
@@ -62,11 +60,12 @@ export const Board = () => ({
     },
 
     // Returns the player who's turn it ISN'T
-    otherPlayer(player?: Turn): Turn {
+    otherPlayer(player?: Player): Player {
         if (!player) player = this.turn;
 
         if (player === Player.black) return Player.white;
-        else return Player.black;
+        if (player === Player.white) return Player.black;
+        return Player.neither;
     },
 
     // Is the board in a state where either player has won?
@@ -74,6 +73,7 @@ export const Board = () => ({
     isGameOver(): number {
         if (this.off[this.turn] === 15) {
             this.winner = this.turn;
+            this.turn = Player.neither;
             // if the other player has borne off 0 checkers, return 2 points
             const loser = this.otherPlayer(this.winner);
             return this.off[loser] === 0 ? 2 : 1;
@@ -82,7 +82,7 @@ export const Board = () => ({
     },
 
     // Validates a turn of 0–4 moves
-    turnValidator(moves: Turns): TurnMessage {
+    turnValidator(moves: Turn): TurnMessage {
         // Validate turn length. Players must make as many moves as possible
         if (this.maxTurnLength !== moves.length) {
             // unless they have 14 checkers off and are bearing off their 15th (final)
@@ -109,7 +109,7 @@ export const Board = () => ({
     },
 
     // Returns a 2D array of Move objects
-    allPossibleTurns(isBot: boolean): Turns[] {
+    allPossibleTurns(isBot: boolean): Turn[] {
         if (this.dice.length === 0) return [];
         const allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;

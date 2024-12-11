@@ -93,11 +93,13 @@ const Plakoto = () => ({
         // Both player's starting checkers have been trapped: game is a draw
         if (this.pips[1].top !== this.pips[1].bot && this.pips[24].top !== this.pips[24].bot) {
             this.winner = Player.neither;
+            this.turn = Player.neither;
             return 1;
         }
         // Player has borne off all of their checkers
         else if (this.off[this.turn] === 15) {
             this.winner = this.turn;
+            this.turn = Player.neither;
             // if the other player has born off 0 checkers, return 2 points
             return this.off[this.otherPlayer(this.winner)] === 0 ? 2 : 1;
         }
@@ -107,6 +109,7 @@ const Plakoto = () => ({
             home[this.turn].bot !== this.turn
         ) {
             this.winner = this.turn;
+            this.turn = Player.neither;
             return 2;
         }
 
