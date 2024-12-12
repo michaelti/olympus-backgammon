@@ -4,6 +4,12 @@ import { clone } from "ramda";
 
 type Turn = Moves[];
 
+type RecentMove = {
+    from: number;
+    to: number;
+    subMove?: Moves;
+};
+
 export const Board = () => ({
     turn: null as Player | null,
     winner: null as Player | null,
@@ -11,14 +17,14 @@ export const Board = () => ({
     pips: new Array(26).fill(undefined).map(() => Pip()),
     diceRolled: new Array(2),
     dice: new Array(2),
-    recentMove: {},
+    recentMove: {} as RecentMove,
     possibleTurns: null as Turn[] | null,
     maxTurnLength: 0,
     turnValidity: TurnMessage.invalid,
     firstPip: 1,
     lastPip: 24,
     // Property used by bot
-    uniqueTurns: null,
+    uniqueTurns: null as null | Map<any, any>,
     // Fevga properties
     state: undefined,
 
@@ -119,6 +125,11 @@ export const Board = () => ({
         return clamp(this.turn * die + start);
     },
 
+    // Abstract method. Must be overloaded.
+    isMoveValid(from: number, to: number): boolean {
+        return true;
+    },
+
     // Returns a 2D array of Move objects
     allPossibleTurns(isBot?: boolean): Turn[] {
         if (this.dice.length === 0) return [];
@@ -138,7 +149,7 @@ export const Board = () => ({
                             for (const nextMoves of nextTurns) {
                                 const turn = [currentMove, ...nextMoves];
                                 allTurns.push(turn);
-                                if (isBot && turn.length === 4) {
+                                if (isBot && this.uniqueTurns && turn.length === 4) {
                                     const destinations = turn.map((move) => move.to);
                                     const string = destinations.sort().join("");
                                     this.uniqueTurns.set(string, turn);
