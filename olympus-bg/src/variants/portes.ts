@@ -1,5 +1,5 @@
 import { Board as GenericBoard } from "../game.js";
-import { range, Pip, Player, clamp, pipDistance } from "../util.js";
+import { range, Pip, Player, clamp, pipDistance, TODO_DELETE_THIS_isTurnPlayer } from "../util.js";
 
 const Portes = () => ({
     // Inherit from generic board
@@ -74,7 +74,7 @@ const Portes = () => ({
     },
 
     doMove(from: number, to: number) {
-        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
 
         to = clamp(to);
         const bar = this.turn === Player.white ? 0 : 25;

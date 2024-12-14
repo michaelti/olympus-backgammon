@@ -1,5 +1,13 @@
-import { Move, Pip, Player, TurnMessage, clamp, random, pipDistance } from "./util.js";
-// import clone from "ramda.clone";
+import {
+    Move,
+    Pip,
+    Player,
+    TurnMessage,
+    clamp,
+    random,
+    pipDistance,
+    TODO_DELETE_THIS_isTurnPlayer,
+} from "./util.js";
 import { clone } from "ramda";
 
 type Turn = Move[];
@@ -68,8 +76,7 @@ export const Board = () => ({
     // Returns the player who's turn it ISN'T
     otherPlayer(player?: Player.white | Player.black): Player.white | Player.black {
         if (player === undefined) {
-            if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
-            if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+            TODO_DELETE_THIS_isTurnPlayer(this.turn);
             player = this.turn;
         }
 
@@ -80,8 +87,7 @@ export const Board = () => ({
     // Is the board in a state where either player has won?
     // Returns the number of points won
     isGameOver(): number {
-        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
-        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
 
         if (this.off[this.turn] === 15) {
             this.winner = this.turn;
@@ -95,8 +101,7 @@ export const Board = () => ({
 
     // Validates a turn of 0–4 moves
     turnValidator(moves: Turn): TurnMessage {
-        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
-        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
 
         // Validate turn length. Players must make as many moves as possible
         if (this.maxTurnLength !== moves.length) {
@@ -120,7 +125,7 @@ export const Board = () => ({
 
     // Calculates destination pip of a move
     getDestination(start: number, die: number): number {
-        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
         return clamp(this.turn * die + start);
     },
 

@@ -1,5 +1,5 @@
 import { Board as GenericBoard } from "../game.js";
-import { range, Pip, Player, clamp, pipDistance } from "../util.js";
+import { range, Pip, Player, clamp, pipDistance, TODO_DELETE_THIS_isTurnPlayer } from "../util.js";
 enum State {
     start = 1,
     firstAway = 2,
@@ -24,8 +24,7 @@ const Fevga = () => ({
     // to:      Move to pip # <eg. 4>
     // return:  Returns a boolean
     isMoveValid(from: number, to: number): boolean {
-        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
-        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
 
         to = clamp(to);
         if (this.pips[from].top !== this.turn) return false;
@@ -86,8 +85,7 @@ const Fevga = () => ({
     },
 
     doMove(from: number, to: number) {
-        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
-        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
 
         to = clamp(to);
         this.recentMove = { from, to };

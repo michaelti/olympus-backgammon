@@ -57,3 +57,11 @@ export const Pip = (size = 0, owner = Player.neither) => ({
 
 export const range = (start: number, end: number, length = end - start + 1) =>
     Array.from({ length }, (_, i) => start + i);
+
+export function TODO_DELETE_THIS_isTurnPlayer(
+    turn: Player | null,
+): asserts turn is Player.black | Player.white {
+    if (turn === Player.neither || turn === null) {
+        throw "turn musn't be neither or null";
+    }
+}

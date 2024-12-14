@@ -1,5 +1,5 @@
 import { Board as GenericBoard } from "../game.js";
-import { range, Pip, Player, clamp, pipDistance } from "../util.js";
+import { range, Pip, Player, clamp, pipDistance, TODO_DELETE_THIS_isTurnPlayer } from "../util.js";
 
 const Plakoto = () => ({
     // Inherit from generic board
@@ -55,7 +55,7 @@ const Plakoto = () => ({
     },
 
     doMove(from: number, to: number) {
-        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
 
         to = clamp(to);
         this.recentMove = { from, to };
@@ -90,8 +90,7 @@ const Plakoto = () => ({
     // Is the board in a state where the game has just ended?
     // Returns the number of points won
     isGameOver(): number {
-        if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
-        if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
 
         const home = { [Player.white]: this.pips[1], [Player.black]: this.pips[24] };
 
