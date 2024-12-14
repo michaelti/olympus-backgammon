@@ -24,7 +24,7 @@ export const Board = () => ({
     firstPip: 1,
     lastPip: 24,
     // Property used by bot
-    uniqueTurns: null as null | Map<any, any>,
+    uniqueTurns: null as null | Map<string, Moves[]>,
     // Fevga properties
     state: undefined,
 
@@ -127,7 +127,13 @@ export const Board = () => ({
 
     // Abstract method. Must be overloaded.
     isMoveValid(from: number, to: number): boolean {
+        console.log(from, to);
         return true;
+    },
+
+    // Abstract method. Must be overloaded.
+    doMove(from: number, to: number): void {
+        console.log(from, to);
     },
 
     // Returns a 2D array of Move objects
