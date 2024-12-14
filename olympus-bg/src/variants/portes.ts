@@ -1,5 +1,5 @@
 import { Board as GenericBoard } from "../game.js";
-import { range, Pip, Move, Player, clamp, pipDistance } from "../util.js";
+import { range, Pip, Player, clamp, pipDistance, TODO_DELETE_THIS_isTurnPlayer } from "../util.js";
 
 const Portes = () => ({
     // Inherit from generic board
@@ -27,7 +27,7 @@ const Portes = () => ({
     // from:    Move from pip # <eg. 1>
     // to:      Move to pip # <eg. 4>
     // return:  Returns a boolean
-    isMoveValid(from, to) {
+    isMoveValid(from: number, to: number): boolean {
         to = clamp(to);
         const bar = this.turn === Player.white ? 0 : 25;
         if (this.pips[from].top !== this.turn) return false;
@@ -73,11 +73,13 @@ const Portes = () => ({
         return true;
     },
 
-    doMove(from, to) {
+    doMove(from: number, to: number) {
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
+
         to = clamp(to);
         const bar = this.turn === Player.white ? 0 : 25;
         const otherBar = this.turn === Player.white ? 25 : 0;
-        this.recentMove = Move(from, to);
+        this.recentMove = { from, to };
 
         // From pip
         if (this.pips[bar].size > 0) {
@@ -99,8 +101,8 @@ const Portes = () => ({
             // Sending opponent to the bar
             if (this.pips[to].bot === this.otherPlayer()) {
                 this.pips[otherBar].size++;
-                if (this.turn === Player.white) this.recentMove.subMove = Move(to, 25);
-                if (this.turn === Player.black) this.recentMove.subMove = Move(to, 0);
+                if (this.turn === Player.white) this.recentMove.subMove = { from: to, to: 25 };
+                if (this.turn === Player.black) this.recentMove.subMove = { from: to, to: 0 };
             } else {
                 this.pips[to].size++;
             }
