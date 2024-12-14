@@ -158,7 +158,7 @@ function Bot(roomName) {
                           });
 
                 // Clear these so we don't waste resources cloning them in pickTurn()
-                logicBoard.possibleTurns = null;
+                logicBoard.possibleTurns = [];
                 logicBoard.uniqueTurns = null;
 
                 // Select the best turn for the bot to choose

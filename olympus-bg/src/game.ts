@@ -18,7 +18,7 @@ export const Board = () => ({
     diceRolled: new Array(2),
     dice: new Array(2),
     recentMove: {} as RecentMove,
-    possibleTurns: null as Turn[] | null,
+    possibleTurns: [] as Turn[],
     maxTurnLength: 0,
     turnValidity: TurnMessage.invalid,
     firstPip: 1,
@@ -55,7 +55,7 @@ export const Board = () => ({
         this.dice = [...this.diceRolled].sort((a, b) => a - b);
 
         // Set to null first to ensure garbage collection
-        this.possibleTurns = null;
+        this.possibleTurns = [];
         this.possibleTurns = this.allPossibleTurns(false);
 
         this.maxTurnLength = 0;
@@ -97,7 +97,6 @@ export const Board = () => ({
     turnValidator(moves: Turn): TurnMessage {
         if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
         if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
-        if (this.possibleTurns === null) throw "this.possibleTurns musn't be null"; // TODO: appeasing typescript
 
         // Validate turn length. Players must make as many moves as possible
         if (this.maxTurnLength !== moves.length) {
