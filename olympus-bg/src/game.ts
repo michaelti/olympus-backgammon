@@ -1,13 +1,13 @@
-import { Move, Moves, Pip, Player, TurnMessage, clamp, random, pipDistance } from "./util.js";
+import { Move, Pip, Player, TurnMessage, clamp, random, pipDistance } from "./util.js";
 // import clone from "ramda.clone";
 import { clone } from "ramda";
 
-type Turn = Moves[];
+type Turn = Move[];
 
 type RecentMove = {
     from: number;
     to: number;
-    subMove?: Moves;
+    subMove?: Move;
 };
 
 export const Board = () => ({
@@ -24,7 +24,7 @@ export const Board = () => ({
     firstPip: 1,
     lastPip: 24,
     // Property used by bot
-    uniqueTurns: null as null | Map<string, Moves[]>,
+    uniqueTurns: null as null | Map<string, Turn>,
     // Fevga properties
     state: undefined,
 
@@ -145,7 +145,7 @@ export const Board = () => ({
             for (let pipStart = this.firstPip; pipStart <= this.lastPip; pipStart++) {
                 if (this.pips[pipStart].top === this.turn) {
                     const pipEnd = this.getDestination(pipStart, die);
-                    const currentMove = Move(pipStart, pipEnd);
+                    const currentMove = { from: pipStart, to: pipEnd };
                     if (this.isMoveValid(currentMove.from, currentMove.to)) {
                         // deep copy game board using ramda
                         const newBoard = clone(this);

@@ -1,5 +1,5 @@
 import clone from "ramda.clone";
-import { Board, Player, Variant, reverseMove, rollDie, portes, plakoto, fevga } from "olympus-bg";
+import { Board, Player, Variant, rollDie, portes, plakoto, fevga } from "olympus-bg";
 
 const Step = Object.freeze({
     setup: 1,
@@ -97,8 +97,10 @@ export const Room = () => ({
             const move = this.moves.pop();
             const boardBackup = this.boardBackups.pop();
             this.board = clone(boardBackup);
-            this.board.recentMove = reverseMove(move);
-            if (move.subMove) this.board.recentMove.subMove = reverseMove(move.subMove);
+            this.board.recentMove = { from: move.to, to: move.from };
+            if (move.subMove) {
+                this.board.recentMove.subMove = { from: move.subMove.to, to: move.subMove.from };
+            }
         }
     },
 

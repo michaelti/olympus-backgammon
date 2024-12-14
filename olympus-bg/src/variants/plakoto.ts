@@ -1,5 +1,5 @@
 import { Board as GenericBoard } from "../game.js";
-import { range, Pip, Move, Player, clamp, pipDistance } from "../util.js";
+import { range, Pip, Player, clamp, pipDistance } from "../util.js";
 
 const Plakoto = () => ({
     // Inherit from generic board
@@ -58,7 +58,7 @@ const Plakoto = () => ({
         if (this.turn === null) throw "this.turn musn't be null"; // TODO: appeasing typescript
 
         to = clamp(to);
-        this.recentMove = Move(from, to);
+        this.recentMove = { from, to };
 
         // From pip
         if (this.pips[from].size === 1) {

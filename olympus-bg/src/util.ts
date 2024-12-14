@@ -28,7 +28,7 @@ export enum Variant {
 }
 
 // TODO: Delete the "Move" object factory and rename this to "Move"
-export type Moves = {
+export type Move = {
     from: number;
     to: number;
 };
@@ -49,15 +49,11 @@ export const rollDie = () => random.die(6);
 
 // OBJECT FACTORIES //
 
-export const Move = (from: number, to: number) => ({ from, to });
-
 export const Pip = (size = 0, owner = Player.neither) => ({
     size: size,
     top: owner,
     bot: owner,
 });
-
-export const reverseMove = (move: Moves) => ({ from: move.to, to: move.from });
 
 export const range = (start: number, end: number, length = end - start + 1) =>
     Array.from({ length }, (_, i) => start + i);

@@ -1,5 +1,5 @@
 import { Board as GenericBoard } from "../game.js";
-import { range, Pip, Move, Player, clamp, pipDistance } from "../util.js";
+import { range, Pip, Player, clamp, pipDistance } from "../util.js";
 enum State {
     start = 1,
     firstAway = 2,
@@ -90,7 +90,7 @@ const Fevga = () => ({
         if (this.turn === Player.neither) throw "this.turn musn't be Player.neither"; // TODO: appeasing typescript
 
         to = clamp(to);
-        this.recentMove = Move(from, to);
+        this.recentMove = { from, to };
 
         // From pip
         if (this.pips[from].size === 1) {
