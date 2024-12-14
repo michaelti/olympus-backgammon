@@ -27,7 +27,6 @@ export enum Variant {
     fevga = 3,
 }
 
-// TODO: Delete the "Move" object factory and rename this to "Move"
 export type Move = {
     from: number;
     to: number;
