@@ -1,14 +1,9 @@
-// TODO: Import Player from types
-enum Player {
-    neither = 0,
-    white = 1,
-    black = -1,
-}
+import { Player } from "./types.js";
 
 export class Pip {
     constructor(
-        public owner: Player = Player.neither,
         public size: number = 0,
-        public isPinned: boolean = false
+        public owner: Player = Player.neither,
+        public isPinned: boolean = false,
     ) {}
 }
