@@ -4,4 +4,4 @@ export enum Player {
     black = -1,
 }
 
-type PlayerBW = Player.white | Player.black;
+export type PlayerBW = Player.black | Player.white;

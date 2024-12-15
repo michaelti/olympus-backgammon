@@ -1,5 +1,5 @@
-import { rollDie } from "../util.js";
-
+import { otherPlayer, rollDie } from "../util.js";
+import { Player } from "../types.js";
 import { expect, describe, test } from "vitest";
 
 describe("rollDie", () => {
@@ -32,5 +32,17 @@ describe("rollDie", () => {
                 `Unexpected number of ${i + 1}s`,
             );
         });
+    });
+});
+
+describe("otherPlayer", () => {
+    test("Returns white given black", () => {
+        const player = otherPlayer(Player.black);
+        expect(player).toBe(Player.white);
+    });
+
+    test("Returns black given white", () => {
+        const player = otherPlayer(Player.white);
+        expect(player).toBe(Player.black);
     });
 });
