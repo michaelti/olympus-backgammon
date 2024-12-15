@@ -6,12 +6,14 @@ describe("constructor", () => {
         const dice = new Dice([1, 1]);
         expect(dice.initial).toEqual([1, 1, 1, 1]);
         expect(dice.remaining).toEqual([1, 1, 1, 1]);
+        expect(dice.isDoubles).toBe(true);
     });
 
     test("Constructs regular numbers", () => {
         const dice = new Dice([2, 1]);
         expect(dice.initial).toEqual([2, 1]);
         expect(dice.remaining).toEqual([2, 1]);
+        expect(dice.isDoubles).toBe(false);
     });
 
     test("Rolls randomly", () => {
