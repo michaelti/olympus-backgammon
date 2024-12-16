@@ -1,10 +1,8 @@
-import { includes } from "ramda";
 import { rollDie } from "./util.js";
 
 export class Dice {
     initial: [number, number] | [number, number, number, number];
     remaining: number[];
-    isDoubles: boolean = false;
 
     /**
      * Rolls a pair of dice.
@@ -16,7 +14,6 @@ export class Dice {
 
         if (dice[0] === dice[1]) {
             this.initial = [dice[0], dice[0], dice[0], dice[0]];
-            this.isDoubles = true;
         } else {
             this.initial = [dice[0], dice[1]];
         }
@@ -39,6 +36,10 @@ export class Dice {
 
     getSmallest(): number {
         return Math.min(...this.remaining);
+    }
+
+    isDoubles(): boolean {
+        return this.initial.length === 4;
     }
 
     /**

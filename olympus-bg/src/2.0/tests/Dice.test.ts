@@ -6,14 +6,14 @@ describe("constructor", () => {
         const dice = new Dice([1, 1]);
         expect(dice.initial).toEqual([1, 1, 1, 1]);
         expect(dice.remaining).toEqual([1, 1, 1, 1]);
-        expect(dice.isDoubles).toBe(true);
+        expect(dice.isDoubles()).toBe(true);
     });
 
     test("Constructs regular numbers", () => {
         const dice = new Dice([2, 1]);
         expect(dice.initial).toEqual([2, 1]);
         expect(dice.remaining).toEqual([2, 1]);
-        expect(dice.isDoubles).toBe(false);
+        expect(dice.isDoubles()).toBe(false);
     });
 
     test("Rolls randomly", () => {
@@ -56,6 +56,18 @@ describe("getSmallest", () => {
 
         const dice2 = new Dice([2, 1]);
         expect(dice2.getSmallest()).toEqual(1);
+    });
+});
+
+describe("isDoubles", () => {
+    test("Returns true for doubles", () => {
+        const dice = new Dice([1, 1]);
+        expect(dice.isDoubles()).toEqual(true);
+    });
+
+    test("Returns false for regular roll", () => {
+        const dice = new Dice([1, 2]);
+        expect(dice.isDoubles()).toEqual(false);
     });
 });
 
