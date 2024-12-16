@@ -1,3 +1,4 @@
+import { includes } from "ramda";
 import { rollDie } from "./util.js";
 
 export class Dice {
@@ -21,6 +22,15 @@ export class Dice {
         }
 
         this.remaining = [...this.initial];
+    }
+
+    /**
+     * Does the remaining dice include die
+     * @param die
+     * @returns true or false
+     */
+    includes(die: number): boolean {
+        return this.remaining.includes(die);
     }
 
     getLargest(): number {
