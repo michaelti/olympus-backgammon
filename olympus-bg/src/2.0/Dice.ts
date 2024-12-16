@@ -7,9 +7,11 @@ export class Dice {
     /**
      * Rolls a pair of dice.
      * @param values Optionally provide values for the dice. Random if omitted.
+     * @param remaining Optionally provide values for remaining dice. Initial if omitted.
      */
-    constructor(values?: [number, number]) {
+    constructor(values?: [number, number], remaining?: number[]) {
         let dice = values;
+
         if (!dice) dice = [rollDie(), rollDie()];
 
         if (dice[0] === dice[1]) {
@@ -18,7 +20,7 @@ export class Dice {
             this.initial = [dice[0], dice[1]];
         }
 
-        this.remaining = [...this.initial];
+        this.remaining = remaining ?? [...this.initial];
     }
 
     /**

@@ -16,6 +16,11 @@ describe("constructor", () => {
         expect(dice.isDoubles()).toBe(false);
     });
 
+    test("Constructs remaining dice", () => {
+        const dice = new Dice([2, 1], [1]);
+        expect(dice.remaining).toEqual([1]);
+    });
+
     test("Rolls randomly", () => {
         const dice = new Dice();
 
