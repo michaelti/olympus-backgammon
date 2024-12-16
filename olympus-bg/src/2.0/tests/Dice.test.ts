@@ -29,6 +29,16 @@ describe("constructor", () => {
     });
 });
 
+describe("includes", () => {
+    test("If it includes", () => {
+        const dice = new Dice([1, 2]);
+        expect(dice.includes(3)).toBe(false);
+        expect(dice.includes(1)).toBe(true);
+        dice.remaining = [2];
+        expect(dice.includes(1)).toBe(false);
+    });
+});
+
 describe("getLargest", () => {
     test("Gets largest number", () => {
         const dice = new Dice([1, 2]);
