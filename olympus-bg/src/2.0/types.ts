@@ -26,7 +26,6 @@ export type MoveData = {
 export type DiceData = {
     initial: [number, number] | [number, number, number, number];
     remaining: number[];
-    isDoubles: boolean;
 };
 
 type PipData = {
