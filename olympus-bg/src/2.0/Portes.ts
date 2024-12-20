@@ -5,10 +5,7 @@ import { GameData, Player, PlayerBW } from "./types.js";
 export class Portes extends Game {
     constructor(initial: GameData | { player: PlayerBW }) {
         super(initial);
-
-        if ("pips" in initial) {
-            return;
-        }
+        if ("pips" in initial) return;
 
         // Black moves towards pip 1 (decreasing)
         // White moves towards pip 24 (increasing)
