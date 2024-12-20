@@ -18,8 +18,6 @@
 - pips: Pip[]
 - bar
 - off
-- firstPip\*
-- lastPip\*
 - possibleTurns\*
 - constructor()
 - abstract isMoveValid()
@@ -30,8 +28,6 @@
 
 ### Portes, Plakoto, Fevga (extends Game)
 
-- firstPip\*
-- lastPip\*
 - state (fevga only)
 - constructor()
 - startTurn()

@@ -146,6 +146,7 @@ export const Board = () => ({
         const allTurns = [];
         const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
         for (const die of uniqueDice) {
+            // TODO: Replace this.firstPip and this.lastPip with 0 and 25. It's probably fine.
             for (let pipStart = this.firstPip; pipStart <= this.lastPip; pipStart++) {
                 if (this.pips[pipStart].top === this.turn) {
                     const pipEnd = this.getDestination(pipStart, die);

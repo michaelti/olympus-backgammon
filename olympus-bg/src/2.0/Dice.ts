@@ -9,15 +9,16 @@ export class Dice {
      * @param values Optionally provide values for the dice. Random if omitted.
      * @param remaining Optionally provide values for remaining dice. Initial if omitted.
      */
-    constructor(values?: [number, number], remaining?: number[]) {
-        let dice = values;
+    constructor(
+        initial?: [number, number] | [number, number, number, number],
+        remaining?: number[],
+    ) {
+        if (!initial) initial = [rollDie(), rollDie()];
 
-        if (!dice) dice = [rollDie(), rollDie()];
-
-        if (dice[0] === dice[1]) {
-            this.initial = [dice[0], dice[0], dice[0], dice[0]];
+        if (initial[0] === initial[1]) {
+            this.initial = [initial[0], initial[0], initial[0], initial[0]];
         } else {
-            this.initial = [dice[0], dice[1]];
+            this.initial = [initial[0], initial[1]];
         }
 
         this.remaining = remaining ?? [...this.initial];

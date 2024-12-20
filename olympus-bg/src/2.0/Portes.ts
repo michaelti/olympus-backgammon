@@ -1,26 +1,27 @@
 import { Game } from "./Game.js";
 import { clamp, pipDistance, range } from "./util.js";
-import { Player, PlayerBW } from "./types.js";
-import { Pip } from "./Pip.js";
+import { GameData, Player, PlayerBW } from "./types.js";
 
 export class Portes extends Game {
-    // firstPip = 0;
-    // lastPip = 25;
-    constructor(startPlayer: PlayerBW) {
-        super(startPlayer);
+    constructor(initial: GameData | { player: PlayerBW }) {
+        super(initial);
 
-        // What's better? Creating a new object, or changing one?
-        // this.pips[25].set(0, Player.black);
-        this.pips[25] = new Pip(0, Player.black);
-        this.pips[24] = new Pip(2, Player.black); // Black moves towards pip 1 (decreasing)
-        this.pips[19] = new Pip(5, Player.white);
-        this.pips[17] = new Pip(3, Player.white);
-        this.pips[13] = new Pip(5, Player.black);
-        this.pips[12] = new Pip(5, Player.white);
-        this.pips[8] = new Pip(3, Player.black);
-        this.pips[6] = new Pip(5, Player.black);
-        this.pips[1] = new Pip(2, Player.white); // White moves towards pip 24 (increasing)
-        this.pips[0] = new Pip(0, Player.white);
+        if ("pips" in initial) {
+            return;
+        }
+
+        // Black moves towards pip 1 (decreasing)
+        // White moves towards pip 24 (increasing)
+        this.pips[25].set(0, Player.black);
+        this.pips[24].set(2, Player.black);
+        this.pips[19].set(5, Player.white);
+        this.pips[17].set(3, Player.white);
+        this.pips[13].set(5, Player.black);
+        this.pips[12].set(5, Player.white);
+        this.pips[8].set(3, Player.black);
+        this.pips[6].set(5, Player.black);
+        this.pips[1].set(2, Player.white);
+        this.pips[0].set(0, Player.white);
     }
 
     isMoveValid(from: number, to: number): boolean {
@@ -70,6 +71,8 @@ export class Portes extends Game {
     }
 
     doMove(from: number, to: number): void {
-        throw new Error("Method not implemented.");
+        throw new Error(
+            `Method not implemented. But just for the record, you went: ${from} to ${to}`,
+        );
     }
 }

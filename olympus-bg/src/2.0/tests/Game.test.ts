@@ -18,7 +18,7 @@ class MockGame extends Game {
 
 describe("constructor", () => {
     test("Initializes pips", () => {
-        const game = new MockGame(Player.black);
+        const game = new MockGame({ player: Player.black });
         expect(game.pips).toHaveLength(26);
         expect(game.pips[0]).toBeInstanceOf(Pip);
     });
@@ -60,7 +60,7 @@ describe("constructor", () => {
             dice: { initial: [6, 3], remaining: [6, 3] },
         };
 
-        const game = new MockGame(Player.black, gameData);
+        const game = new MockGame(gameData);
 
         expect(game).toMatchObject(gameData);
     });

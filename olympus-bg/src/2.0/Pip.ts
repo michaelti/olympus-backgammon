@@ -6,4 +6,10 @@ export class Pip {
         public owner: Player = Player.neither,
         public isPinned: boolean = false,
     ) {}
+
+    set(size: number, owner: Player, isPinned?: boolean) {
+        this.size = size;
+        this.owner = owner;
+        this.isPinned = isPinned ?? this.isPinned;
+    }
 }

@@ -1,4 +1,4 @@
-import { GameData, Player, PlayerBW } from "./types.js";
+import { Bar, GameData, Off, Player, PlayerBW } from "./types.js";
 import { Move } from "./Move.js";
 import { Dice } from "./Dice.js";
 import { Pip } from "./Pip.js";
@@ -6,32 +6,30 @@ import { otherPlayer } from "./util.js";
 
 export abstract class Game {
     player: PlayerBW;
-    moves: Move[] = [];
     dice: Dice;
-    pips: Pip[] = Array.from({ length: 26 }, () => new Pip());
-    bar = { [Player.black]: 0, [Player.white]: 0 };
-    off = { [Player.black]: 0, [Player.white]: 0 };
-
-    // #firstPip = 1;
-    // #lastPip = 24;
+    moves: Move[];
+    pips: Pip[];
+    bar: Bar;
+    off: Off;
     // #possibleTurns: Move[][] = [];
 
-    constructor(startPlayer: PlayerBW, gameData?: GameData) {
-        // TODO: make a better signature to avoid repetition
-        this.player = startPlayer;
-        this.dice = new Dice();
-
-        if (gameData) {
-            this.player = gameData.player;
-            this.moves = gameData.moves.map((move) => new Move(move.from, move.to, move.dieUsed));
-            this.dice = new Dice(
-                [gameData.dice.initial[0], gameData.dice.initial[1]],
-                gameData.dice.remaining,
-            ); // TODO: fix the tuple stuff
-            this.pips = gameData.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
-            this.bar = { ...gameData.bar };
-            this.off = { ...gameData.off };
+    constructor(initial: GameData | { player: PlayerBW }) {
+        if ("pips" in initial) {
+            this.player = initial.player;
+            this.moves = initial.moves.map((move) => new Move(move.from, move.to, move.dieUsed));
+            this.dice = new Dice(initial.dice.initial, initial.dice.remaining);
+            this.pips = initial.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
+            this.bar = { ...initial.bar };
+            this.off = { ...initial.off };
+            return;
         }
+
+        this.player = initial.player;
+        this.dice = new Dice();
+        this.moves = [];
+        this.pips = Array.from({ length: 26 }, () => new Pip());
+        this.bar = { [Player.black]: 0, [Player.white]: 0 };
+        this.off = { [Player.black]: 0, [Player.white]: 0 };
     }
 
     abstract isMoveValid(from: number, to: number): boolean;

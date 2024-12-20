@@ -6,7 +6,17 @@ export enum Player {
 
 export type PlayerBW = Player.black | Player.white;
 
-// TODO: consider whethere this is the right approach
+export type Bar = {
+    [Player.black]: number;
+    [Player.white]: number;
+};
+
+export type Off = {
+    [Player.black]: number;
+    [Player.white]: number;
+};
+
+// TODO: consider whether this is the right approach
 // (for snapshots/restoration of game state)
 export type GameData = {
     player: PlayerBW;
