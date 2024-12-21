@@ -67,9 +67,45 @@ export class Portes extends Game {
         return true;
     }
 
-    doMove(from: number, to: number): void {
-        throw new Error(
-            `Method not implemented. But just for the record, you went: ${from} to ${to}`,
-        );
+    doMove(from: number, to: number) {
+        TODO_DELETE_THIS_isTurnPlayer(this.turn);
+
+        to = clamp(to);
+        const bar = this.turn === Player.white ? 0 : 25;
+        const otherBar = this.turn === Player.white ? 25 : 0;
+        this.recentMove = { from, to };
+
+        // From pip
+        if (this.pips[bar].size > 0) {
+            // Don't change owner of the bar ever
+        } else if (this.pips[from].size === 1) {
+            this.pips[from].top = Player.neither;
+            this.pips[from].bot = Player.neither;
+        } else if (this.pips[from].size === 2 && this.pips[from].top !== this.pips[from].bot) {
+            this.pips[from].top = this.pips[from].bot;
+        }
+        this.pips[from].size--;
+
+        // To pip
+        if (to === 0 || to === 25) {
+            // Bearing off
+            if (this.turn === Player.white) this.off[Player.white]++;
+            if (this.turn === Player.black) this.off[Player.black]++;
+        } else {
+            // Sending opponent to the bar
+            if (this.pips[to].bot === this.otherPlayer()) {
+                this.pips[otherBar].size++;
+                if (this.turn === Player.white) this.recentMove.subMove = { from: to, to: 25 };
+                if (this.turn === Player.black) this.recentMove.subMove = { from: to, to: 0 };
+            } else {
+                this.pips[to].size++;
+            }
+            this.pips[to].top = this.turn;
+            this.pips[to].bot = this.turn;
+        }
+
+        // Handle dice. NOTE: this will only work for 2 distinct values or 4 identical values
+        if (this.dice[0] >= pipDistance(from, to)) this.dice.shift();
+        else this.dice.pop();
     }
 }
