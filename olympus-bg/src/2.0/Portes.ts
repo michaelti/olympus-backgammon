@@ -72,7 +72,7 @@ export class Portes extends Game {
         to = clamp(to);
         const bar = this.player === Player.white ? 0 : 25;
         const otherBar = this.player === Player.white ? 25 : 0;
-        var subMove;
+        let sideEffect;
 
         // From pip
         if (this.pips[bar].size > 0) {
@@ -90,7 +90,7 @@ export class Portes extends Game {
             // Sending opponent to the bar
             if (this.pips[to].owner === this.otherPlayer()) {
                 this.pips[otherBar].size++;
-                subMove = { from: to, to: otherBar };
+                sideEffect = { from: to, to: otherBar };
             }
             // Regular move
             else {
@@ -100,10 +100,10 @@ export class Portes extends Game {
         }
 
         // Use smallest dice possible
-        var die = this.dice.getSmallest();
+        let die = this.dice.getSmallest();
         if (die < pipDistance(from, to)) die = this.dice.getLargest();
         this.dice.use(die);
 
-        this.moves.push(new Move(from, to, die, subMove));
+        this.moves.push(new Move(from, to, die, sideEffect));
     }
 }
