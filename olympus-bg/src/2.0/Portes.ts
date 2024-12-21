@@ -1,6 +1,7 @@
 import { Game } from "./Game.js";
 import { clamp, pipDistance, range } from "./util.js";
 import { GameData, Player, PlayerBW } from "./types.js";
+import { Move } from "./Move.js";
 
 export class Portes extends Game {
     constructor(initial: GameData | { player: PlayerBW }) {
@@ -67,45 +68,42 @@ export class Portes extends Game {
         return true;
     }
 
-    doMove(from: number, to: number) {
-        TODO_DELETE_THIS_isTurnPlayer(this.turn);
-
+    doMove(from: number, to: number): void {
         to = clamp(to);
-        const bar = this.turn === Player.white ? 0 : 25;
-        const otherBar = this.turn === Player.white ? 25 : 0;
-        this.recentMove = { from, to };
+        const bar = this.player === Player.white ? 0 : 25;
+        const otherBar = this.player === Player.white ? 25 : 0;
+        var subMove;
 
         // From pip
         if (this.pips[bar].size > 0) {
             // Don't change owner of the bar ever
         } else if (this.pips[from].size === 1) {
-            this.pips[from].top = Player.neither;
-            this.pips[from].bot = Player.neither;
-        } else if (this.pips[from].size === 2 && this.pips[from].top !== this.pips[from].bot) {
-            this.pips[from].top = this.pips[from].bot;
+            this.pips[from].owner = Player.neither;
         }
         this.pips[from].size--;
 
         // To pip
         if (to === 0 || to === 25) {
             // Bearing off
-            if (this.turn === Player.white) this.off[Player.white]++;
-            if (this.turn === Player.black) this.off[Player.black]++;
+            this.off[this.player]++;
         } else {
             // Sending opponent to the bar
-            if (this.pips[to].bot === this.otherPlayer()) {
+            if (this.pips[to].owner === this.otherPlayer()) {
                 this.pips[otherBar].size++;
-                if (this.turn === Player.white) this.recentMove.subMove = { from: to, to: 25 };
-                if (this.turn === Player.black) this.recentMove.subMove = { from: to, to: 0 };
-            } else {
+                subMove = { from: to, to: otherBar };
+            }
+            // Regular move
+            else {
                 this.pips[to].size++;
             }
-            this.pips[to].top = this.turn;
-            this.pips[to].bot = this.turn;
+            this.pips[to].owner = this.player;
         }
 
-        // Handle dice. NOTE: this will only work for 2 distinct values or 4 identical values
-        if (this.dice[0] >= pipDistance(from, to)) this.dice.shift();
-        else this.dice.pop();
+        // Use smallest dice possible
+        var die = this.dice.getSmallest();
+        if (die < pipDistance(from, to)) die = this.dice.getLargest();
+        this.dice.use(die);
+
+        this.moves.push(new Move(from, to, die, subMove));
     }
 }
