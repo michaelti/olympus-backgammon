@@ -105,4 +105,45 @@ export class Portes extends Game {
 
         this.moves.push(new Move(from, to, die, sideEffect));
     }
+
+    /**
+     * Undoes the last move made by the current player.
+     *
+     * This method performs the following actions:
+     * - Pops the last move from the moves stack.
+     * - Reverts the dice usage for the move.
+     * - Handles any side effects of the move, such as sending the opponent to the bar.
+     * - Updates the pip counts and ownership for the 'to' and 'from' positions of the move.
+     *
+     * @remarks
+     * If there is no move to undo, the method returns immediately.
+     *
+     * @returns {void}
+     */
+    undoMove(): void {
+        const move = this.moves.pop();
+        if (!move) return;
+
+        const { from, to, dieUsed, sideEffect } = move;
+        const off = this.player === Player.white ? 25 : 0;
+
+        this.dice.unUse(dieUsed);
+
+        // Only possible side effect is sending opponent to the bar
+        if (sideEffect) {
+            this.pips[sideEffect.to].size--;
+            this.pips[sideEffect.from].owner = this.otherPlayer();
+            this.pips[sideEffect.from].size++;
+        }
+
+        // Undo to
+        if (this.pips[to].size === 1 && to !== off) {
+            this.pips[to].owner = Player.neither;
+        }
+        this.pips[to].size--;
+
+        // Undo from
+        this.pips[from].size++;
+        this.pips[from].owner = this.player;
+    }
 }
