@@ -40,7 +40,7 @@ export class Portes extends Game {
             // Range of all pips excluding the current player's home quadrant
             const nonHomePips = this.player === Player.white ? range(1, 18) : range(7, 24);
             for (const i of nonHomePips) {
-                if (this.pips[i].owner === this.player || this.pips[i].isPinned) return false;
+                if (this.pips[i].owner === this.player) return false;
             }
             // If bearing off from an non-exact number of pips
             if (!this.dice.includes(pipDistance(from, to))) {
@@ -50,8 +50,7 @@ export class Portes extends Game {
                     const farHomePips =
                         this.player === Player.white ? range(19, from - 1) : range(from + 1, 6);
                     for (const i of farHomePips) {
-                        if (this.pips[i].owner === this.player || this.pips[i].isPinned)
-                            return false;
+                        if (this.pips[i].owner === this.player) return false;
                     }
                 } else {
                     return false;
