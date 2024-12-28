@@ -4,10 +4,16 @@ export class Move {
     dieUsed: number;
     sideEffect?: { from: number; to: number };
 
-    constructor(from: number, to: number, dieUsed: number) {
+    constructor(
+        from: number,
+        to: number,
+        dieUsed: number,
+        sideEffect?: { from: number; to: number },
+    ) {
         this.from = from;
         this.to = to;
         this.dieUsed = dieUsed;
+        this.sideEffect = sideEffect;
     }
 
     setSideEffect(from: number, to: number) {
