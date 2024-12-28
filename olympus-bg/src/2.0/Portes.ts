@@ -9,7 +9,6 @@ export class Portes extends Game {
 
         // Black moves towards pip 1 (decreasing)
         // White moves towards pip 24 (increasing)
-        this.pips[25].set(0, Player.black);
         this.pips[24].set(2, Player.black);
         this.pips[19].set(5, Player.white);
         this.pips[17].set(3, Player.white);
@@ -18,7 +17,6 @@ export class Portes extends Game {
         this.pips[8].set(3, Player.black);
         this.pips[6].set(5, Player.black);
         this.pips[1].set(2, Player.white);
-        this.pips[0].set(0, Player.white);
     }
 
     isMoveValid(from: number, to: number): boolean {
