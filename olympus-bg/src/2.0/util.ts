@@ -1,4 +1,4 @@
-import { Player, PlayerBW } from "./types.js";
+import { PipData, Player, PlayerBW } from "./types.js";
 
 /**
  * Generates a random number between 1 and 6
@@ -40,4 +40,42 @@ export function pipDistance(from: number, to: number): number {
 export function range(start: number, end: number): number[] {
     const length = end - start + 1;
     return Array.from({ length }, (_, i) => start + i);
+}
+
+/**
+ * Returns an array of pips based on a serialized string
+ * E.g. stringToPips(`
+            5b 0 0 0 3w 0 5w 0 0 0 0 2b
+            5w 0 0 0 3b 0 5b 0 0 0 0 2w
+        `)
+ */
+export function stringToPips(string: string): PipData[] {
+    const rows = string.trim().split("\n");
+    const topRow = rows[0].split(" ");
+    const bottomRow = rows[1].trim().split(" ").reverse();
+    const pipValues = [...bottomRow, ...topRow];
+
+    const pips: PipData[] = [];
+
+    for (let i = 0; i < pipValues.length; i++) {
+        const pipValue = pipValues[i];
+        const playerMap = new Map([
+            ["w", Player.white],
+            ["b", Player.black],
+            ["", Player.neither],
+        ]);
+
+        const size = Number(pipValue.replace(/[^0-9]/g, ""));
+        const owner = playerMap.get(pipValue.replace(/[^a-z]/g, "")) ?? Player.neither;
+        const isPinned = pipValue.includes("*");
+
+        const pip = { owner, size, isPinned };
+
+        pips.push(pip);
+    }
+
+    pips.unshift({ owner: Player.neither, size: 0, isPinned: false }); // 0
+    pips.push({ owner: Player.neither, size: 0, isPinned: false }); // 25
+
+    return pips;
 }

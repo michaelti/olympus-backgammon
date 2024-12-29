@@ -38,7 +38,7 @@ export type DiceData = {
     remaining: number[];
 };
 
-type PipData = {
+export type PipData = {
     size: number;
     owner: Player;
     isPinned: boolean;
