@@ -49,6 +49,10 @@ export function range(start: number, end: number): number[] {
             5w 0 0 0 3b 0 5b 0 0 0 0 2w
             0b 0w
         `)
+ * E.g. stringToPips(`
+            0 0 0 0 0 0 0 0 0 0 0 14b
+            0 2b* 0 0 0 0 0 0 0 0 0 14w
+        `)
  */
 export function stringToPips(string: string): PipData[] {
     const rows = string.trim().split("\n");

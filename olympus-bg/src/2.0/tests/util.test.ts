@@ -120,4 +120,40 @@ describe("stringToPips", () => {
             { owner: Player.black, size: 2, isPinned: false },
         ]);
     });
+
+    test("Returns pinned", () => {
+        const pips = stringToPips(`
+            0 0 0 0 0 0 0 0 0 0 0 14b
+            0 2b* 0 0 0 0 0 0 0 0 0 14w
+        `);
+
+        expect(pips).toEqual([
+            { owner: Player.white, size: 0, isPinned: false },
+            { owner: Player.white, size: 14, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.black, size: 2, isPinned: true },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.black, size: 14, isPinned: false },
+            { owner: Player.black, size: 0, isPinned: false },
+        ]);
+    });
 });
