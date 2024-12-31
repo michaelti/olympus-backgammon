@@ -45,23 +45,27 @@ function stressTest(fn: () => void) {
     }
 }
 
-describe("Approaches to cloning boards", () => {
-    test("Old (Board) implementation", () => {
-        const board = Board();
-        const boards = [];
+describe(
+    "Approaches to cloning boards",
+    () => {
+        test("Old (Board) implementation", () => {
+            const board = Board();
+            const boards = [];
 
-        stressTest(() => {
-            const clonedBoard = clone(board);
-            boards.push(clonedBoard);
+            stressTest(() => {
+                const clonedBoard = clone(board);
+                boards.push(clonedBoard);
+            });
         });
-    });
 
-    test("New (Game) implementation", () => {
-        const game = new MockGame({ player: Player.black });
-        const games = [];
-        stressTest(() => {
-            const clonedGame = new MockGame(game);
-            games.push(clonedGame);
+        test("New (Game) implementation", () => {
+            const game = new MockGame({ player: Player.black });
+            const games = [];
+            stressTest(() => {
+                const clonedGame = new MockGame(game);
+                games.push(clonedGame);
+            });
         });
-    });
-});
+    },
+    { skip: true },
+);

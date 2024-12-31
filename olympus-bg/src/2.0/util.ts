@@ -47,7 +47,7 @@ export function range(start: number, end: number): number[] {
  * E.g. stringToPips(`
             5b 0 0 0 3w 0 5w 0 0 0 0 2b
             5w 0 0 0 3b 0 5b 0 0 0 0 2w
-            0b 0w
+            2b 1w
         `)
  * E.g. stringToPips(`
             0 0 0 0 0 0 0 0 0 0 0 14b
@@ -102,4 +102,60 @@ export function stringToPips(string: string): PipData[] {
     pips.push({ owner: Player.black, size: 0, isPinned: false });
 
     return pips;
+}
+
+/**
+ * Returns a serialized string based on an array of pips
+ * See stringToPips for more info.
+ */
+export function pipsToString(pips: PipData[]): string {
+    const playerMap = new Map([
+        [Player.white, "w"],
+        [Player.black, "b"],
+        [Player.neither, ""],
+    ]);
+
+    const pipToString = (pip: PipData) => {
+        const size = String(pip.size);
+        const owner = pip.size > 0 ? playerMap.get(pip.owner) : "";
+        const pinned = pip.isPinned ? "*" : "";
+        return size + owner + pinned;
+    };
+
+    let string = "";
+
+    const topRow = [];
+    const bottomRow = [];
+    const bar = [];
+
+    for (let i = 13; i <= 24; i++) {
+        topRow.push(pipToString(pips[i]));
+    }
+
+    for (let i = 12; i >= 1; i--) {
+        bottomRow.push(pipToString(pips[i]));
+    }
+
+    if (pips[0].size > 0) {
+        const size = String(pips[0].size);
+        const owner = playerMap.get(pips[0].owner);
+        bar.push(size + owner);
+    }
+
+    if (pips[25].size > 0) {
+        const size = String(pips[25].size);
+        const owner = playerMap.get(pips[25].owner);
+        bar.push(size + owner);
+    }
+
+    string += topRow.join(" ");
+    string += "\n";
+    string += bottomRow.join(" ");
+
+    if (bar.length > 0) {
+        string += "\n";
+        string += bar.join(" ");
+    }
+
+    return string;
 }
