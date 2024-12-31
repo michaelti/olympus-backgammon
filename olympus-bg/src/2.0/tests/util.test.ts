@@ -1,4 +1,4 @@
-import { otherPlayer, rollDie } from "../util.js";
+import { otherPlayer, rollDie, stringToPips } from "../util.js";
 import { Player } from "../types.js";
 import { expect, describe, test } from "vitest";
 
@@ -44,5 +44,80 @@ describe("otherPlayer", () => {
     test("Returns black given white", () => {
         const player = otherPlayer(Player.white);
         expect(player).toBe(Player.black);
+    });
+});
+
+describe("stringToPips", () => {
+    test("Returns portes setup", () => {
+        const pips = stringToPips(`
+            5b 0 0 0 3w 0 5w 0 0 0 0 2b
+            5w 0 0 0 3b 0 5b 0 0 0 0 2w
+        `);
+
+        expect(pips).toEqual([
+            { owner: Player.white, size: 0, isPinned: false },
+            { owner: Player.white, size: 2, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.black, size: 5, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.black, size: 3, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.white, size: 5, isPinned: false },
+            { owner: Player.black, size: 5, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.white, size: 3, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.white, size: 5, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.black, size: 2, isPinned: false },
+            { owner: Player.black, size: 0, isPinned: false },
+        ]);
+    });
+
+    test("Returns bars", () => {
+        const pips = stringToPips(`
+            0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0
+            2b 1w
+        `);
+
+        expect(pips).toEqual([
+            { owner: Player.white, size: 1, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.neither, size: 0, isPinned: false },
+            { owner: Player.black, size: 2, isPinned: false },
+        ]);
     });
 });

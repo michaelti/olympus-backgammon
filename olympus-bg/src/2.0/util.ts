@@ -47,6 +47,7 @@ export function range(start: number, end: number): number[] {
  * E.g. stringToPips(`
             5b 0 0 0 3w 0 5w 0 0 0 0 2b
             5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            0b 0w
         `)
  */
 export function stringToPips(string: string): PipData[] {
@@ -74,8 +75,27 @@ export function stringToPips(string: string): PipData[] {
         pips.push(pip);
     }
 
-    pips.unshift({ owner: Player.neither, size: 0, isPinned: false }); // 0
-    pips.push({ owner: Player.neither, size: 0, isPinned: false }); // 25
+    // Bar
+    if (rows[2]) {
+        const bar = rows[2].trim().split(" ");
+
+        const barBlack = bar.find((item) => item.includes("b"));
+        const barWhite = bar.find((item) => item.includes("w"));
+
+        let barBlackSize = 0;
+        let barWhiteSize = 0;
+
+        if (barBlack) barBlackSize = Number(barBlack.replace(/[^0-9]/g, ""));
+        if (barWhite) barWhiteSize = Number(barWhite.replace(/[^0-9]/g, ""));
+
+        pips.unshift({ owner: Player.white, size: barWhiteSize, isPinned: false }); // "Pip" 0
+        pips.push({ owner: Player.black, size: barBlackSize, isPinned: false }); // "Pip" 25
+
+        return pips;
+    }
+
+    pips.unshift({ owner: Player.white, size: 0, isPinned: false });
+    pips.push({ owner: Player.black, size: 0, isPinned: false });
 
     return pips;
 }
