@@ -14,6 +14,10 @@ export abstract class Game {
     // #possibleTurns: Move[][] = [];
 
     constructor(initial: GameData | { player: PlayerBW }) {
+        // TODO: there is a bug here where we can end up with incomplete gamedata
+        // - Option 1: make each of these keys optional for real
+        // - Option 2: update the types so that a partial object isn't accepted
+        //   (currently it's using the second type and 'allowing' extra keys)
         if ("pips" in initial) {
             this.player = initial.player;
             this.moves = initial.moves.map((move) => new Move(move.from, move.to, move.dieUsed));
