@@ -1,15 +1,12 @@
 {
     "name": "olympus-backgammon-backend",
     "version": "0.1.0",
-    "engines": {
-        "node": ">=14.4.0"
-    },
     "type": "module",
     "private": true,
     "scripts": {
-        "start": "nodemon --exec 'npm run lint && npm run start-server'",
-        "start-server": "node src/index.js",
-        "lint": "eslint src/; exit 0"
+        "dev": "nodemon --watch '.' --watch '../olympus-bg' --exec 'npm run lint ; npm start'",
+        "start": "tsx src/index.ts",
+        "lint": "eslint src/; tsc --noEmit"
     },
     "dependencies": {
         "dotenv": "^8.2.0",
@@ -19,22 +16,15 @@
         "socket.io-client": "^2.3.0"
     },
     "devDependencies": {
+        "@types/node": "^22.10.4",
         "eslint": "^9.16.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-prettier": "^5.2.1",
-        "nodemon": "^2.0.4",
+        "nodemon": "^3.1.9",
         "prettier": "3.4.1",
+        "tsx": "^4.19.2",
         "typescript": "^5.7.2",
         "typescript-eslint": "^8.19.0"
-    },
-    "nodemonConfig": {
-        "events": {
-            "start": "node -e 'console.clear()'"
-        },
-        "watch": [
-            ".",
-            "../olympus-bg"
-        ]
     },
     "prettier": {
         "tabWidth": 4,

@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "noEmit": true,
+        "module": "NodeNext",
+        "rootDir": "./src",
+        "moduleResolution": "nodenext",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true
+    }
+}
