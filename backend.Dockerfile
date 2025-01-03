@@ -8,5 +8,5 @@ WORKDIR /app/backend
 COPY ./backend/package.json ./backend/package-lock.json ./
 RUN npm install
 COPY ./backend/ .
-CMD PORT=8000 npm run start-server
+CMD PORT=8000 npm run start
 EXPOSE 8000
