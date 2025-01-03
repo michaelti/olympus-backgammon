@@ -28,7 +28,7 @@ const pickTurn = {
                 if (rank > bestTurn.rank) return { turn: currentTurn, rank };
                 return bestTurn;
             },
-            { turn: [], rank: -Infinity }
+            { turn: [], rank: -Infinity },
         );
 
         return turn;
@@ -59,7 +59,7 @@ function rankBoard(board) {
         // While in endgame, the prioritly should be moving all checkers to home quadrant
         board.pips.forEach((pip, i) => {
             // A penalty of 1 point per space from home is applied
-            let spacesFromHome = i < 6 ? 0 : i - 6;
+            const spacesFromHome = i < 6 ? 0 : i - 6;
             if (pip.top === board.turn) rank -= pip.size * spacesFromHome;
         });
     } else {
