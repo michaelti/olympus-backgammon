@@ -80,4 +80,23 @@ describe("isMoveValid", () => {
 
         expect(result).toBe(false);
     });
+
+    test("Returns false if moving backwards", () => {
+        const game = new Portes({
+            player: Player.white,
+            dice: { initial: [1, 2], remaining: [1, 2] },
+            moves: [],
+            pips: stringToPips(`
+                0 0 0 0 0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0 0 0 1w 0
+            `),
+            off: { [Player.black]: 0, [Player.white]: 0 },
+        });
+
+        const move: MoveData = { from: 2, to: 1, dieUsed: 1 };
+
+        const result = game.isMoveValid(move.from, move.to);
+
+        expect(result).toBe(false);
+    });
 });
