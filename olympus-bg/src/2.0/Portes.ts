@@ -1,6 +1,6 @@
 import { Game } from "./Game.js";
 import { clamp, pipDistance, range } from "./util.js";
-import { GameData, Player, PlayerBW } from "./types.js";
+import { GameData, PlayerBW } from "./types.js";
 import { Move } from "./Move.js";
 
 export class Portes extends Game {
@@ -10,19 +10,19 @@ export class Portes extends Game {
 
         // Black moves towards pip 1 (decreasing)
         // White moves towards pip 24 (increasing)
-        this.pips[24].set(2, Player.black);
-        this.pips[19].set(5, Player.white);
-        this.pips[17].set(3, Player.white);
-        this.pips[13].set(5, Player.black);
-        this.pips[12].set(5, Player.white);
-        this.pips[8].set(3, Player.black);
-        this.pips[6].set(5, Player.black);
-        this.pips[1].set(2, Player.white);
+        this.pips[24].set(2, "black");
+        this.pips[19].set(5, "white");
+        this.pips[17].set(3, "white");
+        this.pips[13].set(5, "black");
+        this.pips[12].set(5, "white");
+        this.pips[8].set(3, "black");
+        this.pips[6].set(5, "black");
+        this.pips[1].set(2, "white");
     }
 
     isMoveValid(from: number, to: number): boolean {
         to = clamp(to);
-        const barId = this.player === Player.white ? 0 : 25;
+        const barId = this.player === "white" ? 0 : 25;
         if (this.pips[from].owner !== this.player) return false;
 
         // Entering the board
@@ -33,10 +33,10 @@ export class Portes extends Game {
         }
         // Bearing off
         else if (to === 25 || to === 0) {
-            if (this.player === Player.white && from < 19) return false;
-            if (this.player === Player.black && from > 6) return false;
+            if (this.player === "white" && from < 19) return false;
+            if (this.player === "black" && from > 6) return false;
             // Range of all pips excluding the current player's home quadrant
-            const nonHomePips = this.player === Player.white ? range(1, 18) : range(7, 24);
+            const nonHomePips = this.player === "white" ? range(1, 18) : range(7, 24);
             for (const i of nonHomePips) {
                 if (this.pips[i].owner === this.player) return false;
             }
@@ -46,7 +46,7 @@ export class Portes extends Game {
                 if (this.dice.getLargest() > pipDistance(from, to)) {
                     // Range of pips in the player's home quadrant that are further away than the pip they are trying to bear off of
                     const farHomePips =
-                        this.player === Player.white ? range(19, from - 1) : range(from + 1, 6);
+                        this.player === "white" ? range(19, from - 1) : range(from + 1, 6);
                     for (const i of farHomePips) {
                         if (this.pips[i].owner === this.player) return false;
                     }
@@ -67,15 +67,15 @@ export class Portes extends Game {
 
     doMove(from: number, to: number): void {
         to = clamp(to);
-        const bar = this.player === Player.white ? 0 : 25;
-        const otherBar = this.player === Player.white ? 25 : 0;
+        const bar = this.player === "white" ? 0 : 25;
+        const otherBar = this.player === "white" ? 25 : 0;
         let sideEffect;
 
         // From pip
         if (this.pips[bar].size > 0) {
             // Don't change owner of the bar ever
         } else if (this.pips[from].size === 1) {
-            this.pips[from].owner = Player.neither;
+            this.pips[from].owner = "neither";
         }
         this.pips[from].size--;
 
@@ -123,7 +123,7 @@ export class Portes extends Game {
         if (!move) return;
 
         const { from, to, dieUsed, sideEffect } = move;
-        const off = this.player === Player.white ? 25 : 0;
+        const off = this.player === "white" ? 25 : 0;
 
         this.dice.unUse(dieUsed);
 
@@ -136,7 +136,7 @@ export class Portes extends Game {
 
         // Undo to
         if (this.pips[to].size === 1 && to !== off) {
-            this.pips[to].owner = Player.neither;
+            this.pips[to].owner = "neither";
         }
         this.pips[to].size--;
 

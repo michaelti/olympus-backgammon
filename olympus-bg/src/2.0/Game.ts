@@ -1,4 +1,4 @@
-import { Bar, GameData, Off, Player, PlayerBW } from "./types.js";
+import { Bar, GameData, Off, PlayerBW } from "./types.js";
 import { Move } from "./Move.js";
 import { Dice } from "./Dice.js";
 import { Pip } from "./Pip.js";
@@ -32,8 +32,8 @@ export abstract class Game {
         this.dice = new Dice();
         this.moves = [];
         this.pips = Array.from({ length: 26 }, () => new Pip());
-        this.bar = { [Player.black]: 0, [Player.white]: 0 };
-        this.off = { [Player.black]: 0, [Player.white]: 0 };
+        this.bar = { black: 0, white: 0 };
+        this.off = { black: 0, white: 0 };
     }
 
     abstract isMoveValid(from: number, to: number): boolean;

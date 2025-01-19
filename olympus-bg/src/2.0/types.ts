@@ -1,19 +1,15 @@
-export enum Player {
-    neither = 0,
-    white = 1,
-    black = -1,
-}
+export type Player = "black" | "white" | "neither";
 
-export type PlayerBW = Player.black | Player.white;
+export type PlayerBW = "black" | "white";
 
 export type Bar = {
-    [Player.black]: number;
-    [Player.white]: number;
+    black: number;
+    white: number;
 };
 
 export type Off = {
-    [Player.black]: number;
-    [Player.white]: number;
+    black: number;
+    white: number;
 };
 
 // TODO: consider whether this is the right approach
@@ -45,13 +41,13 @@ export type PipData = {
 };
 
 type BarData = {
-    [Player.black]: number;
-    [Player.white]: number;
+    black: number;
+    white: number;
 };
 
 type OffData = {
-    [Player.black]: number;
-    [Player.white]: number;
+    black: number;
+    white: number;
 };
 // END TODO
 //

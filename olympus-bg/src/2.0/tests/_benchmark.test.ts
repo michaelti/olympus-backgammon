@@ -2,7 +2,7 @@ import { describe, test } from "vitest";
 import { Game } from "../Game.js";
 import { Board } from "../../game.js";
 import { clone } from "ramda";
-import { GameData, Player, PlayerBW } from "../types.js";
+import { GameData, PlayerBW } from "../types.js";
 
 class MockGame extends Game {
     constructor(initial: GameData | { player: PlayerBW }) {
@@ -14,16 +14,16 @@ class MockGame extends Game {
 
         // Black moves towards pip 1 (decreasing)
         // White moves towards pip 24 (increasing)
-        this.pips[25].set(0, Player.black);
-        this.pips[24].set(2, Player.black);
-        this.pips[19].set(5, Player.white);
-        this.pips[17].set(3, Player.white);
-        this.pips[13].set(5, Player.black);
-        this.pips[12].set(5, Player.white);
-        this.pips[8].set(3, Player.black);
-        this.pips[6].set(5, Player.black);
-        this.pips[1].set(2, Player.white);
-        this.pips[0].set(0, Player.white);
+        this.pips[25].set(0, "black");
+        this.pips[24].set(2, "black");
+        this.pips[19].set(5, "white");
+        this.pips[17].set(3, "white");
+        this.pips[13].set(5, "black");
+        this.pips[12].set(5, "white");
+        this.pips[8].set(3, "black");
+        this.pips[6].set(5, "black");
+        this.pips[1].set(2, "white");
+        this.pips[0].set(0, "white");
     }
 
     isMoveValid(from: number, to: number): boolean {
@@ -59,7 +59,7 @@ describe(
         });
 
         test("New (Game) implementation", () => {
-            const game = new MockGame({ player: Player.black });
+            const game = new MockGame({ player: "black" });
             const games = [];
             stressTest(() => {
                 const clonedGame = new MockGame(game);

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { Game } from "../Game.js";
-import { Player, GameData } from "../types.js";
+import { GameData } from "../types.js";
 import { Pip } from "../Pip.js";
 
 // Mock game implementation because
@@ -18,7 +18,7 @@ class MockGame extends Game {
 
 describe("constructor", () => {
     test("Initializes pips", () => {
-        const game = new MockGame({ player: Player.black });
+        const game = new MockGame({ player: "black" });
         expect(game.pips).toHaveLength(26);
         expect(game.pips[0]).toBeInstanceOf(Pip);
     });
@@ -27,36 +27,36 @@ describe("constructor", () => {
         const gameData: GameData = {
             moves: [],
             pips: [
-                { size: 0, owner: 1, isPinned: false },
-                { size: 2, owner: 1, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 5, owner: -1, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 3, owner: -1, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 5, owner: 1, isPinned: false },
-                { size: 5, owner: -1, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 3, owner: 1, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 5, owner: 1, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 0, owner: 0, isPinned: false },
-                { size: 2, owner: -1, isPinned: false },
-                { size: 0, owner: -1, isPinned: false },
+                { size: 0, owner: "white", isPinned: false },
+                { size: 2, owner: "white", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 5, owner: "black", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 3, owner: "black", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 5, owner: "white", isPinned: false },
+                { size: 5, owner: "black", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 3, owner: "white", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 5, owner: "white", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 0, owner: "neither", isPinned: false },
+                { size: 2, owner: "black", isPinned: false },
+                { size: 0, owner: "black", isPinned: false },
             ],
-            bar: { "1": 0, "-1": 0 },
-            off: { "1": 0, "-1": 0 },
-            player: -1,
+            bar: { white: 0, black: 0 },
+            off: { white: 0, black: 0 },
+            player: "black",
             dice: { initial: [6, 3], remaining: [6, 3] },
         };
 

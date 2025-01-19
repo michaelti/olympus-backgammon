@@ -13,8 +13,8 @@ export function rollDie() {
  * Returns the opposite player
  */
 export function otherPlayer(player: PlayerBW): PlayerBW {
-    if (player === Player.black) return Player.white;
-    else return Player.black;
+    if (player === "black") return "white";
+    else return "black";
 }
 
 /**
@@ -64,14 +64,14 @@ export function stringToPips(string: string): PipData[] {
 
     for (let i = 0; i < pipValues.length; i++) {
         const pipValue = pipValues[i];
-        const playerMap = new Map([
-            ["w", Player.white],
-            ["b", Player.black],
-            ["", Player.neither],
+        const playerMap = new Map<string, Player>([
+            ["w", "white"],
+            ["b", "black"],
+            ["", "neither"],
         ]);
 
         const size = Number(pipValue.replace(/[^0-9]/g, ""));
-        const owner = playerMap.get(pipValue.replace(/[^a-z]/g, "")) ?? Player.neither;
+        const owner = playerMap.get(pipValue.replace(/[^a-z]/g, "")) ?? "neither";
         const isPinned = pipValue.includes("*");
 
         const pip = { owner, size, isPinned };
@@ -92,14 +92,14 @@ export function stringToPips(string: string): PipData[] {
         if (barBlack) barBlackSize = Number(barBlack.replace(/[^0-9]/g, ""));
         if (barWhite) barWhiteSize = Number(barWhite.replace(/[^0-9]/g, ""));
 
-        pips.unshift({ owner: Player.white, size: barWhiteSize, isPinned: false }); // "Pip" 0
-        pips.push({ owner: Player.black, size: barBlackSize, isPinned: false }); // "Pip" 25
+        pips.unshift({ owner: "white", size: barWhiteSize, isPinned: false }); // "Pip" 0
+        pips.push({ owner: "black", size: barBlackSize, isPinned: false }); // "Pip" 25
 
         return pips;
     }
 
-    pips.unshift({ owner: Player.white, size: 0, isPinned: false });
-    pips.push({ owner: Player.black, size: 0, isPinned: false });
+    pips.unshift({ owner: "white", size: 0, isPinned: false });
+    pips.push({ owner: "black", size: 0, isPinned: false });
 
     return pips;
 }
@@ -110,9 +110,9 @@ export function stringToPips(string: string): PipData[] {
  */
 export function pipsToString(pips: PipData[]): string {
     const playerMap = new Map([
-        [Player.white, "w"],
-        [Player.black, "b"],
-        [Player.neither, ""],
+        ["white", "w"],
+        ["black", "b"],
+        ["neither", ""],
     ]);
 
     const pipToString = (pip: PipData) => {
