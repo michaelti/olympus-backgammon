@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { Game } from "../Game.js";
-import { GameData } from "../types.js";
+import { GameData, TurnValidity } from "../types.js";
 import { Pip } from "../Pip.js";
+import { stringToPips } from "../util.js";
 
 // Mock game implementation because
 // abstract class can't be tested directly
@@ -26,34 +27,10 @@ describe("constructor", () => {
     test("Makes a game with gameData", () => {
         const gameData: GameData = {
             moves: [],
-            pips: [
-                { size: 0, owner: "white", isPinned: false },
-                { size: 2, owner: "white", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 5, owner: "black", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 3, owner: "black", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 5, owner: "white", isPinned: false },
-                { size: 5, owner: "black", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 3, owner: "white", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 5, owner: "white", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 0, owner: "neither", isPinned: false },
-                { size: 2, owner: "black", isPinned: false },
-                { size: 0, owner: "black", isPinned: false },
-            ],
+            pips: stringToPips(`
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             bar: { white: 0, black: 0 },
             off: { white: 0, black: 0 },
             player: "black",
@@ -63,5 +40,24 @@ describe("constructor", () => {
         const game = new MockGame(gameData);
 
         expect(game).toMatchObject(gameData);
+    });
+});
+
+describe("getTurnValidity", () => {
+    test("Returns validZero if there are no possible moves", () => {
+        const game = new MockGame({
+            player: "black",
+            pips: stringToPips(`
+                0 0 0 0 0 0 2w 2w 2w 2w 2w 2w
+                0 0 0 0 0 0 0 0 0 0 0 0
+                1b
+            `),
+            bar: { white: 0, black: 0 },
+            off: { white: 0, black: 0 },
+            dice: { initial: [1, 2], remaining: [1, 2] },
+            moves: [],
+        });
+
+        expect(game.getTurnValidity()).toBe(TurnValidity.validZero);
     });
 });

@@ -25,6 +25,21 @@ export class Dice {
     }
 
     /**
+     * Rolls the dice
+     * TODO: test and make this class better
+     */
+
+    roll() {
+        this.initial = [rollDie(), rollDie()];
+
+        if (this.initial[0] === this.initial[1]) {
+            this.initial = [this.initial[0], this.initial[0], this.initial[0], this.initial[0]];
+        }
+
+        this.remaining = [...this.initial];
+    }
+
+    /**
      * Does the remaining dice include die
      * @param die
      * @returns true or false

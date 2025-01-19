@@ -2,6 +2,8 @@ export type Player = "black" | "white" | "neither";
 
 export type PlayerBW = "black" | "white";
 
+// export type Place = number | "bar" | "off";
+
 export type Bar = {
     black: number;
     white: number;
@@ -11,6 +13,14 @@ export type Off = {
     black: number;
     white: number;
 };
+
+export enum TurnValidity {
+    valid = 1,
+    validZero = 2,
+    invalid = 0,
+    invalidMoreMoves = -1,
+    invalidLongerMove = -2,
+}
 
 // TODO: consider whether this is the right approach
 // (for snapshots/restoration of game state)
