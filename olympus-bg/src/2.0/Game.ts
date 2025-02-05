@@ -35,15 +35,14 @@ export abstract class Game {
         this.pips = Array.from({ length: 26 }, () => new Pip());
         this.bar = { black: 0, white: 0 };
         this.off = { black: 0, white: 0 };
-
-        this.startTurn();
     }
 
     abstract isMoveValid(from: number, to: number): boolean;
     abstract doMove(from: number, to: number): void;
+    abstract getDestination(start: number, die: number): number;
+    abstract clone(): Game;
 
     startTurn() {
-        this.dice.roll();
         this.#generateAllPossibleTurns();
     }
 
@@ -82,24 +81,58 @@ export abstract class Game {
     }
 
     #generateAllPossibleTurns(): void {
-        // TODoozy
-        this.#possibleTurns = [[]];
+        if (this.dice.remaining.length === 0) return;
 
-        for (const turn of this.#possibleTurns) {
-            if (turn.length > this.#longestPossibleTurn) {
-                this.#longestPossibleTurn = turn.length;
+        const turns: Move[][] = [];
+        let maxTurnLength = 0;
+
+        // Optimization for doubles since the order in which they are played doesn't matter
+        const uniqueDice = this.dice.isDoubles() ? [this.dice.remaining[0]] : this.dice.remaining;
+
+        for (const die of uniqueDice) {
+            for (let pipStart = 0; pipStart <= 25; pipStart++) {
+                if (this.pips[pipStart].owner !== this.player) continue;
+                if (this.pips[pipStart].size < 1) continue; // Added
+
+                const pipTo = this.getDestination(pipStart, die);
+                const move = new Move(pipStart, pipTo, die);
+
+                if (!this.isMoveValid(move.from, move.to)) continue;
+
+                const gameClone = this.clone();
+
+                gameClone.doMove(move.from, move.to);
+                gameClone.#generateAllPossibleTurns();
+                const nextTurns = gameClone.#possibleTurns;
+
+                if (!nextTurns.length) {
+                    const turn = [move];
+                    turns.push(turn);
+
+                    if (turn.length > maxTurnLength) {
+                        maxTurnLength = turn.length;
+                    }
+
+                    continue;
+                }
+
+                for (const nextMoves of nextTurns) {
+                    const turn = [move, ...nextMoves];
+                    turns.push(turn);
+
+                    if (turn.length > maxTurnLength) {
+                        maxTurnLength = turn.length;
+                    }
+                }
             }
         }
 
-        this.#longestPossibleTurn = 0;
+        this.#possibleTurns = turns;
+        this.#longestPossibleTurn = maxTurnLength;
     }
 
     isGameOver(): 0 | 1 | 2 {
         return 0;
-    }
-
-    getDestination(start: number, die: number): number {
-        return start + die;
     }
 
     otherPlayer(): PlayerBW {
