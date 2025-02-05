@@ -102,39 +102,81 @@ describe("isMoveValid", () => {
 });
 
 describe("getTurnValidity", () => {
-    test("Returns validZero if there are no possible moves", () => {
-        const game = new Portes({
-            player: "black",
-            pips: stringToPips(`
-                0 0 0 0 0 0 2w 2w 2w 2w 2w 2w
-                0 0 0 0 0 0 0 0 0 0 0 0
-                1b
-            `),
-            bar: { white: 0, black: 0 },
-            off: { white: 0, black: 0 },
-            dice: { initial: [1, 2], remaining: [1, 2] },
-            moves: [],
+    describe("Returns validZero if there are no possible moves", () => {
+        test("Player is stuck on bar", () => {
+            const game = new Portes({
+                player: "black",
+                pips: stringToPips(`
+                    0 0 0 0 0 0 2w 2w 2w 2w 2w 2w
+                    0 0 0 0 0 0 0 0 0 0 0 0
+                    1b
+                `),
+                bar: { white: 0, black: 0 },
+                off: { white: 0, black: 0 },
+                dice: { initial: [1, 2], remaining: [1, 2] },
+                moves: [],
+            });
+
+            game.startTurn();
+
+            expect(game.getTurnValidity()).toBe(TurnValidity.validZero);
         });
 
-        expect(game.getTurnValidity()).toBe(TurnValidity.validZero);
+        test("Player is stuck behind a wall", () => {
+            const game = new Portes({
+                player: "black",
+                pips: stringToPips(`
+                    0 0 0 0 0 2w 2w 2w 2w 2w 2w 1b
+                    0 0 0 0 0 0 0 0 0 0 0 0
+                `),
+                bar: { white: 0, black: 0 },
+                off: { white: 0, black: 0 },
+                dice: { initial: [6, 6, 6, 6], remaining: [6, 6, 6, 6] },
+                moves: [],
+            });
+
+            game.startTurn();
+
+            expect(game.getTurnValidity()).toBe(TurnValidity.validZero);
+        });
     });
 
-    test("Returns invalidMoreMoves if there are more possible moves", () => {
-        const game = new Portes({
-            player: "white",
-            pips: stringToPips(`
+    describe("Returns invalidMoreMoves if there are more possible moves", () => {
+        test("Player hasn't moved at all", () => {
+            const game = new Portes({
+                player: "white",
+                pips: stringToPips(`
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                `),
-            bar: { white: 0, black: 0 },
-            off: { white: 0, black: 0 },
-            dice: { initial: [1, 2], remaining: [1, 2] },
-            moves: [],
+                    `),
+                bar: { white: 0, black: 0 },
+                off: { white: 0, black: 0 },
+                dice: { initial: [1, 2], remaining: [1, 2] },
+                moves: [],
+            });
+
+            game.startTurn();
+
+            expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
         });
 
-        game.startTurn();
-        game.doMove(1, 2);
+        test("Player has only moved once", () => {
+            const game = new Portes({
+                player: "white",
+                pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                    `),
+                bar: { white: 0, black: 0 },
+                off: { white: 0, black: 0 },
+                dice: { initial: [1, 2], remaining: [1, 2] },
+                moves: [],
+            });
 
-        expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
+            game.startTurn();
+            game.doMove(1, 2);
+
+            expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
+        });
     });
 });

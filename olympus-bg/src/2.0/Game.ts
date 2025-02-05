@@ -56,7 +56,7 @@ export abstract class Game {
         if (this.moves.length !== this.#longestPossibleTurn) {
             // Unless they are bearing off their final checker
             const isLastChecker = this.off[this.player] === 14;
-            const isBearingOff = this.moves[0].to === 0 || this.moves[0].to === 25;
+            const isBearingOff = this.moves[0]?.to === 0 || this.moves[0]?.to === 25;
 
             if (!(isLastChecker && isBearingOff)) {
                 return TurnValidity.invalidMoreMoves;
