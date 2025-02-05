@@ -65,6 +65,7 @@ export class Portes extends Game {
         return true;
     }
 
+    // TODO: There might be a bug where this misses the ownership change sometimes? (when black moves to neither?)
     doMove(from: number, to: number): void {
         to = clamp(to);
         const bar = this.player === "white" ? 0 : 25;
@@ -143,5 +144,15 @@ export class Portes extends Game {
         // Undo from
         this.pips[from].size++;
         this.pips[from].owner = this.player;
+    }
+
+    // TODO: see if we can improve this implementation
+    getDestination(start: number, die: number): number {
+        const direction = this.player == "black" ? -1 : 1;
+        return clamp(direction * die + start);
+    }
+
+    clone(): Portes {
+        return new Portes(this);
     }
 }
