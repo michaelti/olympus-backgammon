@@ -21,7 +21,7 @@ export class Dice {
             this.initial = [initial[0], initial[1]];
         }
 
-        this.remaining = remaining ?? [...this.initial];
+        this.remaining = remaining ? [...remaining] : [...this.initial];
     }
 
     /**
