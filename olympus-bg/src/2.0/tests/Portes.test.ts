@@ -198,5 +198,26 @@ describe("getTurnValidity", () => {
 
             expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
         });
+
+        test("Player has moved only thrice", () => {
+            const game = new Portes({
+                player: "white",
+                pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                    `),
+                bar: { white: 0, black: 0 },
+                off: { white: 0, black: 0 },
+                dice: { initial: [3, 3, 3, 3], remaining: [3, 3, 3, 3] },
+                moves: [],
+            });
+
+            game.startTurn();
+            game.doMove(1, 4);
+            game.doMove(1, 4);
+            game.doMove(4, 7);
+
+            expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
+        });
     });
 });
