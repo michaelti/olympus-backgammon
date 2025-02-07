@@ -44,23 +44,23 @@ describe("includes", () => {
     });
 });
 
-describe("getLargest", () => {
+describe("getLargestRemaining", () => {
     test("Gets largest number", () => {
         const dice = new Dice([1, 2]);
-        expect(dice.getLargest()).toEqual(2);
+        expect(dice.getLargestRemaining()).toEqual(2);
 
         const dice2 = new Dice([2, 1]);
-        expect(dice2.getLargest()).toEqual(2);
+        expect(dice2.getLargestRemaining()).toEqual(2);
     });
 });
 
-describe("getSmallest", () => {
+describe("getSmallestRemaining", () => {
     test("Gets smallest number", () => {
         const dice = new Dice([1, 2]);
-        expect(dice.getSmallest()).toEqual(1);
+        expect(dice.getSmallestRemaining()).toEqual(1);
 
         const dice2 = new Dice([2, 1]);
-        expect(dice2.getSmallest()).toEqual(1);
+        expect(dice2.getSmallestRemaining()).toEqual(1);
     });
 });
 
@@ -83,7 +83,7 @@ describe("use", () => {
         expect(dice.remaining).not.toContain(2);
 
         const dice2 = new Dice([2, 1]);
-        expect(dice2.getSmallest()).toEqual(1);
+        expect(dice2.getSmallestRemaining()).toEqual(1);
     });
 
     test("Shortens remaining for doubles", () => {

@@ -2,7 +2,7 @@ import { Bar, GameData, Off, PlayerBW, TurnValidity } from "./types.js";
 import { Move } from "./Move.js";
 import { Dice } from "./Dice.js";
 import { Pip } from "./Pip.js";
-import { otherPlayer, pipDistance } from "./util.js";
+import { otherPlayer } from "./util.js";
 
 export abstract class Game {
     player: PlayerBW;
@@ -67,10 +67,10 @@ export abstract class Game {
         if (this.#longestPossibleTurn === 1 && !this.dice.isDoubles()) {
             // If the supplied move matches the smaller dice
             // then check if there's a possible move with the larger dice
-            if (pipDistance(this.moves[0].from, this.moves[0].to) === this.dice.getSmallest()) {
+
+            if (this.moves[0].dieUsed === this.dice.getSmallestInitial()) {
                 for (const possibleTurn of this.#possibleTurns) {
-                    const distance = pipDistance(possibleTurn[0].from, possibleTurn[0].to);
-                    if (distance === this.dice.getLargest()) {
+                    if (possibleTurn[0].dieUsed === this.dice.getLargestInitial()) {
                         return TurnValidity.invalidLongerMove;
                     }
                 }

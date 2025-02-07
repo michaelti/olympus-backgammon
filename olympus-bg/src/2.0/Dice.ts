@@ -48,12 +48,20 @@ export class Dice {
         return this.remaining.includes(die);
     }
 
-    getLargest(): number {
+    getLargestRemaining(): number {
         return Math.max(...this.remaining);
     }
 
-    getSmallest(): number {
+    getSmallestRemaining(): number {
         return Math.min(...this.remaining);
+    }
+
+    getLargestInitial(): number {
+        return Math.max(...this.initial);
+    }
+
+    getSmallestInitial(): number {
+        return Math.min(...this.initial);
     }
 
     isDoubles(): boolean {

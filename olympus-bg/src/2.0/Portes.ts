@@ -43,7 +43,7 @@ export class Portes extends Game {
             // If bearing off from an non-exact number of pips
             if (!this.dice.includes(pipDistance(from, to))) {
                 // Check if there's a big enough dice
-                if (this.dice.getLargest() > pipDistance(from, to)) {
+                if (this.dice.getLargestRemaining() > pipDistance(from, to)) {
                     // Range of pips in the player's home quadrant that are further away than the pip they are trying to bear off of
                     const farHomePips =
                         this.player === "white" ? range(19, from - 1) : range(from + 1, 6);
@@ -98,8 +98,8 @@ export class Portes extends Game {
         }
 
         // Use smallest dice possible
-        let die = this.dice.getSmallest();
-        if (die < pipDistance(from, to)) die = this.dice.getLargest();
+        let die = this.dice.getSmallestRemaining();
+        if (die < pipDistance(from, to)) die = this.dice.getLargestRemaining();
         this.dice.use(die);
 
         this.moves.push(new Move(from, to, die, sideEffect));

@@ -148,7 +148,7 @@ describe("getTurnValidity", () => {
                 pips: stringToPips(`
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                    `),
+                `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: { initial: [1, 2], remaining: [1, 2] },
@@ -166,7 +166,7 @@ describe("getTurnValidity", () => {
                 pips: stringToPips(`
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                    `),
+                `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: { initial: [1, 2], remaining: [1, 2] },
@@ -185,7 +185,7 @@ describe("getTurnValidity", () => {
                 pips: stringToPips(`
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                    `),
+                `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: { initial: [3, 3, 3, 3], remaining: [3, 3, 3, 3] },
@@ -205,7 +205,7 @@ describe("getTurnValidity", () => {
                 pips: stringToPips(`
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                    `),
+                `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: { initial: [3, 3, 3, 3], remaining: [3, 3, 3, 3] },
@@ -218,6 +218,49 @@ describe("getTurnValidity", () => {
             game.doMove(4, 7);
 
             expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
+        });
+    });
+
+    describe("Returns invalidLongerMove if the larger die can be used", () => {
+        test("Player can only move one die or the other", () => {
+            const game = new Portes({
+                player: "white",
+                pips: stringToPips(`
+                    0 0 0 0 0 0 0 0 0 0 0 0
+                    0 0 0 0 0 0 0 0 2b 0 0 1w
+                `),
+                bar: { white: 0, black: 0 },
+                off: { white: 0, black: 0 },
+                dice: { initial: [1, 2], remaining: [1, 2] },
+                moves: [],
+            });
+
+            game.startTurn();
+            game.doMove(1, 2);
+
+            expect(game.getTurnValidity()).toBe(TurnValidity.invalidLongerMove);
+        });
+    });
+
+    describe("Returns valid if the turn is valid", () => {
+        test("Player has moved both dice", () => {
+            const game = new Portes({
+                player: "white",
+                pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                `),
+                bar: { white: 0, black: 0 },
+                off: { white: 0, black: 0 },
+                dice: { initial: [1, 2], remaining: [1, 2] },
+                moves: [],
+            });
+
+            game.startTurn();
+            game.doMove(1, 2);
+            game.doMove(1, 3);
+
+            expect(game.getTurnValidity()).toBe(TurnValidity.valid);
         });
     });
 });
