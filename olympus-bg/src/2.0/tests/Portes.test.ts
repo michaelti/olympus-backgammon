@@ -179,7 +179,7 @@ describe("getTurnValidity", () => {
             expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
         });
 
-        test("Player has moved only twice", () => {
+        test("Player has only moved twice", () => {
             const game = new Portes({
                 player: "white",
                 pips: stringToPips(`
@@ -199,7 +199,7 @@ describe("getTurnValidity", () => {
             expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
         });
 
-        test("Player has moved only thrice", () => {
+        test("Player has only moved thrice", () => {
             const game = new Portes({
                 player: "white",
                 pips: stringToPips(`
