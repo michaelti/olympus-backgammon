@@ -13,6 +13,7 @@ export abstract class Game {
     off: Off;
     #possibleTurns: Move[][] = [];
     #longestPossibleTurn: number = 0;
+    #areWeDone: boolean = false;
 
     constructor(initial: GameData | { player: PlayerBW }) {
         // TODO: there is a bug here where we can end up with incomplete gamedata
@@ -82,6 +83,7 @@ export abstract class Game {
 
     #generateAllPossibleTurns(): void {
         if (this.dice.remaining.length === 0) return;
+        if (this.#areWeDone) return;
 
         const turns: Move[][] = [];
         let maxTurnLength = 0;
@@ -122,6 +124,11 @@ export abstract class Game {
 
                     if (turn.length > maxTurnLength) {
                         maxTurnLength = turn.length;
+                        // Optimization: if we've used all dice, we can't do better
+                        if (maxTurnLength === this.dice.initial.length) {
+                            this.#areWeDone = true;
+                            break;
+                        }
                     }
                 }
             }
