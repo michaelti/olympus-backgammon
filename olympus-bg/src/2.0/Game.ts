@@ -11,6 +11,7 @@ export abstract class Game {
     pips: Pip[];
     bar: Bar;
     off: Off;
+    // TODO: sleep on these
     #possibleTurns: Move[][] = [];
     #longestPossibleTurn: number = 0;
     #areWeDone: boolean = false;
