@@ -97,6 +97,9 @@ export abstract class Game {
         // We don't think so, but the tests are passing.
         // If not, revert Dice 2.0
         // ... but if it does... remove isDoubles?!
+        // TODO: try making this a closure
+        //  1. Grab all the stuff from beginning (possibleTurns, areWeDone, longestPossibleTurn, initialDice)
+        //  2. Start recursin'
         const initialDice = [...this.dice.remaining];
 
         // Optimization for doubles since the order in which they are played doesn't matter
