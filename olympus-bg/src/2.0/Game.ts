@@ -93,10 +93,14 @@ export abstract class Game {
         const turns: Move[][] = [];
         let maxTurnLength = 0;
 
-        const initialDiceLength = this.dice.remaining.length;
+        // TODO: does this work?
+        // We don't think so, but the tests are passing.
+        // If not, revert Dice 2.0
+        // ... but if it does... remove isDoubles?!
+        const initialDice = [...this.dice.remaining];
 
         // Optimization for doubles since the order in which they are played doesn't matter
-        const uniqueDice = this.dice.isDoubles ? [this.dice.remaining[0]] : this.dice.remaining;
+        const uniqueDice = initialDice.length === 4 ? [initialDice[0]] : [...initialDice];
 
         for (const die of uniqueDice) {
             for (let pipStart = 0; pipStart <= 25; pipStart++) {
@@ -132,7 +136,7 @@ export abstract class Game {
                     if (turn.length > maxTurnLength) {
                         maxTurnLength = turn.length;
                         // Optimization: if we've used all dice, we can't do better
-                        if (maxTurnLength === initialDiceLength) {
+                        if (maxTurnLength === initialDice.length) {
                             this.#areWeDone = true;
                             break;
                         }
