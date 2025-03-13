@@ -24,7 +24,7 @@ export abstract class Game {
         if ("pips" in initial) {
             this.player = initial.player;
             this.moves = initial.moves.map((move) => new Move(move.from, move.to, move.dieUsed));
-            this.dice = new Dice(initial.dice.initial, initial.dice.remaining);
+            this.dice = new Dice(initial.dice);
             this.pips = initial.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
             this.bar = { ...initial.bar };
             this.off = { ...initial.off };
@@ -65,16 +65,17 @@ export abstract class Game {
             }
         }
 
-        // Validate single move turn uses the largest die
-        if (this.#longestPossibleTurn === 1 && !this.dice.isDoubles()) {
-            // If the supplied move matches the smaller dice
-            // then check if there's a possible move with the larger dice
-
-            if (this.moves[0].dieUsed === this.dice.getSmallestInitial()) {
-                for (const possibleTurn of this.#possibleTurns) {
-                    if (possibleTurn[0].dieUsed === this.dice.getLargestInitial()) {
-                        return TurnValidity.invalidLongerMove;
-                    }
+        // Validate single move turn uses the largest possible die
+        // If the supplied move is smaller than the remaining die,
+        // then check if there's a possible move with the remaining die
+        if (
+            this.moves.length === 1 &&
+            this.#longestPossibleTurn === 1 &&
+            this.moves[0].dieUsed < this.dice.remaining[0]
+        ) {
+            for (const possibleTurn of this.#possibleTurns) {
+                if (possibleTurn[0].dieUsed > this.moves[0].dieUsed) {
+                    return TurnValidity.invalidLongerMove;
                 }
             }
         }
@@ -82,6 +83,9 @@ export abstract class Game {
         return TurnValidity.valid;
     }
 
+    /**
+     * Must be called at the beginning of a turn
+     */
     #generateAllPossibleTurns(): void {
         if (this.dice.remaining.length === 0) return;
         if (this.#areWeDone) return;
@@ -89,8 +93,10 @@ export abstract class Game {
         const turns: Move[][] = [];
         let maxTurnLength = 0;
 
+        const initialDiceLength = this.dice.remaining.length;
+
         // Optimization for doubles since the order in which they are played doesn't matter
-        const uniqueDice = this.dice.isDoubles() ? [this.dice.remaining[0]] : this.dice.remaining;
+        const uniqueDice = this.dice.isDoubles ? [this.dice.remaining[0]] : this.dice.remaining;
 
         for (const die of uniqueDice) {
             for (let pipStart = 0; pipStart <= 25; pipStart++) {
@@ -126,7 +132,7 @@ export abstract class Game {
                     if (turn.length > maxTurnLength) {
                         maxTurnLength = turn.length;
                         // Optimization: if we've used all dice, we can't do better
-                        if (maxTurnLength === this.dice.initial.length) {
+                        if (maxTurnLength === initialDiceLength) {
                             this.#areWeDone = true;
                             break;
                         }

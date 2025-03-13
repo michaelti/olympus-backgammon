@@ -1,51 +1,23 @@
 import { rollDie } from "./util.js";
 
 export class Dice {
-    initial: [number, number] | [number, number, number, number];
     remaining: number[];
+    isDoubles: boolean;
 
     /**
      * Rolls a pair of dice.
-     * @param values Optionally provide values for the dice. Random if omitted.
-     * @param remaining Optionally provide values for remaining dice. Initial if omitted.
+     * @param init Optionally provide initial values for the dice. Random if omitted.
      */
-    constructor(
-        initial?: [number, number] | [number, number, number, number],
-        remaining?: number[],
-    ) {
-        if (!initial) initial = [rollDie(), rollDie()];
-
-        if (initial[0] === initial[1]) {
-            this.initial = [initial[0], initial[0], initial[0], initial[0]];
-        } else {
-            this.initial = [initial[0], initial[1]];
+    constructor(init?: { remaining: number[]; isDoubles: boolean }) {
+        if (init) {
+            this.remaining = [...init.remaining];
+            this.isDoubles = init.isDoubles;
+            return;
         }
 
-        this.remaining = remaining ? [...remaining] : [...this.initial];
-    }
-
-    /**
-     * Rolls the dice
-     * TODO: test and make this class better
-     */
-
-    roll() {
-        this.initial = [rollDie(), rollDie()];
-
-        if (this.initial[0] === this.initial[1]) {
-            this.initial = [this.initial[0], this.initial[0], this.initial[0], this.initial[0]];
-        }
-
-        this.remaining = [...this.initial];
-    }
-
-    /**
-     * Does the remaining dice include die
-     * @param die
-     * @returns true or false
-     */
-    includes(die: number): boolean {
-        return this.remaining.includes(die);
+        this.remaining = [rollDie(), rollDie()];
+        this.isDoubles = this.remaining[0] === this.remaining[1];
+        if (this.isDoubles) this.remaining = [...this.remaining, ...this.remaining];
     }
 
     getLargestRemaining(): number {
@@ -54,18 +26,6 @@ export class Dice {
 
     getSmallestRemaining(): number {
         return Math.min(...this.remaining);
-    }
-
-    getLargestInitial(): number {
-        return Math.max(...this.initial);
-    }
-
-    getSmallestInitial(): number {
-        return Math.min(...this.initial);
-    }
-
-    isDoubles(): boolean {
-        return this.initial.length === 4;
     }
 
     /**
@@ -81,27 +41,6 @@ export class Dice {
         }
 
         this.remaining.splice(index, 1);
-        return true;
-    }
-
-    /**
-     * Adds a die back into remaining dice
-     * @param die The number to add
-     * @returns true if it was successfully added, false otherwise
-     */
-    unUse(die: number): boolean {
-        const index = this.initial.indexOf(die);
-
-        if (index === -1) {
-            return false;
-        }
-
-        if (index === 0) {
-            this.remaining.unshift(die);
-            return true;
-        }
-
-        this.remaining.push(die);
         return true;
     }
 }

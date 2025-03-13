@@ -29,7 +29,7 @@ export class Portes extends Game {
         if (this.pips[barId].size > 0) {
             if (from !== 25 && from !== 0) return false;
             if (this.pips[to].owner !== this.player && this.pips[to].size > 1) return false;
-            if (!this.dice.includes(pipDistance(from, to))) return false;
+            if (!this.dice.remaining.includes(pipDistance(from, to))) return false;
         }
         // Bearing off
         else if (to === 25 || to === 0) {
@@ -41,7 +41,7 @@ export class Portes extends Game {
                 if (this.pips[i].owner === this.player) return false;
             }
             // If bearing off from an non-exact number of pips
-            if (!this.dice.includes(pipDistance(from, to))) {
+            if (!this.dice.remaining.includes(pipDistance(from, to))) {
                 // Check if there's a big enough dice
                 if (this.dice.getLargestRemaining() > pipDistance(from, to)) {
                     // Range of pips in the player's home quadrant that are further away than the pip they are trying to bear off of
@@ -59,7 +59,7 @@ export class Portes extends Game {
         else {
             if (from < 1 || from > 24 || to < 1 || to > 24) return false;
             if (this.pips[to].owner !== this.player && this.pips[to].size > 1) return false;
-            if (!this.dice.includes(pipDistance(from, to))) return false;
+            if (!this.dice.remaining.includes(pipDistance(from, to))) return false;
         }
 
         return true;
@@ -126,7 +126,7 @@ export class Portes extends Game {
         const { from, to, dieUsed, sideEffect } = move;
         const off = this.player === "white" ? 25 : 0;
 
-        this.dice.unUse(dieUsed);
+        this.dice.remaining.push(dieUsed);
 
         // Only possible side effect is sending opponent to the bar
         if (sideEffect) {

@@ -7,7 +7,7 @@ describe("isMoveValid", () => {
     test("Returns false if pip isn't owned by player", () => {
         const game = new Portes({
             player: "white",
-            dice: { initial: [1, 2], remaining: [1, 2] },
+            dice: { remaining: [1, 2], isDoubles: false },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -26,7 +26,7 @@ describe("isMoveValid", () => {
     test("Returns false if player must first move from the bar", () => {
         const game = new Portes({
             player: "white",
-            dice: { initial: [1, 2], remaining: [1, 2] },
+            dice: { remaining: [1, 2], isDoubles: false },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -46,7 +46,7 @@ describe("isMoveValid", () => {
     test("Returns false if player lands on a door", () => {
         const game = new Portes({
             player: "white",
-            dice: { initial: [1, 2], remaining: [1, 2] },
+            dice: { remaining: [1, 2], isDoubles: false },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -65,7 +65,7 @@ describe("isMoveValid", () => {
     test("Returns false if die can't go there", () => {
         const game = new Portes({
             player: "white",
-            dice: { initial: [1, 2], remaining: [1, 2] },
+            dice: { remaining: [1, 2], isDoubles: false },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -84,7 +84,7 @@ describe("isMoveValid", () => {
     test("Returns false if moving backwards", { skip: true }, () => {
         const game = new Portes({
             player: "white",
-            dice: { initial: [1, 2], remaining: [1, 2] },
+            dice: { remaining: [1, 2], isDoubles: false },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -113,7 +113,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { initial: [1, 2], remaining: [1, 2] },
+                dice: { remaining: [1, 2], isDoubles: false },
                 moves: [],
             });
 
@@ -131,7 +131,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { initial: [6, 6, 6, 6], remaining: [6, 6, 6, 6] },
+                dice: { remaining: [6, 6, 6, 6], isDoubles: true },
                 moves: [],
             });
 
@@ -151,7 +151,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { initial: [1, 2], remaining: [1, 2] },
+                dice: { remaining: [1, 2], isDoubles: false },
                 moves: [],
             });
 
@@ -169,7 +169,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { initial: [1, 2], remaining: [1, 2] },
+                dice: { remaining: [1, 2], isDoubles: false },
                 moves: [],
             });
 
@@ -188,7 +188,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { initial: [3, 3, 3, 3], remaining: [3, 3, 3, 3] },
+                dice: { remaining: [3, 3, 3, 3], isDoubles: true },
                 moves: [],
             });
 
@@ -208,7 +208,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { initial: [3, 3, 3, 3], remaining: [3, 3, 3, 3] },
+                dice: { remaining: [3, 3, 3, 3], isDoubles: true },
                 moves: [],
             });
 
@@ -231,7 +231,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { initial: [1, 2], remaining: [1, 2] },
+                dice: { remaining: [1, 2], isDoubles: false },
                 moves: [],
             });
 
@@ -252,7 +252,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { initial: [1, 2], remaining: [1, 2] },
+                dice: { remaining: [1, 2], isDoubles: false },
                 moves: [],
             });
 

@@ -23,6 +23,7 @@ export enum TurnValidity {
 }
 
 // TODO: consider whether this is the right approach
+// can we have the classes implement these types or vice versa?
 // (for snapshots/restoration of game state)
 export type GameData = {
     player: PlayerBW;
@@ -40,8 +41,8 @@ export type MoveData = {
 };
 
 export type DiceData = {
-    initial: [number, number] | [number, number, number, number];
     remaining: number[];
+    isDoubles: boolean;
 };
 
 export type PipData = {
