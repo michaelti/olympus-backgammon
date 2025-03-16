@@ -100,10 +100,9 @@ export abstract class Game {
         // TODO: try making this a closure
         //  1. Grab all the stuff from beginning (possibleTurns, areWeDone, longestPossibleTurn, initialDice)
         //  2. Start recursin'
-        const initialDice = [...this.dice.remaining];
 
         // Optimization for doubles since the order in which they are played doesn't matter
-        const uniqueDice = initialDice.length === 4 ? [initialDice[0]] : [...initialDice];
+        const uniqueDice = this.dice.isDoubles ? [this.dice.remaining[0]] : this.dice.remaining;
 
         for (const die of uniqueDice) {
             for (let pipStart = 0; pipStart <= 25; pipStart++) {
@@ -139,7 +138,7 @@ export abstract class Game {
                     if (turn.length > maxTurnLength) {
                         maxTurnLength = turn.length;
                         // Optimization: if we've used all dice, we can't do better
-                        if (maxTurnLength === initialDice.length) {
+                        if (maxTurnLength === (this.dice.isDoubles ? 4 : 2)) {
                             this.#areWeDone = true;
                             break;
                         }
