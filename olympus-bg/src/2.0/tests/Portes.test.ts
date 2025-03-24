@@ -16,7 +16,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 1, to: 2, dieUsed: 1 };
+        const move: MoveData = { from: 1, to: 2, die: 1 };
 
         const result = game.isMoveValid(move.from, move.to);
 
@@ -36,7 +36,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 1, to: 2, dieUsed: 1 };
+        const move: MoveData = { from: 1, to: 2, die: 1 };
 
         const result = game.isMoveValid(move.from, move.to);
 
@@ -55,7 +55,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 1, to: 2, dieUsed: 1 };
+        const move: MoveData = { from: 1, to: 2, die: 1 };
 
         const result = game.isMoveValid(move.from, move.to);
 
@@ -74,7 +74,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 1, to: 4, dieUsed: 1 };
+        const move: MoveData = { from: 1, to: 4, die: 1 };
 
         const result = game.isMoveValid(move.from, move.to);
 
@@ -93,7 +93,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 2, to: 1, dieUsed: 1 };
+        const move: MoveData = { from: 2, to: 1, die: 1 };
 
         const result = game.isMoveValid(move.from, move.to);
 

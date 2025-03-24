@@ -20,7 +20,7 @@ export abstract class Game {
         //   (currently it's using the second type and 'allowing' extra keys)
         if ("pips" in initial) {
             this.player = initial.player;
-            this.moves = initial.moves.map((move) => new Move(move.from, move.to, move.dieUsed));
+            this.moves = initial.moves.map((move) => new Move(move.from, move.to, move.die));
             this.dice = [...initial.dice];
             this.pips = initial.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
             this.bar = { ...initial.bar };
@@ -74,10 +74,10 @@ export abstract class Game {
         if (
             this.moves.length === 1 &&
             this.#longestPossibleTurn === 1 &&
-            this.moves[0].dieUsed < this.dice[0]
+            this.moves[0].die < this.dice[0]
         ) {
             for (const possibleTurn of this.#possibleTurns) {
-                if (possibleTurn[0].dieUsed > this.moves[0].dieUsed) {
+                if (possibleTurn[0].die > this.moves[0].die) {
                     return TurnValidity.invalidLongerMove;
                 }
             }

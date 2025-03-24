@@ -125,10 +125,10 @@ export class Portes extends Game {
         const move = this.moves.pop();
         if (!move) return;
 
-        const { from, to, dieUsed, sideEffect } = move;
+        const { from, to, die, sideEffect } = move;
         const off = this.player === "white" ? 25 : 0;
 
-        this.dice.push(dieUsed);
+        this.dice.push(die);
 
         // Only possible side effect is sending opponent to the bar
         if (sideEffect) {

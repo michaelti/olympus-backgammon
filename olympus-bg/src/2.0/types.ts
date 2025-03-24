@@ -37,7 +37,7 @@ export type GameData = {
 export type MoveData = {
     from: number;
     to: number;
-    dieUsed: number;
+    die: number;
 };
 
 export type PipData = {
