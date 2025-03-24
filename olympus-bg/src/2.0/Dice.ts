@@ -1,23 +1,23 @@
+// TODO: delete
+
 import { rollDie } from "./util.js";
 
 export class Dice {
     remaining: number[];
-    isDoubles: boolean;
 
     /**
      * Rolls a pair of dice.
      * @param init Optionally provide initial values for the dice. Random if omitted.
      */
-    constructor(init?: { remaining: number[]; isDoubles: boolean }) {
+    constructor(init?: { remaining: number[] }) {
         if (init) {
             this.remaining = [...init.remaining];
-            this.isDoubles = init.isDoubles;
             return;
         }
 
         this.remaining = [rollDie(), rollDie()];
-        this.isDoubles = this.remaining[0] === this.remaining[1];
-        if (this.isDoubles) this.remaining = [...this.remaining, ...this.remaining];
+        const isDoubles = this.remaining[0] === this.remaining[1];
+        if (isDoubles) this.remaining = [...this.remaining, ...this.remaining];
     }
 
     getLargestRemaining(): number {

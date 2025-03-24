@@ -7,7 +7,7 @@ describe("isMoveValid", () => {
     test("Returns false if pip isn't owned by player", () => {
         const game = new Portes({
             player: "white",
-            dice: { remaining: [1, 2], isDoubles: false },
+            dice: { remaining: [1, 2] },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -26,7 +26,7 @@ describe("isMoveValid", () => {
     test("Returns false if player must first move from the bar", () => {
         const game = new Portes({
             player: "white",
-            dice: { remaining: [1, 2], isDoubles: false },
+            dice: { remaining: [1, 2] },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -46,7 +46,7 @@ describe("isMoveValid", () => {
     test("Returns false if player lands on a door", () => {
         const game = new Portes({
             player: "white",
-            dice: { remaining: [1, 2], isDoubles: false },
+            dice: { remaining: [1, 2] },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -65,7 +65,7 @@ describe("isMoveValid", () => {
     test("Returns false if die can't go there", () => {
         const game = new Portes({
             player: "white",
-            dice: { remaining: [1, 2], isDoubles: false },
+            dice: { remaining: [1, 2] },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -84,7 +84,7 @@ describe("isMoveValid", () => {
     test("Returns false if moving backwards", { skip: true }, () => {
         const game = new Portes({
             player: "white",
-            dice: { remaining: [1, 2], isDoubles: false },
+            dice: { remaining: [1, 2] },
             moves: [],
             pips: stringToPips(`
                 0 0 0 0 0 0 0 0 0 0 0 0
@@ -113,7 +113,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { remaining: [1, 2], isDoubles: false },
+                dice: { remaining: [1, 2] },
                 moves: [],
             });
 
@@ -131,7 +131,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { remaining: [6, 6, 6, 6], isDoubles: true },
+                dice: { remaining: [6, 6, 6, 6] },
                 moves: [],
             });
 
@@ -151,7 +151,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { remaining: [1, 2], isDoubles: false },
+                dice: { remaining: [1, 2] },
                 moves: [],
             });
 
@@ -169,7 +169,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { remaining: [1, 2], isDoubles: false },
+                dice: { remaining: [1, 2] },
                 moves: [],
             });
 
@@ -188,7 +188,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { remaining: [3, 3, 3, 3], isDoubles: true },
+                dice: { remaining: [3, 3, 3, 3] },
                 moves: [],
             });
 
@@ -208,7 +208,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { remaining: [3, 3, 3, 3], isDoubles: true },
+                dice: { remaining: [3, 3, 3, 3] },
                 moves: [],
             });
 
@@ -231,7 +231,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { remaining: [1, 2], isDoubles: false },
+                dice: { remaining: [1, 2] },
                 moves: [],
             });
 
@@ -252,7 +252,7 @@ describe("getTurnValidity", () => {
                 `),
                 bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
-                dice: { remaining: [1, 2], isDoubles: false },
+                dice: { remaining: [1, 2] },
                 moves: [],
             });
 
@@ -262,5 +262,97 @@ describe("getTurnValidity", () => {
 
             expect(game.getTurnValidity()).toBe(TurnValidity.valid);
         });
+    });
+});
+
+describe("getAllPossibleTurns", () => {
+    test("396 (4) possible turns (longest: 4)", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                        5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                        5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                    `),
+            bar: { white: 0, black: 0 },
+            off: { white: 0, black: 0 },
+            dice: { remaining: [2, 2, 2, 2] },
+            moves: [],
+        });
+
+        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(396);
+        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(4);
+        expect(Portes.getAllPossibleTurns(game).longest).toBe(4);
+    });
+
+    test("27 (7) possible turns (longest: 2)", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                        5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                        5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                    `),
+            bar: { white: 0, black: 0 },
+            off: { white: 0, black: 0 },
+            dice: { remaining: [2, 1] },
+            moves: [],
+        });
+
+        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(27);
+        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(7);
+        expect(Portes.getAllPossibleTurns(game).longest).toBe(2);
+    });
+
+    test("1 possible turns (longest: 3)", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                        2b 0 0 0 0 0 0 0 0 0 0 0
+                        0 0 0 0 0 0 0 0 0 0 0 3w
+                    `),
+            bar: { white: 0, black: 0 },
+            off: { white: 0, black: 0 },
+            dice: { remaining: [6, 6, 6, 6] },
+            moves: [],
+        });
+
+        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(1);
+        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(1);
+        expect(Portes.getAllPossibleTurns(game).longest).toBe(3);
+    });
+
+    test("1 possible turns, (longest: 1)", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                        0 0 0 0 0 0 0 0 0 0 0 0
+                        2b 0 0 0 0 2b 0 0 0 0 0 2w
+                    `),
+            bar: { white: 0, black: 0 },
+            off: { white: 0, black: 0 },
+            dice: { remaining: [6, 5] },
+            moves: [],
+        });
+
+        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(1);
+        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(1);
+        expect(Portes.getAllPossibleTurns(game).longest).toBe(1);
+    });
+
+    test("0 possible turns, (longest: 0)", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                        0 0 0 0 0 0 0 0 0 0 0 0
+                        0 0 0 0 0 0 0 0 2b 2b 0 2w
+                    `),
+            bar: { white: 0, black: 0 },
+            off: { white: 0, black: 0 },
+            dice: { remaining: [3, 2] },
+            moves: [],
+        });
+
+        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(0);
+        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(0);
+        expect(Portes.getAllPossibleTurns(game).longest).toBe(0);
     });
 });

@@ -23,7 +23,7 @@ describe("constructor", () => {
             bar: { white: 0, black: 0 },
             off: { white: 0, black: 0 },
             player: "black",
-            dice: { remaining: [6, 3], isDoubles: false },
+            dice: { remaining: [6, 3] },
         };
 
         const game = new MockGame(gameData);

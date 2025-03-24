@@ -42,7 +42,6 @@ export type MoveData = {
 
 export type DiceData = {
     remaining: number[];
-    isDoubles: boolean;
 };
 
 export type PipData = {

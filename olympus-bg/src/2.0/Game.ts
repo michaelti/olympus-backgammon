@@ -11,10 +11,8 @@ export abstract class Game {
     pips: Pip[];
     bar: Bar;
     off: Off;
-    // TODO: sleep on these
-    #possibleTurns: Move[][] = [];
     #longestPossibleTurn: number = 0;
-    #areWeDone: boolean = false;
+    #possibleTurns: Move[][] = [];
 
     constructor(initial: GameData | { player: PlayerBW }) {
         // TODO: there is a bug here where we can end up with incomplete gamedata
@@ -45,7 +43,10 @@ export abstract class Game {
     abstract clone(): Game;
 
     startTurn() {
-        this.#generateAllPossibleTurns();
+        // this.dice = new Dice();
+        const { longest, turns } = Game.getAllPossibleTurns(this);
+        this.#longestPossibleTurn = longest;
+        this.#possibleTurns = turns;
     }
 
     getTurnValidity(): TurnValidity {
@@ -83,79 +84,84 @@ export abstract class Game {
         return TurnValidity.valid;
     }
 
-    /**
-     * Must be called at the beginning of a turn
-     */
-    #generateAllPossibleTurns(): void {
-        if (this.dice.remaining.length === 0) return;
-        if (this.#areWeDone) return;
-
-        const turns: Move[][] = [];
-        let maxTurnLength = 0;
-
-        // TODO: does this work?
-        // We don't think so, but the tests are passing.
-        // If not, revert Dice 2.0
-        // ... but if it does... remove isDoubles?!
-        // TODO: try making this a closure
-        //  1. Grab all the stuff from beginning (possibleTurns, areWeDone, longestPossibleTurn, initialDice)
-        //  2. Start recursin'
-
-        // Optimization for doubles since the order in which they are played doesn't matter
-        const uniqueDice = this.dice.isDoubles ? [this.dice.remaining[0]] : this.dice.remaining;
-
-        for (const die of uniqueDice) {
-            for (let pipStart = 0; pipStart <= 25; pipStart++) {
-                if (this.pips[pipStart].owner !== this.player) continue;
-                if (this.pips[pipStart].size < 1) continue; // Added
-
-                const pipTo = this.getDestination(pipStart, die);
-                const move = new Move(pipStart, pipTo, die);
-
-                if (!this.isMoveValid(move.from, move.to)) continue;
-
-                const gameClone = this.clone();
-
-                gameClone.doMove(move.from, move.to);
-                gameClone.#generateAllPossibleTurns();
-                const nextTurns = gameClone.#possibleTurns;
-
-                if (!nextTurns.length) {
-                    const turn = [move];
-                    turns.push(turn);
-
-                    if (turn.length > maxTurnLength) {
-                        maxTurnLength = turn.length;
-                    }
-
-                    continue;
-                }
-
-                for (const nextMoves of nextTurns) {
-                    const turn = [move, ...nextMoves];
-                    turns.push(turn);
-
-                    if (turn.length > maxTurnLength) {
-                        maxTurnLength = turn.length;
-                        // Optimization: if we've used all dice, we can't do better
-                        if (maxTurnLength === (this.dice.isDoubles ? 4 : 2)) {
-                            this.#areWeDone = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        this.#possibleTurns = turns;
-        this.#longestPossibleTurn = maxTurnLength;
-    }
-
     isGameOver(): 0 | 1 | 2 {
         return 0;
     }
 
     otherPlayer(): PlayerBW {
         return otherPlayer(this.player);
+    }
+
+    /**
+     * Must be called at the beginning of a turn
+     * May contain some invalid turns (TODO: is this true? copied from old version)
+     * TODO: add a rewind to the beginning of this so it can be used at any time?
+     * DECISION:
+     * - either add config: { stopEarly: boolean, onlyValidTurns: boolean }
+     * - or change this to just getLongestPossibleTurn, and implement allPossibleValidTurns separately for bot
+     */
+    static getAllPossibleTurns(game: Game): {
+        turns: Move[][];
+        longest: number;
+    } {
+        const diceLength = game.dice.remaining.length;
+        let foundTurnThatUsesAllDice = false;
+
+        return recurse(game);
+
+        function recurse(game: Game): { turns: Move[][]; longest: number } {
+            if (game.dice.remaining.length === 0) return { turns: [], longest: 0 };
+            if (foundTurnThatUsesAllDice) return { turns: [], longest: 0 };
+
+            const turns: Move[][] = [];
+            let maxTurnLength = 0;
+
+            // Optimization: for doubles, the order in which they are played doesn't matter
+            const uniqueDice = new Set(game.dice.remaining);
+
+            for (const die of uniqueDice) {
+                for (let pipStart = 0; pipStart <= 25; pipStart++) {
+                    if (game.pips[pipStart].owner !== game.player) continue;
+                    if (game.pips[pipStart].size < 1) continue; // Added
+
+                    const pipTo = game.getDestination(pipStart, die);
+                    const move = new Move(pipStart, pipTo, die);
+
+                    if (!game.isMoveValid(move.from, move.to)) continue;
+
+                    const gameClone = game.clone();
+
+                    gameClone.doMove(move.from, move.to);
+                    const nextTurns = recurse(gameClone).turns;
+
+                    if (!nextTurns.length) {
+                        const turn = [move];
+                        turns.push(turn);
+
+                        if (turn.length > maxTurnLength) {
+                            maxTurnLength = turn.length;
+                        }
+
+                        continue;
+                    }
+
+                    for (const nextMoves of nextTurns) {
+                        const turn = [move, ...nextMoves];
+                        turns.push(turn);
+
+                        if (turn.length > maxTurnLength) {
+                            maxTurnLength = turn.length;
+                            // Optimization: if we've used all dice, we can't do better
+                            if (maxTurnLength === diceLength) {
+                                foundTurnThatUsesAllDice = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return { turns: turns, longest: maxTurnLength };
+        }
     }
 }

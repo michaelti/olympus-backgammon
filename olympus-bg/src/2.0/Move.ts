@@ -13,7 +13,7 @@ export class Move {
         this.from = from;
         this.to = to;
         this.dieUsed = dieUsed;
-        this.sideEffect = sideEffect;
+        if (sideEffect) this.sideEffect = sideEffect;
     }
 
     setSideEffect(from: number, to: number) {
