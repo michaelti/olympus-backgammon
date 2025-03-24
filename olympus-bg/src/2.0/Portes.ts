@@ -29,7 +29,7 @@ export class Portes extends Game {
         if (this.pips[barId].size > 0) {
             if (from !== 25 && from !== 0) return false;
             if (this.pips[to].owner !== this.player && this.pips[to].size > 1) return false;
-            if (!this.dice.remaining.includes(pipDistance(from, to))) return false;
+            if (!this.dice.includes(pipDistance(from, to))) return false;
         }
         // Bearing off
         else if (to === 25 || to === 0) {
@@ -41,9 +41,9 @@ export class Portes extends Game {
                 if (this.pips[i].owner === this.player) return false;
             }
             // If bearing off from an non-exact number of pips
-            if (!this.dice.remaining.includes(pipDistance(from, to))) {
+            if (!this.dice.includes(pipDistance(from, to))) {
                 // Check if there's a big enough dice
-                if (this.dice.getLargestRemaining() > pipDistance(from, to)) {
+                if (Math.max(...this.dice) > pipDistance(from, to)) {
                     // Range of pips in the player's home quadrant that are further away than the pip they are trying to bear off of
                     const farHomePips =
                         this.player === "white" ? range(19, from - 1) : range(from + 1, 6);
@@ -59,7 +59,7 @@ export class Portes extends Game {
         else {
             if (from < 1 || from > 24 || to < 1 || to > 24) return false;
             if (this.pips[to].owner !== this.player && this.pips[to].size > 1) return false;
-            if (!this.dice.remaining.includes(pipDistance(from, to))) return false;
+            if (!this.dice.includes(pipDistance(from, to))) return false;
         }
 
         return true;
@@ -98,9 +98,11 @@ export class Portes extends Game {
         }
 
         // Use smallest dice possible
-        let die = this.dice.getSmallestRemaining();
-        if (die < pipDistance(from, to)) die = this.dice.getLargestRemaining();
-        this.dice.use(die);
+        let die = Math.min(...this.dice);
+        if (die < pipDistance(from, to)) die = Math.max(...this.dice);
+
+        const dieIndex = this.dice.indexOf(die);
+        this.dice.splice(dieIndex, 1);
 
         this.moves.push(new Move(from, to, die, sideEffect));
     }
@@ -126,7 +128,7 @@ export class Portes extends Game {
         const { from, to, dieUsed, sideEffect } = move;
         const off = this.player === "white" ? 25 : 0;
 
-        this.dice.remaining.push(dieUsed);
+        this.dice.push(dieUsed);
 
         // Only possible side effect is sending opponent to the bar
         if (sideEffect) {

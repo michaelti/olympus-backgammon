@@ -28,7 +28,7 @@ export enum TurnValidity {
 export type GameData = {
     player: PlayerBW;
     moves: MoveData[];
-    dice: DiceData;
+    dice: number[];
     pips: PipData[];
     bar: BarData;
     off: OffData;
@@ -38,10 +38,6 @@ export type MoveData = {
     from: number;
     to: number;
     dieUsed: number;
-};
-
-export type DiceData = {
-    remaining: number[];
 };
 
 export type PipData = {

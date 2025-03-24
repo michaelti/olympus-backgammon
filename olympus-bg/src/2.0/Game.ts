@@ -1,12 +1,11 @@
 import { Bar, GameData, Off, PlayerBW, TurnValidity } from "./types.js";
 import { Move } from "./Move.js";
-import { Dice } from "./Dice.js";
 import { Pip } from "./Pip.js";
 import { otherPlayer } from "./util.js";
 
 export abstract class Game {
     player: PlayerBW;
-    dice: Dice;
+    dice: number[];
     moves: Move[];
     pips: Pip[];
     bar: Bar;
@@ -22,7 +21,7 @@ export abstract class Game {
         if ("pips" in initial) {
             this.player = initial.player;
             this.moves = initial.moves.map((move) => new Move(move.from, move.to, move.dieUsed));
-            this.dice = new Dice(initial.dice);
+            this.dice = [...initial.dice];
             this.pips = initial.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
             this.bar = { ...initial.bar };
             this.off = { ...initial.off };
@@ -30,7 +29,7 @@ export abstract class Game {
         }
 
         this.player = initial.player;
-        this.dice = new Dice();
+        this.dice = [];
         this.moves = [];
         this.pips = Array.from({ length: 26 }, () => new Pip());
         this.bar = { black: 0, white: 0 };
@@ -43,7 +42,10 @@ export abstract class Game {
     abstract clone(): Game;
 
     startTurn() {
-        // this.dice = new Dice();
+        // this.dice = [rollDie(), rollDie()];
+        // const isDoubles = this.dice[0] === this.dice[1];
+        // if (isDoubles) this.dice = [...this.dice, ...this.dice];
+
         const { longest, turns } = Game.getAllPossibleTurns(this);
         this.#longestPossibleTurn = longest;
         this.#possibleTurns = turns;
@@ -72,7 +74,7 @@ export abstract class Game {
         if (
             this.moves.length === 1 &&
             this.#longestPossibleTurn === 1 &&
-            this.moves[0].dieUsed < this.dice.remaining[0]
+            this.moves[0].dieUsed < this.dice[0]
         ) {
             for (const possibleTurn of this.#possibleTurns) {
                 if (possibleTurn[0].dieUsed > this.moves[0].dieUsed) {
@@ -104,20 +106,20 @@ export abstract class Game {
         turns: Move[][];
         longest: number;
     } {
-        const diceLength = game.dice.remaining.length;
+        const diceLength = game.dice.length;
         let foundTurnThatUsesAllDice = false;
 
         return recurse(game);
 
         function recurse(game: Game): { turns: Move[][]; longest: number } {
-            if (game.dice.remaining.length === 0) return { turns: [], longest: 0 };
+            if (game.dice.length === 0) return { turns: [], longest: 0 };
             if (foundTurnThatUsesAllDice) return { turns: [], longest: 0 };
 
             const turns: Move[][] = [];
             let maxTurnLength = 0;
 
             // Optimization: for doubles, the order in which they are played doesn't matter
-            const uniqueDice = new Set(game.dice.remaining);
+            const uniqueDice = new Set(game.dice);
 
             for (const die of uniqueDice) {
                 for (let pipStart = 0; pipStart <= 25; pipStart++) {
