@@ -54,6 +54,14 @@ export abstract class Game {
         this.#largestPossibleDie = largest;
     }
 
+    isGameOver(): 0 | 1 | 2 {
+        return 0;
+    }
+
+    otherPlayer(): PlayerBW {
+        return otherPlayer(this.player);
+    }
+
     getTurnValidity(): TurnValidity {
         // If there are no possible moves, the turn is valid
         if (this.#longestPossibleTurn === 0) {
@@ -87,17 +95,13 @@ export abstract class Game {
         return TurnValidity.valid;
     }
 
-    isGameOver(): 0 | 1 | 2 {
-        return 0;
-    }
-
-    otherPlayer(): PlayerBW {
-        return otherPlayer(this.player);
-    }
-
     /**
      * Must be called at the beginning of a turn
-     * May contain some invalid turns
+     *
+     * Returns:
+     *  - The length of a turn that must be played if possible
+     *  - The largest die that must be played in the case of a single-move turn
+     *  - The list of turns that were generated to produce these values
      */
     static getValidTurnCriteria(game: Game): {
         longest: number;
