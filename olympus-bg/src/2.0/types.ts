@@ -20,6 +20,15 @@ export enum TurnValidity {
     invalidLongerMove = -2,
 }
 
+export type InitialGameData = {
+    player: PlayerBW;
+    moves?: MoveData[];
+    dice?: number[];
+    pips?: PipData[];
+    bar?: BarData;
+    off?: OffData;
+};
+
 export type GameData = {
     player: PlayerBW;
     moves: MoveData[];

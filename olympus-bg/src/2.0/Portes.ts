@@ -1,10 +1,10 @@
 import { Game } from "./Game.js";
 import { clamp, pipDistance, range } from "./util.js";
-import { GameData, PlayerBW } from "./types.js";
+import { InitialGameData } from "./types.js";
 import { Move } from "./Move.js";
 
 export class Portes extends Game {
-    constructor(initial: GameData | { player: PlayerBW }) {
+    constructor(initial: InitialGameData) {
         super(initial);
         if ("pips" in initial) return;
 

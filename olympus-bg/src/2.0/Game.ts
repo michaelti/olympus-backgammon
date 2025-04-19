@@ -1,4 +1,4 @@
-import { Bar, GameData, Off, PlayerBW, TurnValidity } from "./types.js";
+import { Bar, InitialGameData, Off, PlayerBW, TurnValidity } from "./types.js";
 import { Move } from "./Move.js";
 import { Pip } from "./Pip.js";
 import { otherPlayer, rollDie } from "./util.js";
@@ -13,27 +13,20 @@ export abstract class Game {
     #longestPossibleTurn: number = 0;
     #largestPossibleDie: number = 0;
 
-    constructor(initial: GameData | { player: PlayerBW }) {
-        // TODO: there is a bug here where we can end up with incomplete gamedata
-        // - Option 1: make each of these keys optional for real
-        // - Option 2: update the types so that a partial object isn't accepted
-        //   (currently it's using the second type and 'allowing' extra keys)
-        if ("pips" in initial) {
-            this.player = initial.player;
-            this.moves = initial.moves.map((move) => new Move(move.from, move.to, move.die));
-            this.dice = [...initial.dice];
-            this.pips = initial.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
-            this.bar = { ...initial.bar };
-            this.off = { ...initial.off };
-            return;
-        }
-
+    constructor(initial: InitialGameData) {
         this.player = initial.player;
-        this.dice = [];
-        this.moves = [];
-        this.pips = Array.from({ length: 26 }, () => new Pip());
-        this.bar = { black: 0, white: 0 };
-        this.off = { black: 0, white: 0 };
+        this.dice = initial.dice ? [...initial.dice] : [];
+
+        this.moves = initial.moves
+            ? initial.moves.map((move) => new Move(move.from, move.to, move.die))
+            : [];
+
+        this.pips = initial.pips
+            ? initial.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned))
+            : Array.from({ length: 26 }, () => new Pip());
+
+        this.bar = initial.bar ? { ...initial.bar } : { black: 0, white: 0 };
+        this.off = initial.off ? { ...initial.off } : { black: 0, white: 0 };
     }
 
     abstract isMoveValid(from: number, to: number): boolean;

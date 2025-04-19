@@ -5,12 +5,12 @@ import { clone } from "ramda";
 
 // Run using `npx vitest bench`
 
-bench("Old (Board) implementation", () => {
+bench("Old implementation", () => {
     const board = Board();
     clone(board);
 });
 
-bench("New (Game) implementation", () => {
+bench("New implementation", () => {
     const game = new Portes({ player: "black" });
     game.clone();
 });
