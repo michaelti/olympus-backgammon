@@ -106,7 +106,6 @@ export class Portes extends Game {
         this.moves.push(new Move(from, to, die, sideEffect));
     }
 
-    // TODO: see if we can improve this implementation
     getDestination(start: number, die: number): number {
         const direction = this.player == "black" ? -1 : 1;
         return clamp(direction * die + start);

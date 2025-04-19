@@ -2,8 +2,6 @@ export type Player = "black" | "white" | "neither";
 
 export type PlayerBW = "black" | "white";
 
-// export type Place = number | "bar" | "off";
-
 export type Bar = {
     black: number;
     white: number;
@@ -22,9 +20,6 @@ export enum TurnValidity {
     invalidLongerMove = -2,
 }
 
-// TODO: consider whether this is the right approach
-// can we have the classes implement these types or vice versa?
-// (for snapshots/restoration of game state)
 export type GameData = {
     player: PlayerBW;
     moves: MoveData[];
@@ -55,5 +50,3 @@ type OffData = {
     black: number;
     white: number;
 };
-// END TODO
-//

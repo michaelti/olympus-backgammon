@@ -351,3 +351,5 @@ describe("getValidTurnCriteria", () => {
         expect(Portes.getValidTurnCriteria(game).longest).toBe(0);
     });
 });
+
+new Portes({ player: "white", dice: [1, 2] });

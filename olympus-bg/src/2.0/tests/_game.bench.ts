@@ -3,9 +3,7 @@ import { Portes } from "../Portes.js";
 import { Board } from "../../game.js";
 import { clone } from "ramda";
 
-// This benchmark can be run using `npx vitest bench`
-
-// TODO: Remove this?
+// Run using `npx vitest bench`
 
 bench("Old (Board) implementation", () => {
     const board = Board();
