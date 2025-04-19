@@ -40,6 +40,7 @@ export abstract class Game {
     abstract doMove(from: number, to: number): void;
     abstract getDestination(start: number, die: number): number;
     abstract clone(): Game;
+    // TODO: abstract undo()
 
     rollDice() {
         this.dice = [rollDie(), rollDie()];
