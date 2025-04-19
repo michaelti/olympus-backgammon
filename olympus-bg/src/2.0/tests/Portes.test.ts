@@ -265,7 +265,7 @@ describe("getTurnValidity", () => {
     });
 });
 
-describe("getAllPossibleTurns", () => {
+describe("getValidTurnCriteria", () => {
     test("396 (4) possible turns (longest: 4)", () => {
         const game = new Portes({
             player: "white",
@@ -279,9 +279,8 @@ describe("getAllPossibleTurns", () => {
             moves: [],
         });
 
-        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(396);
-        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(4);
-        expect(Portes.getAllPossibleTurns(game).longest).toBe(4);
+        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(4);
+        expect(Portes.getValidTurnCriteria(game).longest).toBe(4);
     });
 
     test("27 (7) possible turns (longest: 2)", () => {
@@ -297,9 +296,8 @@ describe("getAllPossibleTurns", () => {
             moves: [],
         });
 
-        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(27);
-        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(7);
-        expect(Portes.getAllPossibleTurns(game).longest).toBe(2);
+        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(7);
+        expect(Portes.getValidTurnCriteria(game).longest).toBe(2);
     });
 
     test("1 possible turns (longest: 3)", () => {
@@ -315,9 +313,8 @@ describe("getAllPossibleTurns", () => {
             moves: [],
         });
 
-        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(1);
-        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(1);
-        expect(Portes.getAllPossibleTurns(game).longest).toBe(3);
+        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(1);
+        expect(Portes.getValidTurnCriteria(game).longest).toBe(3);
     });
 
     test("1 possible turns, (longest: 1)", () => {
@@ -333,9 +330,8 @@ describe("getAllPossibleTurns", () => {
             moves: [],
         });
 
-        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(1);
-        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(1);
-        expect(Portes.getAllPossibleTurns(game).longest).toBe(1);
+        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(1);
+        expect(Portes.getValidTurnCriteria(game).longest).toBe(1);
     });
 
     test("0 possible turns, (longest: 0)", () => {
@@ -351,8 +347,7 @@ describe("getAllPossibleTurns", () => {
             moves: [],
         });
 
-        // expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(0);
-        expect(Portes.getAllPossibleTurns(game).turns).toHaveLength(0);
-        expect(Portes.getAllPossibleTurns(game).longest).toBe(0);
+        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(0);
+        expect(Portes.getValidTurnCriteria(game).longest).toBe(0);
     });
 });

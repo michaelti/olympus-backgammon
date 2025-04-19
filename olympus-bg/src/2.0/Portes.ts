@@ -65,7 +65,6 @@ export class Portes extends Game {
         return true;
     }
 
-    // TODO: There might be a bug where this misses the ownership change sometimes? (when black moves to neither?)
     doMove(from: number, to: number): void {
         to = clamp(to);
         const bar = this.player === "white" ? 0 : 25;

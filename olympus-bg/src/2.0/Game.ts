@@ -49,7 +49,7 @@ export abstract class Game {
     }
 
     startTurn() {
-        const { longest, largest } = Game.getAllPossibleTurns(this);
+        const { longest, largest } = Game.getValidTurnCriteria(this);
         this.#longestPossibleTurn = longest;
         this.#largestPossibleDie = largest;
     }
@@ -97,20 +97,15 @@ export abstract class Game {
 
     /**
      * Must be called at the beginning of a turn
-     * May contain some invalid turns (TODO: is this true? copied from old version)
-     * TODO: add a rewind to the beginning of this so it can be used at any time?
-     * DECISION:
-     * - either add config: { stopEarly: boolean, onlyValidTurns: boolean }
-     * - or change this to just getLongestPossibleTurn, and implement allPossibleValidTurns separately for bot
+     * May contain some invalid turns
      */
-    static getAllPossibleTurns(game: Game): {
-        turns: Move[][];
+    static getValidTurnCriteria(game: Game): {
         longest: number;
         largest: number;
+        turns: Move[][];
     } {
         const diceLength = game.dice.length;
         let foundTurnThatUsesAllDice = false;
-
         return recurse(game);
 
         function recurse(game: Game): { turns: Move[][]; longest: number; largest: number } {
