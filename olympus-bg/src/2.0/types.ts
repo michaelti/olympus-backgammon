@@ -12,6 +12,12 @@ export type Off = {
     white: number;
 };
 
+export type Move = {
+    from: number;
+    to: number;
+    effect?: { from: number; to: number };
+};
+
 export enum TurnValidity {
     valid = 1,
     validZero = 2,
