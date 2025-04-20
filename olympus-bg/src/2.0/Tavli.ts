@@ -72,7 +72,7 @@ export class Tavli {
         this.step = "Game";
     }
 
-    setVariant(variant: Variant) {
+    pickVariant(variant: Variant) {
         if (this.step !== "PickVariant") return;
 
         this.variant = variant;
