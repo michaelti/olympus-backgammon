@@ -13,6 +13,7 @@ export abstract class Game {
     #longestPossibleTurn: number = 0;
     #largestPossibleDie: number = 0;
     onGameOver?: OnGameOver;
+    // TODO: do we need Steps for game?
 
     constructor(initial: InitialGameData, onGameOver?: OnGameOver) {
         this.player = initial.player;
