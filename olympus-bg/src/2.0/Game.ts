@@ -1,4 +1,4 @@
-import { Bar, InitialGameData, Off, PlayerBW, TurnValidity } from "./types.js";
+import { Bar, InitialGameData, Off, PlayerBW, TurnValidity, OnGameOver } from "./types.js";
 import { Move } from "./Move.js";
 import { Pip } from "./Pip.js";
 import { otherPlayer, rollDie } from "./util.js";
@@ -12,8 +12,9 @@ export abstract class Game {
     off: Off;
     #longestPossibleTurn: number = 0;
     #largestPossibleDie: number = 0;
+    onGameOver?: OnGameOver;
 
-    constructor(initial: InitialGameData) {
+    constructor(initial: InitialGameData, onGameOver?: OnGameOver) {
         this.player = initial.player;
         this.dice = initial.dice ? [...initial.dice] : [];
 
@@ -27,6 +28,10 @@ export abstract class Game {
 
         this.bar = initial.bar ? { ...initial.bar } : { black: 0, white: 0 };
         this.off = initial.off ? { ...initial.off } : { black: 0, white: 0 };
+
+        if (onGameOver) {
+            this.onGameOver = onGameOver;
+        }
     }
 
     abstract isMoveValid(from: number, to: number): boolean;
@@ -47,7 +52,11 @@ export abstract class Game {
         this.#largestPossibleDie = largest;
     }
 
-    isGameOver(): 0 | 1 | 2 {
+    endTurn(): 0 | 1 | 2 {
+        if (this.onGameOver) {
+            this.onGameOver("neither", 0);
+        }
+
         return 0;
     }
 

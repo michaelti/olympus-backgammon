@@ -65,3 +65,7 @@ type OffData = {
     black: number;
     white: number;
 };
+
+export type Variant = "Portes" | "Plakoto" | "Fevga";
+
+export type OnGameOver = (winner: Player, points: number) => void;

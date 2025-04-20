@@ -1,11 +1,11 @@
 import { Game } from "./Game.js";
 import { clamp, pipDistance, range } from "./util.js";
-import { InitialGameData } from "./types.js";
+import { InitialGameData, OnGameOver } from "./types.js";
 import { Move } from "./Move.js";
 
 export class Portes extends Game {
-    constructor(initial: InitialGameData) {
-        super(initial);
+    constructor(initial: InitialGameData, onGameOver?: OnGameOver) {
+        super(initial, onGameOver);
         if ("pips" in initial) return;
 
         // Black moves towards pip 1 (decreasing)
