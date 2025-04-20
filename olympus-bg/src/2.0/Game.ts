@@ -52,12 +52,34 @@ export abstract class Game {
         this.#largestPossibleDie = largest;
     }
 
-    endTurn(): 0 | 1 | 2 {
-        if (this.onGameOver) {
-            this.onGameOver("neither", 0);
+    endTurn(): TurnValidity | void {
+        const turnValidity = this.getTurnValidity();
+
+        if (turnValidity < TurnValidity.valid) {
+            return turnValidity;
         }
 
-        return 0;
+        // Game over
+        if (this.off[this.player] === 15) {
+            const winner = this.player;
+            const loser = this.otherPlayer();
+            let points = 1;
+
+            if (this.off[loser] === 0) {
+                points = 2;
+            }
+
+            this.onGameOver?.(winner, points);
+            return;
+        }
+
+        this.dice = [];
+        this.moves = [];
+        this.#longestPossibleTurn = 0;
+        this.#largestPossibleDie = 0;
+        this.player = this.otherPlayer();
+
+        return;
     }
 
     otherPlayer(): PlayerBW {
