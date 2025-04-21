@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { stringToPips } from "../util.js";
 import { Portes } from "../Portes.js";
-import { MoveData, TurnValidity } from "../types.js";
+import { TurnValidity } from "../types.js";
 
 describe("isMoveValid", () => {
     test("Returns false if pip isn't owned by player", () => {
@@ -16,9 +16,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 1, to: 2, die: 1 };
-
-        const result = game.isMoveValid(move.from, move.to);
+        const result = game.isMoveValid(1, 2);
 
         expect(result).toBe(false);
     });
@@ -36,9 +34,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 1, to: 2, die: 1 };
-
-        const result = game.isMoveValid(move.from, move.to);
+        const result = game.isMoveValid(1, 2);
 
         expect(result).toBe(false);
     });
@@ -55,9 +51,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 1, to: 2, die: 1 };
-
-        const result = game.isMoveValid(move.from, move.to);
+        const result = game.isMoveValid(1, 2);
 
         expect(result).toBe(false);
     });
@@ -74,9 +68,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 1, to: 4, die: 1 };
-
-        const result = game.isMoveValid(move.from, move.to);
+        const result = game.isMoveValid(1, 4);
 
         expect(result).toBe(false);
     });
@@ -93,9 +85,7 @@ describe("isMoveValid", () => {
             off: { black: 0, white: 0 },
         });
 
-        const move: MoveData = { from: 2, to: 1, die: 1 };
-
-        const result = game.isMoveValid(move.from, move.to);
+        const result = game.isMoveValid(2, 1);
 
         expect(result).toBe(false);
     });
