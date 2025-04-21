@@ -1,4 +1,4 @@
-import { Bar, InitialGameData, Off, PlayerBW, TurnValidity, OnGameOver } from "./types.js";
+import { Bar, InitialGameData, Off, PlayerBW, OnGameOver, TurnValidity } from "./types.js";
 import { Move } from "./Move.js";
 import { Pip } from "./Pip.js";
 import { otherPlayer, rollDie } from "./util.js";
@@ -56,7 +56,7 @@ export abstract class Game {
     endTurn(): TurnValidity | void {
         const turnValidity = this.getTurnValidity();
 
-        if (turnValidity < TurnValidity.valid) {
+        if (!turnValidity.valid) {
             return turnValidity;
         }
 
@@ -90,7 +90,7 @@ export abstract class Game {
     getTurnValidity(): TurnValidity {
         // If there are no possible moves, the turn is valid
         if (this.#longestPossibleTurn === 0) {
-            return TurnValidity.validZero;
+            return { valid: true, reason: "NoPossibleMoves" };
         }
 
         // Validate turn length. Players must make as many moves as possible
@@ -100,7 +100,7 @@ export abstract class Game {
             const isBearingOff = this.moves[0]?.to === 0 || this.moves[0]?.to === 25;
 
             if (!(isLastChecker && isBearingOff)) {
-                return TurnValidity.invalidMoreMoves;
+                return { valid: false, reason: "MorePossibleMoves" };
             }
         }
 
@@ -113,11 +113,11 @@ export abstract class Game {
             this.moves[0].die < this.dice[0]
         ) {
             if (this.moves[0].die < this.#largestPossibleDie) {
-                return TurnValidity.invalidLongerMove;
+                return { valid: false, reason: "LargerPossibleMove" };
             }
         }
 
-        return TurnValidity.valid;
+        return { valid: true, reason: "Valid" };
     }
 
     /**

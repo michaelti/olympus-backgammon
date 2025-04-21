@@ -18,13 +18,9 @@ export type Move = {
     effect?: { from: number; to: number };
 };
 
-export enum TurnValidity {
-    valid = 1,
-    validZero = 2,
-    invalid = 0,
-    invalidMoreMoves = -1,
-    invalidLongerMove = -2,
-}
+export type TurnValidity =
+    | { valid: true; reason: "Valid" | "NoPossibleMoves" }
+    | { valid: false; reason: "MorePossibleMoves" | "LargerPossibleMove" };
 
 export type InitialGameData = {
     player: PlayerBW;

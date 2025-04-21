@@ -1,7 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { stringToPips } from "../util.js";
 import { Portes } from "../Portes.js";
-import { TurnValidity } from "../types.js";
 
 describe("isMoveValid", () => {
     test("Returns false if pip isn't owned by player", () => {
@@ -109,7 +108,10 @@ describe("getTurnValidity", () => {
 
             game.startTurn();
 
-            expect(game.getTurnValidity()).toBe(TurnValidity.validZero);
+            const { valid, reason } = game.getTurnValidity();
+
+            expect(valid).toBe(true);
+            expect(reason).toBe("NoPossibleMoves");
         });
 
         test("Player is stuck behind a wall", () => {
@@ -127,7 +129,10 @@ describe("getTurnValidity", () => {
 
             game.startTurn();
 
-            expect(game.getTurnValidity()).toBe(TurnValidity.validZero);
+            const { valid, reason } = game.getTurnValidity();
+
+            expect(valid).toBe(true);
+            expect(reason).toBe("NoPossibleMoves");
         });
     });
 
@@ -147,7 +152,10 @@ describe("getTurnValidity", () => {
 
             game.startTurn();
 
-            expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
+            const { valid, reason } = game.getTurnValidity();
+
+            expect(valid).toBe(false);
+            expect(reason).toBe("MorePossibleMoves");
         });
 
         test("Player has only moved once", () => {
@@ -166,7 +174,10 @@ describe("getTurnValidity", () => {
             game.startTurn();
             game.doMove(1, 2);
 
-            expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
+            const { valid, reason } = game.getTurnValidity();
+
+            expect(valid).toBe(false);
+            expect(reason).toBe("MorePossibleMoves");
         });
 
         test("Player has only moved twice", () => {
@@ -186,7 +197,10 @@ describe("getTurnValidity", () => {
             game.doMove(1, 4);
             game.doMove(1, 4);
 
-            expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
+            const { valid, reason } = game.getTurnValidity();
+
+            expect(valid).toBe(false);
+            expect(reason).toBe("MorePossibleMoves");
         });
 
         test("Player has only moved thrice", () => {
@@ -207,7 +221,10 @@ describe("getTurnValidity", () => {
             game.doMove(1, 4);
             game.doMove(4, 7);
 
-            expect(game.getTurnValidity()).toBe(TurnValidity.invalidMoreMoves);
+            const { valid, reason } = game.getTurnValidity();
+
+            expect(valid).toBe(false);
+            expect(reason).toBe("MorePossibleMoves");
         });
     });
 
@@ -228,7 +245,10 @@ describe("getTurnValidity", () => {
             game.startTurn();
             game.doMove(1, 2);
 
-            expect(game.getTurnValidity()).toBe(TurnValidity.invalidLongerMove);
+            const { valid, reason } = game.getTurnValidity();
+
+            expect(valid).toBe(false);
+            expect(reason).toBe("LargerPossibleMove");
         });
     });
 
@@ -250,7 +270,10 @@ describe("getTurnValidity", () => {
             game.doMove(1, 2);
             game.doMove(1, 3);
 
-            expect(game.getTurnValidity()).toBe(TurnValidity.valid);
+            const { valid, reason } = game.getTurnValidity();
+
+            expect(valid).toBe(true);
+            expect(reason).toBe("Valid");
         });
     });
 });
