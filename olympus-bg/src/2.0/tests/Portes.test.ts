@@ -352,4 +352,8 @@ describe("getValidTurnCriteria", () => {
     });
 });
 
-new Portes({ player: "white", dice: [1, 2] });
+describe.todo("getDestination", () => {});
+describe.todo("doMove", () => {});
+describe.todo("rollDice", () => {});
+describe.todo("startTurn", () => {});
+describe.todo("endTurn", () => {});
