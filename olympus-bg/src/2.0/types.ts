@@ -40,6 +40,13 @@ export type GameData = {
     off: OffData;
 };
 
+export type BoardData = {
+    dice: number[];
+    pips: PipData[];
+    bar: BarData;
+    off: OffData;
+};
+
 export type MoveData = {
     from: number;
     to: number;

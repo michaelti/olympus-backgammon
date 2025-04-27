@@ -66,6 +66,8 @@ export class Portes extends Game {
     }
 
     doMove(from: number, to: number): void {
+        super.saveBoardHistory();
+
         to = clamp(to);
         const bar = this.player === "white" ? 0 : 25;
         const otherBar = this.player === "white" ? 25 : 0;

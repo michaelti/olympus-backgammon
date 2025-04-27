@@ -365,6 +365,236 @@ describe("getValidTurnCriteria", () => {
     });
 });
 
+describe("undoMove", () => {
+    test("Undoes first move", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                `),
+            dice: [1, 2],
+            moves: [],
+        });
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.doMove(1, 2);
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Undoes second move", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                `),
+            dice: [1, 2],
+            moves: [],
+        });
+
+        game.startTurn();
+        game.doMove(1, 2);
+        const snapshot = structuredClone(game);
+        game.doMove(1, 3);
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Undoes two moves", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                `),
+            dice: [1, 2],
+            moves: [],
+        });
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.doMove(1, 2);
+        game.doMove(1, 3);
+        game.undoMove();
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Undoes third move", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                `),
+            dice: [1, 1, 1, 1],
+            moves: [],
+        });
+
+        game.startTurn();
+        game.doMove(1, 2);
+        game.doMove(1, 2);
+        const snapshot = structuredClone(game);
+        game.doMove(2, 3);
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Undoes three moves", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                `),
+            dice: [1, 1, 1, 1],
+            moves: [],
+        });
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.doMove(1, 2);
+        game.doMove(1, 2);
+        game.doMove(2, 3);
+        game.undoMove();
+        game.undoMove();
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Undoes fourth move", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                `),
+            dice: [1, 1, 1, 1],
+            moves: [],
+        });
+
+        game.startTurn();
+        game.doMove(1, 2);
+        game.doMove(1, 2);
+        game.doMove(2, 3);
+        const snapshot = structuredClone(game);
+        game.doMove(2, 3);
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Undoes four moves", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
+                `),
+            dice: [1, 1, 1, 1],
+            moves: [],
+        });
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.doMove(1, 2);
+        game.doMove(1, 2);
+        game.doMove(2, 3);
+        game.doMove(2, 3);
+        game.undoMove();
+        game.undoMove();
+        game.undoMove();
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Undoes move with side effect", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    0 0 0 0 0 0 0 0 0 0 0 0
+                    0 0 0 0 0 0 0 0 0 0 1b 2w
+                `),
+            dice: [1, 2],
+            moves: [],
+        });
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.doMove(1, 2);
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    // TODO: temporarily failing this test because it highlights that we represent "bar" inconsistently
+    test.fails("Undoes move from bar", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    0 0 0 0 0 0 0 0 0 0 0 0
+                    0 0 0 0 0 0 0 0 0 0 0 0
+                `),
+            bar: { black: 0, white: 1 },
+            dice: [1, 2],
+            moves: [],
+        });
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.doMove(0, 1);
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Undoes move to off", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    0 0 0 0 0 0 0 0 0 0 0 2w
+                    0 0 0 0 0 0 0 0 0 0 0 0
+                `),
+            dice: [1, 2],
+            moves: [],
+        });
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.doMove(24, 25);
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    test("Does nothing if no moves have been made", () => {
+        const game = new Portes({
+            player: "white",
+            pips: stringToPips(`
+                    0 0 0 0 0 0 0 0 0 0 0 0
+                    0 0 0 0 0 0 0 0 0 0 1b 2w
+                `),
+            dice: [1, 2],
+            moves: [],
+        });
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.undoMove();
+
+        expect(game).toMatchObject(snapshot);
+    });
+});
+
 describe.todo("getDestination", () => {});
 describe.todo("doMove", () => {});
 describe.todo("rollDice", () => {});

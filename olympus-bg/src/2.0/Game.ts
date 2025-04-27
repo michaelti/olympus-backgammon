@@ -1,4 +1,12 @@
-import { Bar, InitialGameData, Off, PlayerBW, OnGameOver, TurnValidity } from "./types.js";
+import {
+    Bar,
+    InitialGameData,
+    Off,
+    PlayerBW,
+    OnGameOver,
+    TurnValidity,
+    BoardData,
+} from "./types.js";
 import { Move } from "./Move.js";
 import { Pip } from "./Pip.js";
 import { otherPlayer, rollDie } from "./util.js";
@@ -13,6 +21,7 @@ export abstract class Game {
     #longestPossibleTurn: number = 0;
     #largestPossibleDie: number = 0;
     onGameOver?: OnGameOver;
+    #boardHistory: BoardData[];
     // TODO: do we need Steps for game?
 
     constructor(initial: InitialGameData, onGameOver?: OnGameOver) {
@@ -30,6 +39,8 @@ export abstract class Game {
         this.bar = initial.bar ? { ...initial.bar } : { black: 0, white: 0 };
         this.off = initial.off ? { ...initial.off } : { black: 0, white: 0 };
 
+        this.#boardHistory = [];
+
         if (onGameOver) {
             this.onGameOver = onGameOver;
         }
@@ -39,7 +50,6 @@ export abstract class Game {
     abstract doMove(from: number, to: number): void;
     abstract getDestination(start: number, die: number): number;
     abstract clone(): Game;
-    // TODO: abstract undo()
 
     rollDice() {
         this.dice = [rollDie(), rollDie()];
@@ -79,12 +89,41 @@ export abstract class Game {
         this.#longestPossibleTurn = 0;
         this.#largestPossibleDie = 0;
         this.player = this.otherPlayer();
+        this.#boardHistory = [];
 
         return;
     }
 
     otherPlayer(): PlayerBW {
         return otherPlayer(this.player);
+    }
+
+    saveBoardHistory() {
+        this.#boardHistory.push({
+            dice: [...this.dice],
+            pips: this.pips.map((pip) => ({
+                size: pip.size,
+                owner: pip.owner,
+                isPinned: pip.isPinned,
+            })),
+            bar: { ...this.bar },
+            off: { ...this.off },
+        });
+    }
+
+    undoMove() {
+        const previousBoardState = this.#boardHistory.pop();
+
+        if (!previousBoardState) return;
+
+        const { dice, pips, bar, off } = previousBoardState;
+
+        this.dice = [...dice];
+        this.pips = pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
+        this.bar = { ...bar };
+        this.off = { ...off };
+
+        this.moves.pop();
     }
 
     getTurnValidity(): TurnValidity {
