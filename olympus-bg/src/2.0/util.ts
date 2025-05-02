@@ -1,6 +1,22 @@
 import { PipData, Player, PlayerBW } from "./types.js";
 
 /**
+ * Pip numbers representing each player's off
+ */
+export const OFF = {
+    black: 0,
+    white: 25,
+};
+
+/**
+ * Pip numbers representing each player's bar
+ */
+export const BAR = {
+    black: 25,
+    white: 0,
+};
+
+/**
  * Generates a random number between 1 and 6
  */
 export function rollDie() {

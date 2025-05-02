@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { stringToPips } from "../util.js";
+import { stringToPips, BAR } from "../util.js";
 import { Portes } from "../Portes.js";
 
 describe("isMoveValid", () => {
@@ -100,7 +100,6 @@ describe("getTurnValidity", () => {
                     0 0 0 0 0 0 0 0 0 0 0 0
                     1b
                 `),
-                bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: [1, 2],
                 moves: [],
@@ -121,7 +120,6 @@ describe("getTurnValidity", () => {
                     0 0 0 0 0 2w 2w 2w 2w 2w 2w 1b
                     0 0 0 0 0 0 0 0 0 0 0 0
                 `),
-                bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: [6, 6, 6, 6],
                 moves: [],
@@ -144,7 +142,6 @@ describe("getTurnValidity", () => {
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
                 `),
-                bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: [1, 2],
                 moves: [],
@@ -165,7 +162,6 @@ describe("getTurnValidity", () => {
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
                 `),
-                bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: [1, 2],
                 moves: [],
@@ -187,7 +183,6 @@ describe("getTurnValidity", () => {
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
                 `),
-                bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: [3, 3, 3, 3],
                 moves: [],
@@ -210,7 +205,6 @@ describe("getTurnValidity", () => {
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
                 `),
-                bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: [3, 3, 3, 3],
                 moves: [],
@@ -236,7 +230,6 @@ describe("getTurnValidity", () => {
                     0 0 0 0 0 0 0 0 0 0 0 0
                     0 0 0 0 0 0 0 0 2b 0 0 1w
                 `),
-                bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: [1, 2],
                 moves: [],
@@ -260,7 +253,6 @@ describe("getTurnValidity", () => {
                     5b 0 0 0 3w 0 5w 0 0 0 0 2b
                     5w 0 0 0 3b 0 5b 0 0 0 0 2w
                 `),
-                bar: { white: 0, black: 0 },
                 off: { white: 0, black: 0 },
                 dice: [1, 2],
                 moves: [],
@@ -283,10 +275,9 @@ describe("getValidTurnCriteria", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                        5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                        5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                    `),
-            bar: { white: 0, black: 0 },
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             off: { white: 0, black: 0 },
             dice: [2, 2, 2, 2],
             moves: [],
@@ -300,10 +291,9 @@ describe("getValidTurnCriteria", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                        5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                        5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                    `),
-            bar: { white: 0, black: 0 },
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             off: { white: 0, black: 0 },
             dice: [2, 1],
             moves: [],
@@ -317,10 +307,9 @@ describe("getValidTurnCriteria", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                        2b 0 0 0 0 0 0 0 0 0 0 0
-                        0 0 0 0 0 0 0 0 0 0 0 3w
-                    `),
-            bar: { white: 0, black: 0 },
+                2b 0 0 0 0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0 0 0 0 3w
+            `),
             off: { white: 0, black: 0 },
             dice: [6, 6, 6, 6],
             moves: [],
@@ -334,10 +323,9 @@ describe("getValidTurnCriteria", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                        0 0 0 0 0 0 0 0 0 0 0 0
-                        2b 0 0 0 0 2b 0 0 0 0 0 2w
-                    `),
-            bar: { white: 0, black: 0 },
+                0 0 0 0 0 0 0 0 0 0 0 0
+                2b 0 0 0 0 2b 0 0 0 0 0 2w
+            `),
             off: { white: 0, black: 0 },
             dice: [6, 5],
             moves: [],
@@ -351,10 +339,9 @@ describe("getValidTurnCriteria", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                        0 0 0 0 0 0 0 0 0 0 0 0
-                        0 0 0 0 0 0 0 0 2b 2b 0 2w
-                    `),
-            bar: { white: 0, black: 0 },
+                0 0 0 0 0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0 2b 2b 0 2w
+            `),
             off: { white: 0, black: 0 },
             dice: [3, 2],
             moves: [],
@@ -370,9 +357,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                `),
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             dice: [1, 2],
             moves: [],
         });
@@ -389,9 +376,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                `),
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             dice: [1, 2],
             moves: [],
         });
@@ -409,9 +396,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                `),
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             dice: [1, 2],
             moves: [],
         });
@@ -430,9 +417,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                `),
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             dice: [1, 1, 1, 1],
             moves: [],
         });
@@ -451,9 +438,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                `),
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             dice: [1, 1, 1, 1],
             moves: [],
         });
@@ -474,9 +461,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                `),
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             dice: [1, 1, 1, 1],
             moves: [],
         });
@@ -496,9 +483,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    5b 0 0 0 3w 0 5w 0 0 0 0 2b
-                    5w 0 0 0 3b 0 5b 0 0 0 0 2w
-                `),
+                5b 0 0 0 3w 0 5w 0 0 0 0 2b
+                5w 0 0 0 3b 0 5b 0 0 0 0 2w
+            `),
             dice: [1, 1, 1, 1],
             moves: [],
         });
@@ -521,9 +508,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 0 0 0 0 0 0 0 0 1b 2w
-                `),
+                0 0 0 0 0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0 0 0 1b 2w
+            `),
             dice: [1, 2],
             moves: [],
         });
@@ -536,22 +523,21 @@ describe("undoMove", () => {
         expect(game).toMatchObject(snapshot);
     });
 
-    // TODO: temporarily failing this test because it highlights that we represent "bar" inconsistently
-    test.fails("Undoes move from bar", () => {
+    test("Undoes move from bar", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 0 0 0 0 0 0 0 0 0 0
-                `),
-            bar: { black: 0, white: 1 },
+                0 0 0 0 0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0 0 0 0 0
+                0b 1w
+            `),
             dice: [1, 2],
             moves: [],
         });
 
         game.startTurn();
         const snapshot = structuredClone(game);
-        game.doMove(0, 1);
+        game.doMove(BAR["white"], 1);
         game.undoMove();
 
         expect(game).toMatchObject(snapshot);
@@ -561,9 +547,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    0 0 0 0 0 0 0 0 0 0 0 2w
-                    0 0 0 0 0 0 0 0 0 0 0 0
-                `),
+                0 0 0 0 0 0 0 0 0 0 0 2w
+                0 0 0 0 0 0 0 0 0 0 0 0
+            `),
             dice: [1, 2],
             moves: [],
         });
@@ -580,9 +566,9 @@ describe("undoMove", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
-                    0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 0 0 0 0 0 0 0 0 1b 2w
-                `),
+                0 0 0 0 0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0 0 0 1b 2w
+            `),
             dice: [1, 2],
             moves: [],
         });

@@ -1,12 +1,4 @@
-import {
-    Bar,
-    InitialGameData,
-    Off,
-    PlayerBW,
-    OnGameOver,
-    TurnValidity,
-    BoardData,
-} from "./types.js";
+import { InitialGameData, Off, PlayerBW, OnGameOver, TurnValidity, BoardData } from "./types.js";
 import { Move } from "./Move.js";
 import { Pip } from "./Pip.js";
 import { otherPlayer, rollDie } from "./util.js";
@@ -16,7 +8,6 @@ export abstract class Game {
     dice: number[];
     moves: Move[];
     pips: Pip[];
-    bar: Bar;
     off: Off;
     #longestPossibleTurn: number = 0;
     #largestPossibleDie: number = 0;
@@ -36,7 +27,6 @@ export abstract class Game {
             ? initial.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned))
             : Array.from({ length: 26 }, () => new Pip());
 
-        this.bar = initial.bar ? { ...initial.bar } : { black: 0, white: 0 };
         this.off = initial.off ? { ...initial.off } : { black: 0, white: 0 };
 
         this.#boardHistory = [];
@@ -106,7 +96,6 @@ export abstract class Game {
                 owner: pip.owner,
                 isPinned: pip.isPinned,
             })),
-            bar: { ...this.bar },
             off: { ...this.off },
         });
     }
@@ -116,11 +105,10 @@ export abstract class Game {
 
         if (!previousBoardState) return;
 
-        const { dice, pips, bar, off } = previousBoardState;
+        const { dice, pips, off } = previousBoardState;
 
         this.dice = [...dice];
         this.pips = pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
-        this.bar = { ...bar };
         this.off = { ...off };
 
         this.moves.pop();
