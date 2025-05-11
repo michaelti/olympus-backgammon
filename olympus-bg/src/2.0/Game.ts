@@ -9,7 +9,7 @@ export abstract class Game {
     moves: Move[];
     pips: Pip[];
     off: Off;
-    onGameOver?: OnGameOver;
+    #onGameOver?: OnGameOver;
     #boardHistory: BoardData[];
     #validTurnCriteria: {
         longestPossibleTurn: number;
@@ -35,12 +35,12 @@ export abstract class Game {
         this.#validTurnCriteria = null;
 
         if (onGameOver) {
-            this.onGameOver = onGameOver;
+            this.#onGameOver = onGameOver;
         }
     }
 
     abstract isMoveValid(from: number, to: number): boolean;
-    abstract doMove(from: number, to: number): void;
+    abstract doMove(from: number, to: number): boolean;
     abstract getDestination(start: number, die: number): number;
     abstract clone(): Game;
 
@@ -77,7 +77,7 @@ export abstract class Game {
                 points = 2;
             }
 
-            this.onGameOver?.(winner, points);
+            this.#onGameOver?.(winner, points);
             return;
         }
 
@@ -100,7 +100,7 @@ export abstract class Game {
         return otherPlayer(this.player);
     }
 
-    saveBoardHistory() {
+    protected saveBoardHistory() {
         this.#boardHistory.push({
             dice: [...this.dice],
             pips: this.pips.map((pip) => ({

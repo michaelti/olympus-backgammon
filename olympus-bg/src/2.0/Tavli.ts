@@ -64,7 +64,7 @@ export class Tavli {
         }
 
         const game = GameMap[this.variant];
-        this.game = new game({ player: starter }, this.handleGameOver);
+        this.game = new game({ player: starter }, this.#handleGameOver);
 
         this.startingRolls["black"] = 0;
         this.startingRolls["white"] = 0;
@@ -83,12 +83,12 @@ export class Tavli {
         }
 
         const game = GameMap[this.variant];
-        this.game = new game({ player: this.lastWinner }, this.handleGameOver);
+        this.game = new game({ player: this.lastWinner }, this.#handleGameOver);
 
         this.step = "Game";
     }
 
-    handleGameOver(winner: Player, points: number) {
+    #handleGameOver(winner: Player, points: number) {
         if (this.step !== "Game") return;
 
         this.score[winner] += points;
