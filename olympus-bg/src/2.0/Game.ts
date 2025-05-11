@@ -60,7 +60,7 @@ export abstract class Game {
         };
     }
 
-    endTurn(): TurnValidity | void {
+    endTurn(): TurnValidity {
         const turnValidity = this.getTurnValidity();
 
         if (!turnValidity.valid) {
@@ -78,7 +78,7 @@ export abstract class Game {
             }
 
             this.#onGameOver?.(winner, points);
-            return;
+            return turnValidity;
         }
 
         this.dice = [];
@@ -87,7 +87,7 @@ export abstract class Game {
         this.#boardHistory = [];
         this.#validTurnCriteria = null;
 
-        return;
+        return turnValidity;
     }
 
     #rollDice() {
