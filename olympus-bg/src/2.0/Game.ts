@@ -9,11 +9,12 @@ export abstract class Game {
     moves: Move[];
     pips: Pip[];
     off: Off;
-    #longestPossibleTurn: number = 0;
-    #largestPossibleDie: number = 0;
     onGameOver?: OnGameOver;
     #boardHistory: BoardData[];
-    // TODO: do we need Steps for game?
+    #validTurnCriteria: {
+        longestPossibleTurn: number;
+        largestPossibleDie: number;
+    } | null;
 
     constructor(initial: InitialGameData, onGameOver?: OnGameOver) {
         this.player = initial.player;
@@ -31,6 +32,8 @@ export abstract class Game {
 
         this.#boardHistory = [];
 
+        this.#validTurnCriteria = null;
+
         if (onGameOver) {
             this.onGameOver = onGameOver;
         }
@@ -41,16 +44,20 @@ export abstract class Game {
     abstract getDestination(start: number, die: number): number;
     abstract clone(): Game;
 
-    rollDice() {
-        this.dice = [rollDie(), rollDie()];
-        const isDoubles = this.dice[0] === this.dice[1];
-        if (isDoubles) this.dice = [...this.dice, ...this.dice];
-    }
-
     startTurn() {
+        if (this.moves.length > 0) {
+            return;
+        }
+
+        if (this.dice.length === 0) {
+            this.#rollDice();
+        }
+
         const { longest, largest } = Game.getValidTurnCriteria(this);
-        this.#longestPossibleTurn = longest;
-        this.#largestPossibleDie = largest;
+        this.#validTurnCriteria = {
+            longestPossibleTurn: longest,
+            largestPossibleDie: largest,
+        };
     }
 
     endTurn(): TurnValidity | void {
@@ -76,12 +83,17 @@ export abstract class Game {
 
         this.dice = [];
         this.moves = [];
-        this.#longestPossibleTurn = 0;
-        this.#largestPossibleDie = 0;
         this.player = this.otherPlayer();
         this.#boardHistory = [];
+        this.#validTurnCriteria = null;
 
         return;
+    }
+
+    #rollDice() {
+        this.dice = [rollDie(), rollDie()];
+        const isDoubles = this.dice[0] === this.dice[1];
+        if (isDoubles) this.dice = [...this.dice, ...this.dice];
     }
 
     otherPlayer(): PlayerBW {
@@ -115,13 +127,21 @@ export abstract class Game {
     }
 
     getTurnValidity(): TurnValidity {
+        if (this.dice.length === 0 && this.moves.length === 0) {
+            return { valid: false, reason: "MustRoll" };
+        }
+
+        if (!this.#validTurnCriteria) {
+            throw "Must set validTurnCriteria";
+        }
+
         // If there are no possible moves, the turn is valid
-        if (this.#longestPossibleTurn === 0) {
+        if (this.#validTurnCriteria.longestPossibleTurn === 0) {
             return { valid: true, reason: "NoPossibleMoves" };
         }
 
         // Validate turn length. Players must make as many moves as possible
-        if (this.moves.length !== this.#longestPossibleTurn) {
+        if (this.moves.length !== this.#validTurnCriteria.longestPossibleTurn) {
             // Unless they are bearing off their final checker
             const isLastChecker = this.off[this.player] === 14;
             const isBearingOff = this.moves[0]?.to === 0 || this.moves[0]?.to === 25;
@@ -136,10 +156,10 @@ export abstract class Game {
         // then check if there's a possible move with the remaining die
         if (
             this.moves.length === 1 &&
-            this.#longestPossibleTurn === 1 &&
+            this.#validTurnCriteria.longestPossibleTurn === 1 &&
             this.moves[0].die < this.dice[0]
         ) {
-            if (this.moves[0].die < this.#largestPossibleDie) {
+            if (this.moves[0].die < this.#validTurnCriteria.largestPossibleDie) {
                 return { valid: false, reason: "LargerPossibleMove" };
             }
         }

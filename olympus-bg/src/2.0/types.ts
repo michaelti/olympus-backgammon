@@ -15,7 +15,7 @@ export type Move = {
 
 export type TurnValidity =
     | { valid: true; reason: "Valid" | "NoPossibleMoves" }
-    | { valid: false; reason: "MorePossibleMoves" | "LargerPossibleMove" };
+    | { valid: false; reason: "MorePossibleMoves" | "LargerPossibleMove" | "MustRoll" };
 
 export type InitialGameData = {
     player: PlayerBW;

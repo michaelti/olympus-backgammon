@@ -64,12 +64,15 @@ export class Portes extends Game {
         return true;
     }
 
-    doMove(from: number, to: number): void {
+    doMove(from: number, to: number): boolean {
+        if (!this.isMoveValid(from, to)) {
+            return false;
+        }
+
         super.saveBoardHistory();
 
         to = clamp(to);
-        // const bar = this.player === "white" ? 0 : 25;
-        // const otherBar = this.player === "white" ? 25 : 0;
+
         let sideEffect;
 
         // From pip
@@ -109,6 +112,8 @@ export class Portes extends Game {
         this.dice.splice(dieIndex, 1);
 
         this.moves.push(new Move(from, to, die, sideEffect));
+
+        return true;
     }
 
     getDestination(start: number, die: number): number {
