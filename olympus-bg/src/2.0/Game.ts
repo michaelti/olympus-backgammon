@@ -68,6 +68,7 @@ export abstract class Game {
         }
 
         // Game over
+        // TODO: Implement draw and insta-win for Plakoto
         if (this.off[this.player] === 15) {
             const winner = this.player;
             const loser = this.otherPlayer();
