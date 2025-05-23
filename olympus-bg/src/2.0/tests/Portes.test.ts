@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { stringToPips, BAR } from "../util.js";
 import { Portes } from "../Portes.js";
 
@@ -581,7 +581,22 @@ describe("undoMove", () => {
     });
 });
 
+describe("doMove", () => {
+    test("Does nothing if isMoveValid returns false", () => {
+        const game = new Portes({ player: "white" });
+
+        vi.spyOn(Portes.prototype, "isMoveValid").mockReturnValue(false);
+
+        game.startTurn();
+        const snapshot = structuredClone(game);
+        game.doMove(1, 2);
+
+        expect(game).toMatchObject(snapshot);
+    });
+
+    // TODO: more
+});
+
 describe.todo("getDestination", () => {});
-describe.todo("doMove", () => {});
 describe.todo("startTurn", () => {});
 describe.todo("endTurn", () => {});
