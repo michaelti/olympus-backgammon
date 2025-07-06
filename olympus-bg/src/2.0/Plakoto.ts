@@ -18,6 +18,10 @@ export class Plakoto extends Game {
         to = clamp(to);
         if (this.pips[from].owner !== this.player) return false;
 
+        // Prevent backwards movements
+        if (this.player === "black" && to >= from) return false;
+        if (this.player === "white" && to <= from) return false;
+
         // Bearing off
         if (to === OFF[this.player]) {
             // Range of all pips in current player's home quandrant

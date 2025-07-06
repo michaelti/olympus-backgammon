@@ -72,7 +72,7 @@ describe("isMoveValid", () => {
         expect(result).toBe(false);
     });
 
-    test("Returns false if moving backwards", { skip: true }, () => {
+    test("Returns false if moving backwards", () => {
         const game = new Portes({
             player: "white",
             dice: [1, 2],

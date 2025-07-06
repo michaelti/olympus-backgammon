@@ -26,6 +26,10 @@ export class Portes extends Game {
         to = clamp(to);
         if (this.pips[from].owner !== this.player) return false;
 
+        // Prevent backwards movements
+        if (this.player === "black" && to >= from) return false;
+        if (this.player === "white" && to <= from) return false;
+
         // Entering the board
         if (this.pips[BAR[this.player]].size > 0) {
             if (from !== BAR[this.player]) return false;

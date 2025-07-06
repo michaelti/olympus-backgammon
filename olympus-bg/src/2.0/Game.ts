@@ -1,7 +1,7 @@
 import { InitialGameData, Off, PlayerBW, OnGameOver, TurnValidity, BoardData } from "./types.js";
 import { Move } from "./Move.js";
 import { Pip } from "./Pip.js";
-import { otherPlayer, rollDie, HOME } from "./util.js";
+import { otherPlayer, rollDie, START } from "./util.js";
 
 export abstract class Game {
     player: PlayerBW;
@@ -81,8 +81,8 @@ export abstract class Game {
             return turnValidity;
         }
 
-        const homePip = this.pips[HOME[this.player]];
-        const opponentHomePip = this.pips[HOME[this.otherPlayer()]];
+        const homePip = this.pips[START[this.player]];
+        const opponentHomePip = this.pips[START[this.otherPlayer()]];
 
         // Draw: Both player's starting checkers are pinned
         if (homePip.isPinned && opponentHomePip.isPinned) {

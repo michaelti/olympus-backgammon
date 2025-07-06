@@ -17,9 +17,9 @@ export const BAR = {
 };
 
 /**
- * Pip numbers representing each player's home
+ * Pip numbers representing each player's starting point
  */
-export const HOME = {
+export const START = {
     black: 24,
     white: 1,
 };
