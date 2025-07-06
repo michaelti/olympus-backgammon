@@ -593,8 +593,6 @@ describe("doMove", () => {
 
         expect(game).toMatchObject(snapshot);
     });
-
-    // TODO: more
 });
 
 describe.todo("getDestination", () => {});
