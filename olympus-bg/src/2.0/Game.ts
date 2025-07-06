@@ -1,7 +1,7 @@
 import { InitialGameData, Off, PlayerBW, OnGameOver, TurnValidity, BoardData } from "./types.js";
 import { Move } from "./Move.js";
 import { Pip } from "./Pip.js";
-import { otherPlayer, rollDie } from "./util.js";
+import { otherPlayer, rollDie, HOME } from "./util.js";
 
 export abstract class Game {
     player: PlayerBW;
@@ -68,7 +68,6 @@ export abstract class Game {
         }
 
         // Game over
-        // TODO: Implement draw and insta-win for Plakoto
         if (this.off[this.player] === 15) {
             const winner = this.player;
             const loser = this.otherPlayer();
@@ -79,6 +78,21 @@ export abstract class Game {
             }
 
             this.#onGameOver?.(winner, points);
+            return turnValidity;
+        }
+
+        const homePip = this.pips[HOME[this.player]];
+        const opponentHomePip = this.pips[HOME[this.otherPlayer()]];
+
+        // Draw: Both player's starting checkers are pinned
+        if (homePip.isPinned && opponentHomePip.isPinned) {
+            this.#onGameOver?.("neither", 1);
+            return turnValidity;
+        }
+
+        // Insta-win: Opponent's starting checker is pinned and current player's is safe
+        else if (opponentHomePip.isPinned && homePip.owner !== this.player) {
+            this.#onGameOver?.(this.player, 2);
             return turnValidity;
         }
 

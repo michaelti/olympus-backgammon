@@ -17,6 +17,14 @@ export const BAR = {
 };
 
 /**
+ * Pip numbers representing each player's home
+ */
+export const HOME = {
+    black: 24,
+    white: 1,
+};
+
+/**
  * Generates a random number between 1 and 6
  */
 export function rollDie() {
