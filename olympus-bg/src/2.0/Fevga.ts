@@ -38,24 +38,33 @@ export class Fevga extends Game {
         return true;
     }
 
-    isMoveValid(from: number, to: number): boolean {
-        to = clamp(to);
-        if (this.pips[from].owner !== this.player) return false;
+    distanceFromOff(x: number): number {
+        if (this.player === "black") {
+            return x;
+        }
+        if (x >= OFF.white) return 0; // OFF.white is 0 spaces from off
+        if (x >= 13)
+            return x - 12; // Pips 13-24 correspond to 1-12 spaces
+        else return x + 12; // Pips 12-1 correspond to 24-13 spaces away
+    }
 
-        // Prevent backwards movements
-        if (this.player === "black" && to >= from) return false;
-        // TODO: prevent backwards movement for white
+    isMoveValid(fromId: number, toId: number): boolean {
+        let to = this.distanceFromOff(toId);
+        let from = this.distanceFromOff(fromId);
+        toId = clamp(toId);
+        if (this.pips[fromId].owner !== this.player) return false;
+
+        // Prevent backwards movements: ending pip must be closer to "off"
+        if (to >= from) return false;
 
         // You can't move a second checker from the start until you move your first
         // checker past the other player's start.
         if (this.isFirstAway()) {
-            if (from === START[this.player]) return false;
+            if (from === 24) return false;
         }
 
         // Bearing off
-        if (to === OFF[this.player]) {
-            if (to === OFF.white) to = 12; // BAD. TODO: make good
-
+        if (to === 0) {
             const nonHomePips =
                 this.player === "white" ? [...range(1, 12), ...range(19, 24)] : range(7, 24);
             for (const i of nonHomePips) {
@@ -68,7 +77,7 @@ export class Fevga extends Game {
                 if (Math.max(...this.dice) > pipDistance(from, to)) {
                     // Range of pips in the player's home quadrant that are further away than the pip from which they are trying to bear off
                     const furtherHomePips =
-                        this.player === "white" ? range(from + 1, 18) : range(from + 1, 6);
+                        this.player === "white" ? range(fromId + 1, 18) : range(fromId + 1, 6);
                     for (const i of furtherHomePips) {
                         if (this.pips[i].owner === this.player) return false;
                     }
@@ -80,10 +89,11 @@ export class Fevga extends Game {
         // Standard move
         else {
             if (from < 1 || from > 24 || to < 1 || to > 24) return false;
-            if (this.pips[to].owner === this.otherPlayer()) return false;
+            if (this.pips[toId].owner === this.otherPlayer()) return false;
             if (!this.dice.includes(pipDistance(from, to))) return false;
-            // Prevent players from moving past their OFF
-            if (this.player === "white" && from >= 13 && to <= 12) return false;
+
+            // TODO: Don't allow player to block all starting quadrant pips.
+            // Evaluate this at the end of the turn?
         }
 
         return true;
