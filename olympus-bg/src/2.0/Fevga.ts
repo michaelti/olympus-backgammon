@@ -24,6 +24,9 @@ export class Fevga extends Game {
         this.pips[START.white].set(15, "white");
     }
 
+    // Fevga-specific helper function
+    // Checks if the player is in the early game state where they have not yet
+    // advanced a checker to the other half of the board
     isFirstAway(): boolean {
         if (this.pips[START[this.player]].size === 15) return false;
         let farSidePips;
@@ -38,20 +41,24 @@ export class Fevga extends Game {
         return true;
     }
 
-    distanceFromOff(x: number): number {
-        if (this.player === "black") {
-            return x;
+    // Fevga-specific helper function
+    // Returns the distance between a pip and OFF for the current player
+    distanceFromOff(pip: number): number {
+        if (this.player === "black") return pip;
+
+        if (pip === OFF.white) {
+            return 0; // OFF.white is 0 spaces from off
+        } else if (pip >= 13) {
+            return pip - 12; // Pips 13-24 correspond to 1-12 spaces
+        } else {
+            return pip + 12; // Pips 12-1 correspond to 24-13 spaces away
         }
-        if (x >= OFF.white) return 0; // OFF.white is 0 spaces from off
-        if (x >= 13)
-            return x - 12; // Pips 13-24 correspond to 1-12 spaces
-        else return x + 12; // Pips 12-1 correspond to 24-13 spaces away
     }
 
     isMoveValid(fromId: number, toId: number): boolean {
         let to = this.distanceFromOff(toId);
         let from = this.distanceFromOff(fromId);
-        toId = clamp(toId);
+
         if (this.pips[fromId].owner !== this.player) return false;
 
         // Prevent backwards movements: ending pip must be closer to "off"
@@ -93,7 +100,7 @@ export class Fevga extends Game {
             if (!this.dice.includes(pipDistance(from, to))) return false;
 
             // TODO: Don't allow player to block all starting quadrant pips.
-            // Evaluate this at the end of the turn?
+            // Evaluate this at the end of the turn
         }
 
         return true;
