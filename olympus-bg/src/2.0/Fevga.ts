@@ -1,6 +1,6 @@
 import { Game } from "./Game.js";
 import { clamp, pipDistance, range, OFF } from "./util.js";
-import { InitialGameData, OnGameOver, PlayerBW, TurnValidity } from "./types.js";
+import { InitialGameData, OnGameOver, PlayerBW } from "./types.js";
 import { Move } from "./Move.js";
 
 type State = "Start" | "FirstAway" | "Default";
@@ -117,42 +117,5 @@ export class Fevga extends Game {
 
     clone(): Fevga {
         return new Fevga(this);
-    }
-
-    // 2025-07-09 Michael
-    // Idea 1: override getTurnValidity
-    getTurnValidity(): TurnValidity {
-        const validity = super.getTurnValidity();
-
-        if (!validity.valid) {
-            return validity;
-        }
-
-        // Don't allow player to block all home pips
-        const homePips = this.player === "white" ? range(7, 12) : range(19, 24);
-        const allHomeBlocked = homePips.every((i) => this.pips[i].owner === this.player);
-        if (allHomeBlocked) {
-            return { valid: false, reason: "StartPrime" };
-        }
-
-        // TODO: don't allow player to keep a prime if opponent has stacked all checkers right before
-        // (probably not worth implementing; we didn't before)
-        const opponentStackPip = this.pips.findIndex(
-            (pip) => pip.owner === this.otherPlayer() && pip.size === 15,
-        );
-
-        if (opponentStackPip !== -1) {
-            // Check the next 6 pips after opponentStackPip
-            // If we own them all, turn is invalid
-        }
-
-        // TODO: what if validity was 'true, NoPossibleMoves', but we hit the conditions above?
-        return validity;
-    }
-
-    // Idea 2: add `hooks` to getTurnValidity, endTurn, etc to allow variants to add logic
-    // this would be invoked inside getTurnValidity in Game.ts before the final return
-    turnRules(): TurnValidity {
-        // ...
     }
 }
