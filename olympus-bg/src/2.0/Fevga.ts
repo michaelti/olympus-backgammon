@@ -100,6 +100,7 @@ export class Fevga extends Game {
             if (!this.dice.includes(pipDistance(from, to))) return false;
 
             // TODO: Don't allow player to block all starting quadrant pips.
+            // TODO: Don't allow player to block six pips in front of opponent stack of 15 checkers (or just don't bother)
             // Evaluate this at the end of the turn
         }
 
