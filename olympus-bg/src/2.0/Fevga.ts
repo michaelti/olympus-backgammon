@@ -108,7 +108,41 @@ export class Fevga extends Game {
     }
 
     doMove(from: number, to: number): boolean {
-        // TODO: Implement doMove
+        if (!this.isMoveValid(from, to)) {
+            return false;
+        }
+
+        super.saveBoardHistory();
+
+        // From pip
+        this.pips[from].size--;
+
+        if (this.pips[from].size === 0) {
+            this.pips[from].owner = "neither";
+        }
+
+        // To pip
+        if (to === OFF[this.player]) {
+            // Bearing off
+            this.off[this.player]++;
+        } else {
+            this.pips[to].size++;
+            this.pips[to].owner = this.player;
+        }
+
+        // Try smallest dice possible
+        let die = Math.min(...this.dice);
+
+        if (die < pipDistance(from, to)) {
+            die = Math.max(...this.dice);
+        }
+
+        // Consume the die
+        const dieIndex = this.dice.indexOf(die);
+        this.dice.splice(dieIndex, 1);
+
+        this.moves.push(new Move(from, to, die));
+
         return true;
     }
 
