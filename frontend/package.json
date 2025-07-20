@@ -34,11 +34,6 @@
         "prettier": "2.0.5",
         "vite": "^4.1.0"
     },
-    "prettier": {
-        "tabWidth": 4,
-        "printWidth": 100,
-        "jsxBracketSameLine": true
-    },
     "eslintConfig": {
         "extends": [
             "react-app",

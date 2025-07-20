@@ -27,5 +27,15 @@
     "homepage": "https://github.com/michaelti/olympus-backgammon#readme",
     "devDependencies": {
         "concurrently": "^6.2.0"
-    }
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "printWidth": 100,
+        "jsxBracketSameLine": true
+    },
+    "workspaces": [
+        "backend",
+        "frontend",
+        "olympus-bg"
+    ]
 }
