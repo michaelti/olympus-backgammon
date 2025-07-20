@@ -1,178 +1,262 @@
-import {
-    Move,
-    Pip,
-    Player,
-    TurnMessage,
-    clamp,
-    random,
-    pipDistance,
-    TODO_DELETE_THIS_isTurnPlayer,
-} from "./util.js";
-import { clone } from "ramda";
+import { InitialGameData, Off, PlayerBW, OnGameOver, TurnValidity, BoardData } from "./types.js";
+import { Move } from "./Move.js";
+import { Pip } from "./Pip.js";
+import { otherPlayer, rollDie, START } from "./util.js";
 
-type Turn = Move[];
+export abstract class Game {
+    player: PlayerBW;
+    dice: number[];
+    moves: Move[];
+    pips: Pip[];
+    off: Off;
+    #onGameOver?: OnGameOver;
+    #boardHistory: BoardData[];
+    #validTurnCriteria: {
+        longestPossibleTurn: number;
+        largestPossibleDie: number;
+    } | null;
 
-type RecentMove = {
-    from: number;
-    to: number;
-    subMove?: Move;
-};
+    constructor(initial: InitialGameData, onGameOver?: OnGameOver) {
+        this.player = initial.player;
+        this.dice = initial.dice ? [...initial.dice] : [];
 
-export const Board = () => ({
-    turn: null as Player | null,
-    winner: null as Player | null,
-    off: { [Player.white]: 0, [Player.black]: 0 },
-    pips: new Array(26).fill(undefined).map(() => Pip()),
-    diceRolled: new Array(2),
-    dice: new Array(2),
-    recentMove: {} as RecentMove,
-    possibleTurns: [] as Turn[],
-    maxTurnLength: 0,
-    turnValidity: TurnMessage.invalid,
-    firstPip: 1,
-    lastPip: 24,
-    // Property used by bot
-    uniqueTurns: null as null | Map<string, Turn>,
-    // Fevga properties
-    state: undefined,
+        this.moves = initial.moves
+            ? initial.moves.map((move) => new Move(move.from, move.to, move.die))
+            : [];
 
-    publicProperties() {
-        return {
-            turn: this.turn,
-            winner: this.winner,
-            off: this.off,
-            pips: this.pips,
-            diceRolled: this.diceRolled,
-            dice: this.dice,
-            recentMove: this.recentMove,
-            turnValidity: this.turnValidity,
-            // Fevga properties
-            state: this.state,
+        this.pips = initial.pips
+            ? initial.pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned))
+            : Array.from({ length: 26 }, () => new Pip());
+
+        this.off = initial.off ? { ...initial.off } : { black: 0, white: 0 };
+
+        this.#boardHistory = [];
+
+        this.#validTurnCriteria = null;
+
+        if (onGameOver) {
+            this.#onGameOver = onGameOver;
+        }
+    }
+
+    abstract isMoveValid(from: number, to: number): boolean;
+    abstract doMove(from: number, to: number): boolean;
+    abstract getDestination(start: number, die: number): number;
+    abstract clone(): Game;
+
+    startTurn() {
+        if (this.moves.length > 0) {
+            return;
+        }
+
+        if (this.dice.length === 0) {
+            this.#rollDice();
+        }
+
+        const { longest, largest } = Game.getValidTurnCriteria(this);
+        this.#validTurnCriteria = {
+            longestPossibleTurn: longest,
+            largestPossibleDie: largest,
         };
-    },
+    }
 
-    rollDice() {
-        // Roll a 6-sided die, 2 times
-        this.diceRolled = random.dice(6, 2);
+    endTurn(): TurnValidity {
+        const turnValidity = this.getTurnValidity();
 
-        // Doubles
-        if (this.diceRolled[0] === this.diceRolled[1])
-            this.diceRolled = this.diceRolled.concat(this.diceRolled);
-
-        // Sort smallest to largest
-        this.dice = [...this.diceRolled].sort((a, b) => a - b);
-
-        // Set to null first to ensure garbage collection
-        this.possibleTurns = [];
-        this.possibleTurns = this.allPossibleTurns(false);
-
-        this.maxTurnLength = 0;
-        for (const turn of this.possibleTurns) {
-            if (turn.length > this.maxTurnLength) this.maxTurnLength = turn.length;
-        }
-        this.turnValidity = this.maxTurnLength === 0 ? TurnMessage.validZero : TurnMessage.invalid;
-    },
-
-    // Returns the player who's turn it ISN'T
-    otherPlayer(player?: Player.white | Player.black): Player.white | Player.black {
-        if (player === undefined) {
-            TODO_DELETE_THIS_isTurnPlayer(this.turn);
-            player = this.turn;
+        if (!turnValidity.valid) {
+            return turnValidity;
         }
 
-        if (player === Player.black) return Player.white;
-        else return Player.black;
-    },
+        // Game over
+        if (this.off[this.player] === 15) {
+            const winner = this.player;
+            const loser = this.otherPlayer();
+            let points = 1;
 
-    // Is the board in a state where either player has won?
-    // Returns the number of points won
-    isGameOver(): number {
-        TODO_DELETE_THIS_isTurnPlayer(this.turn);
+            if (this.off[loser] === 0) {
+                points = 2;
+            }
 
-        if (this.off[this.turn] === 15) {
-            this.winner = this.turn;
-            this.turn = Player.neither;
-            // if the other player has borne off 0 checkers, return 2 points
-            const loser = this.otherPlayer(this.winner);
-            return this.off[loser] === 0 ? 2 : 1;
+            this.#onGameOver?.(winner, points);
+            return turnValidity;
         }
-        return 0;
-    },
 
-    // Validates a turn of 0–4 moves
-    turnValidator(moves: Turn): TurnMessage {
-        TODO_DELETE_THIS_isTurnPlayer(this.turn);
+        const homePip = this.pips[START[this.player]];
+        const opponentHomePip = this.pips[START[this.otherPlayer()]];
+
+        // Draw: Both player's starting checkers are pinned
+        if (homePip.isPinned && opponentHomePip.isPinned) {
+            this.#onGameOver?.("neither", 1);
+            return turnValidity;
+        }
+
+        // Insta-win: Opponent's starting checker is pinned and current player's is safe
+        else if (opponentHomePip.isPinned && homePip.owner !== this.player) {
+            this.#onGameOver?.(this.player, 2);
+            return turnValidity;
+        }
+
+        this.dice = [];
+        this.moves = [];
+        this.player = this.otherPlayer();
+        this.#boardHistory = [];
+        this.#validTurnCriteria = null;
+
+        return turnValidity;
+    }
+
+    #rollDice() {
+        this.dice = [rollDie(), rollDie()];
+        const isDoubles = this.dice[0] === this.dice[1];
+        if (isDoubles) this.dice = [...this.dice, ...this.dice];
+    }
+
+    otherPlayer(): PlayerBW {
+        return otherPlayer(this.player);
+    }
+
+    protected saveBoardHistory() {
+        this.#boardHistory.push({
+            dice: [...this.dice],
+            pips: this.pips.map((pip) => ({
+                size: pip.size,
+                owner: pip.owner,
+                isPinned: pip.isPinned,
+            })),
+            off: { ...this.off },
+        });
+    }
+
+    undoMove() {
+        const previousBoardState = this.#boardHistory.pop();
+
+        if (!previousBoardState) return;
+
+        const { dice, pips, off } = previousBoardState;
+
+        this.dice = [...dice];
+        this.pips = pips.map((pip) => new Pip(pip.size, pip.owner, pip.isPinned));
+        this.off = { ...off };
+
+        this.moves.pop();
+    }
+
+    getTurnValidity(): TurnValidity {
+        if (this.dice.length === 0 && this.moves.length === 0) {
+            return { valid: false, reason: "MustRoll" };
+        }
+
+        if (!this.#validTurnCriteria) {
+            throw "Must set validTurnCriteria";
+        }
+
+        // If there are no possible moves, the turn is valid
+        if (this.#validTurnCriteria.longestPossibleTurn === 0) {
+            return { valid: true, reason: "NoPossibleMoves" };
+        }
 
         // Validate turn length. Players must make as many moves as possible
-        if (this.maxTurnLength !== moves.length) {
-            // unless they have 14 checkers off and are bearing off their 15th (final)
-            if (!(this.off[this.turn] === 14 && (moves[0].to === 0 || moves[0].to === 25)))
-                return TurnMessage.invalidMoreMoves;
-        }
-        // Validate single move turn uses the largest dice value possible
-        if (this.maxTurnLength === 1 && this.dice.length === 2) {
-            // if the supplied move matches the smaller dice
-            // then check if there's a possible move with the larger dice
-            if (pipDistance(moves[0].from, moves[0].to) === this.dice[0]) {
-                for (const turn of this.possibleTurns) {
-                    if (pipDistance(turn[0].from, turn[0].to) === this.dice[1])
-                        return TurnMessage.invalidLongerMove;
-                }
+        if (this.moves.length !== this.#validTurnCriteria.longestPossibleTurn) {
+            // Unless they are bearing off their final checker
+            const isLastChecker = this.off[this.player] === 14;
+            const isBearingOff = this.moves[0]?.to === 0 || this.moves[0]?.to === 25;
+
+            if (!(isLastChecker && isBearingOff)) {
+                return { valid: false, reason: "MorePossibleMoves" };
             }
         }
-        return TurnMessage.valid;
-    },
 
-    // Calculates destination pip of a move
-    getDestination(start: number, die: number): number {
-        TODO_DELETE_THIS_isTurnPlayer(this.turn);
-        return clamp(this.turn * die + start);
-    },
+        // Validate single move turn uses the largest possible die
+        // If the supplied move is smaller than the remaining die,
+        // then check if there's a possible move with the remaining die
+        if (
+            this.moves.length === 1 &&
+            this.#validTurnCriteria.longestPossibleTurn === 1 &&
+            this.moves[0].die < this.dice[0]
+        ) {
+            if (this.moves[0].die < this.#validTurnCriteria.largestPossibleDie) {
+                return { valid: false, reason: "LargerPossibleMove" };
+            }
+        }
 
-    // Abstract method. Must be overloaded.
-    isMoveValid(from: number, to: number): boolean {
-        console.log(from, to);
-        return true;
-    },
+        return { valid: true, reason: "Valid" };
+    }
 
-    // Abstract method. Must be overloaded.
-    doMove(from: number, to: number): void {
-        console.log(from, to);
-    },
+    /**
+     * Must be called at the beginning of a turn
+     *
+     * Returns:
+     *  - The length of a turn that must be played if possible
+     *  - The largest die that must be played in the case of a single-move turn
+     *  - The list of turns that were generated to produce these values
+     */
+    static getValidTurnCriteria(game: Game): {
+        longest: number;
+        largest: number;
+        turns: Move[][];
+    } {
+        const diceLength = game.dice.length;
+        let foundTurnThatUsesAllDice = false;
+        return recurse(game);
 
-    // Returns a 2D array of Move objects
-    allPossibleTurns(isBot?: boolean): Turn[] {
-        if (this.dice.length === 0) return [];
-        const allTurns = [];
-        const uniqueDice = this.dice[0] === this.dice[1] ? [this.dice[0]] : this.dice;
-        for (const die of uniqueDice) {
-            // TODO: Replace this.firstPip and this.lastPip with 0 and 25. It's probably fine.
-            for (let pipStart = this.firstPip; pipStart <= this.lastPip; pipStart++) {
-                if (this.pips[pipStart].top === this.turn) {
-                    const pipEnd = this.getDestination(pipStart, die);
-                    const currentMove = { from: pipStart, to: pipEnd };
-                    if (this.isMoveValid(currentMove.from, currentMove.to)) {
-                        // deep copy game board using ramda
-                        const newBoard = clone(this);
-                        newBoard.doMove(currentMove.from, currentMove.to);
-                        const nextTurns = newBoard.allPossibleTurns();
-                        if (nextTurns.length) {
-                            for (const nextMoves of nextTurns) {
-                                const turn = [currentMove, ...nextMoves];
-                                allTurns.push(turn);
-                                if (isBot && this.uniqueTurns && turn.length === 4) {
-                                    const destinations = turn.map((move) => move.to);
-                                    const string = destinations.sort().join("");
-                                    this.uniqueTurns.set(string, turn);
-                                }
+        function recurse(game: Game): { turns: Move[][]; longest: number; largest: number } {
+            if (game.dice.length === 0) return { turns: [], longest: 0, largest: 0 };
+            if (foundTurnThatUsesAllDice) return { turns: [], longest: 0, largest: 0 };
+
+            const turns: Move[][] = [];
+            let maxTurnLength = 0;
+            let maxDieUsed = 0;
+
+            // Optimization: for doubles, the order in which they are played doesn't matter
+            const uniqueDice = new Set(game.dice);
+
+            for (const die of uniqueDice) {
+                for (let pipStart = 0; pipStart <= 25; pipStart++) {
+                    if (game.pips[pipStart].owner !== game.player) continue;
+                    if (game.pips[pipStart].size < 1) continue; // Added
+
+                    const pipTo = game.getDestination(pipStart, die);
+                    const move = new Move(pipStart, pipTo, die);
+
+                    if (!game.isMoveValid(move.from, move.to)) continue;
+
+                    if (die > maxDieUsed) {
+                        maxDieUsed = die;
+                    }
+
+                    const gameClone = game.clone();
+
+                    gameClone.doMove(move.from, move.to);
+                    const nextTurns = recurse(gameClone).turns;
+
+                    if (!nextTurns.length) {
+                        const turn = [move];
+                        turns.push(turn);
+
+                        if (turn.length > maxTurnLength) {
+                            maxTurnLength = turn.length;
+                        }
+
+                        continue;
+                    }
+
+                    for (const nextMoves of nextTurns) {
+                        const turn = [move, ...nextMoves];
+                        turns.push(turn);
+
+                        if (turn.length > maxTurnLength) {
+                            maxTurnLength = turn.length;
+                            // Optimization: if we've used all dice, we can't do better
+                            if (maxTurnLength === diceLength) {
+                                foundTurnThatUsesAllDice = true;
+                                break;
                             }
-                        } else {
-                            allTurns.push([currentMove]);
                         }
                     }
                 }
             }
+
+            return { turns: turns, longest: maxTurnLength, largest: maxDieUsed };
         }
-        return allTurns;
-    },
-});
+    }
+}
