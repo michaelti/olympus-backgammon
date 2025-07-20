@@ -1,6 +1,6 @@
 import { Game } from "./Game.js";
 import { clamp, pipDistance, range, OFF } from "./util.js";
-import { InitialGameData, OnGameOver, PlayerBW } from "./types.js";
+import { InitialGameData, OnGameOver } from "./types.js";
 import { Move } from "./Move.js";
 
 type State = "Start" | "FirstAway" | "Default";
@@ -28,17 +28,17 @@ export class Fevga extends Game {
     // Checks if the player is in the early game state where they have not yet
     // advanced a checker to the other half of the board
     isFirstAway(): boolean {
-        if (this.pips[START[this.player]].size === 15) return false;
+        if (this.pips[START[this.player]].size === 15) return true;
         let farSidePips;
         if (this.player === "white") {
             farSidePips = range(13, 24);
         } else {
             farSidePips = range(1, 12);
         }
-        for (const i in farSidePips) {
-            if (this.pips[i].owner === this.player) return false;
+        for (const i of farSidePips) {
+            if (this.pips[i].owner === this.player) return true;
         }
-        return true;
+        return false;
     }
 
     // Fevga-specific helper function
@@ -56,8 +56,8 @@ export class Fevga extends Game {
     }
 
     isMoveValid(fromId: number, toId: number): boolean {
-        let to = this.distanceFromOff(toId);
-        let from = this.distanceFromOff(fromId);
+        const to = this.distanceFromOff(toId);
+        const from = this.distanceFromOff(fromId);
 
         if (this.pips[fromId].owner !== this.player) return false;
 
@@ -66,7 +66,7 @@ export class Fevga extends Game {
 
         // You can't move a second checker from the start until you move your first
         // checker past the other player's start.
-        if (this.isFirstAway()) {
+        if (!this.isFirstAway()) {
             if (from === 24) return false;
         }
 
