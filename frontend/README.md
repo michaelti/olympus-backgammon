@@ -1,20 +1,38 @@
-# Olympus Backgammon - frontend
+# sv
 
-React frontend for the work-in-progress Olympus Backgammon project. Connects to a separate [backend](https://github.com/michaelti/olympus-backgammon/tree/main/backend) Node.js server and the [olympus-bg](https://github.com/michaelti/olympus-backgammon/tree/main/olympus-bg) node module for gameplay logic.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-### Development
+## Creating a project
 
-1. Install dependencies: `npm install`
-2. Run the start script: `npm run dev`
+If you're seeing this, you've probably already done this step. Congrats!
 
-Be sure to create a local `.env` file in the project root with the key `VITE_BACKEND_URL` pointing to the backend server.
+```bash
+# create a new project in the current directory
+npx sv create
 
-### Deployment
+# create a new project in my-app
+npx sv create my-app
+```
 
-This project is hosted externally on a private server; these instructions are proprietary for the time being.
+## Developing
 
-From the project directory:
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-1. Pull the latest changes: `git pull`
-2. If there are updated dependencies, install them: `npm ci --production`
-3. Build for production: `npm run build`
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
