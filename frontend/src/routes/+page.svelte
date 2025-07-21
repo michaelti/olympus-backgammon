@@ -1,20 +1,72 @@
-<script>
+<script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
-    import { Tavli } from "olympus-bg";
+    import { Fevga, Plakoto, Portes, pipsToString, type Variant } from "olympus-bg";
 
-    const tavli = new Tavli();
-    const display = () => JSON.stringify(tavli, null, 4);
+    let game = new Portes({ player: "white" });
 
-    let string = $state(display());
+    let data = $state({ ...game });
 
-    const start = () => {
-        tavli.pickVariant("Portes");
-        string = display();
+    let move: {
+        from: number | null;
+        to: number | null;
+    } = $state({
+        from: null,
+        to: null,
+    });
+
+    const newGame = (variant: Variant) => {
+        switch (variant) {
+            case "Portes":
+                game = new Portes({ player: "white" });
+                break;
+            case "Plakoto":
+                game = new Plakoto({ player: "white" });
+            case "Fevga":
+                game = new Fevga({ player: "white" });
+        }
+
+        data = { ...game };
+        move = { from: null, to: null };
     };
 
-    const startRollB = () => {
-        tavli.rollToStart("black");
-        string = display();
+    const roll = () => {
+        game.startTurn();
+        data = { ...game };
+    };
+
+    const undoMove = () => {
+        game.undoMove();
+        data = { ...game };
+    };
+
+    const doMove = () => {
+        if (move.from === null || move.to === null) {
+            return;
+        }
+
+        game.doMove(move.from, move.to);
+        move = { from: null, to: null };
+        data = { ...game };
+    };
+
+    const endTurn = () => {
+        game.endTurn();
+        data = { ...game };
+    };
+
+    const isMoveValid = () => {
+        if (move.from === null || move.to === null) {
+            return false;
+        }
+
+        data; // How to make these reactive?
+        return game.isMoveValid(move.from, move.to);
+    };
+
+    const isTurnValid = () => {
+        data; // How to make these reactive?
+        const validity = game.getTurnValidity();
+        return validity.valid;
     };
 </script>
 
@@ -24,19 +76,75 @@
         Olympus Backgammon
     </h1>
 
-    <div class="flex w-full justify-center overflow-y-auto rounded bg-stone-200 p-4 text-sm">
-        <pre>{string}</pre>
+    <div class="flex gap-2">
+        <button class="cursor-pointer rounded border border-stone-300 px-2">New Portes</button>
+        <button class="cursor-pointer rounded border border-stone-300 px-2">New Plakoto</button>
+        <button class="cursor-pointer rounded border border-stone-300 px-2">New Fevga</button>
     </div>
 
-    <div>
-        <button onclick={start} class="cursor-pointer rounded border border-stone-300 px-4 py-2">
-            Start game
+    <div
+        class="flex w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
+    >
+        <p>
+            player: {data.player}
+            | dice: {JSON.stringify(data.dice)}
+            | moves: {JSON.stringify(data.moves)}
+        </p>
+        <p>
+            off black: {data.off.black}
+            | off white: {data.off.white}
+        </p>
+        <pre class="text-center">{pipsToString(data.pips)}</pre>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-2 px-2">
+        <button
+            onclick={roll}
+            class="cursor-pointer rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            disabled={!(!data.dice.length && !data.moves.length)}
+        >
+            Roll
         </button>
         <button
-            onclick={startRollB}
-            class="cursor-pointer rounded border border-stone-300 px-4 py-2"
+            onclick={undoMove}
+            class="cursor-pointer rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            disabled={!data.moves.length}
         >
-            Roll B
+            Undo
+        </button>
+        <input
+            type="number"
+            class="w-24 rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            placeholder="From"
+            disabled={!data.dice.length}
+            pattern="[0-9]*"
+            min="0"
+            max="25"
+            bind:value={move.from}
+        />
+        <input
+            type="number"
+            class="w-24 rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            placeholder="To"
+            disabled={!data.dice.length}
+            pattern="[0-9]*"
+            min="0"
+            max="25"
+            bind:value={move.to}
+        />
+        <button
+            onclick={doMove}
+            class="cursor-pointer rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            disabled={!isMoveValid()}
+        >
+            Move
+        </button>
+        <button
+            onclick={endTurn}
+            class="cursor-pointer rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            disabled={!isTurnValid()}
+        >
+            End turn
         </button>
     </div>
 </div>
