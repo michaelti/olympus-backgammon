@@ -3,18 +3,11 @@ import { clamp, pipDistance, range, OFF } from "./util.js";
 import { InitialGameData, OnGameOver } from "./types.js";
 import { Move } from "./Move.js";
 
-type State = "Start" | "FirstAway" | "Default";
 const START = { black: 24, white: 12 };
 
 export class Fevga extends Game {
-    state: { white: State; black: State };
-
     constructor(initial: InitialGameData, onGameOver?: OnGameOver) {
         super(initial, onGameOver);
-        this.state = {
-            white: "Start",
-            black: "Start",
-        };
 
         if ("pips" in initial) return;
 
