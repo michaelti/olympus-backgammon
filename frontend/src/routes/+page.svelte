@@ -61,12 +61,12 @@
             return false;
         }
 
-        data; // How to make these reactive?
+        console.log(data); // TODO: How to make these reactive?
         return game.isMoveValid(move.from, move.to);
     };
 
     const isTurnValid = () => {
-        data; // How to make these reactive?
+        console.log(data); // TODO: How to make these reactive?
         const validity = game.getTurnValidity();
         return validity.valid;
     };
