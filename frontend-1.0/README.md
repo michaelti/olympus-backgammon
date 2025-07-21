@@ -1,6 +1,6 @@
 # Olympus Backgammon - frontend
 
-Svelte frontend for the work-in-progress Olympus Backgammon project. Connects to a separate [backend](https://github.com/michaelti/olympus-backgammon/tree/main/backend) Node.js server and the [olympus-bg](https://github.com/michaelti/olympus-backgammon/tree/main/olympus-bg) node module for gameplay logic.
+React frontend for the work-in-progress Olympus Backgammon project. Connects to a separate [backend](https://github.com/michaelti/olympus-backgammon/tree/main/backend) Node.js server and the [olympus-bg](https://github.com/michaelti/olympus-backgammon/tree/main/olympus-bg) node module for gameplay logic.
 
 ### Development
 

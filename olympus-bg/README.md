@@ -4,6 +4,6 @@ Game logic module for the work-in-progress [Olympus Backgammon](https://github.c
 
 ## Usage
 
-1. Install the module: `npm install ../path/to/olympus-bg`
+1. Install the module: `npm install ../path/to/olympus-bg` (or in this repo, `npm install olympus-bg`)
 
 Further steps coming soon.
