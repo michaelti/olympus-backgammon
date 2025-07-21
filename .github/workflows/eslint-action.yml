@@ -7,7 +7,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
-            - run: npm install --prefix frontend
+            - run: npm ci
             - run: npm run lint --prefix frontend
     lint-backend:
         name: lint / backend
@@ -15,7 +15,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
-            - run: npm install --prefix backend
+            - run: npm ci
             - run: npm run lint --prefix backend
     lint-olympus-bg:
         name: lint / olympus-bg
@@ -23,5 +23,5 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
-            - run: npm install --prefix olympus-bg
+            - run: npm ci
             - run: npm run lint --prefix olympus-bg
