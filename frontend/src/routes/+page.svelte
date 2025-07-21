@@ -21,8 +21,10 @@
                 break;
             case "Plakoto":
                 game = new Plakoto({ player: "white" });
+                break;
             case "Fevga":
                 game = new Fevga({ player: "white" });
+                break;
         }
 
         data = { ...game };
@@ -77,9 +79,24 @@
     </h1>
 
     <div class="flex gap-2">
-        <button class="cursor-pointer rounded border border-stone-300 px-2">New Portes</button>
-        <button class="cursor-pointer rounded border border-stone-300 px-2">New Plakoto</button>
-        <button class="cursor-pointer rounded border border-stone-300 px-2">New Fevga</button>
+        <button
+            onclick={() => newGame("Portes")}
+            class="cursor-pointer rounded border border-stone-300 px-2"
+        >
+            New Portes
+        </button>
+        <button
+            onclick={() => newGame("Plakoto")}
+            class="cursor-pointer rounded border border-stone-300 px-2"
+        >
+            New Plakoto
+        </button>
+        <button
+            onclick={() => newGame("Fevga")}
+            class="cursor-pointer rounded border border-stone-300 px-2"
+        >
+            New Fevga
+        </button>
     </div>
 
     <div
