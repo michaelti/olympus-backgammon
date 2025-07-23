@@ -19,6 +19,23 @@ describe("isMoveValid", () => {
 
         expect(result).toBe(false);
     });
+
+    test("Returns false if wrapping around the board", () => {
+        const game = new Plakoto({
+            player: "black",
+            dice: [1],
+            moves: [],
+            pips: stringToPips(`
+                0 0 0 0 0 0 0 0 0 0 0 1b
+                0 0 0 0 0 0 0 0 0 0 0 0
+            `),
+            off: { black: 0, white: 0 },
+        });
+
+        const result = game.isMoveValid(24, 1);
+
+        expect(result).toBe(false);
+    });
 });
 
 describe("endTurn", () => {
