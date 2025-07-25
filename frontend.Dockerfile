@@ -8,8 +8,8 @@ COPY ./frontend/package.json ./frontend/package-lock.json ./frontend/
 
 RUN npm install
 
-COPY ./olympus-bg/ .
-COPY ./frontend/ .
+COPY ./olympus-bg/ ./olympus-bg/
+COPY ./frontend/ ./frontend/
 
 RUN npm run build --workspace=olympus-bg
 RUN npm run build --workspace=frontend
