@@ -1,16 +1,18 @@
-FROM node:alpine AS build
-WORKDIR /app/olympus-bg
-COPY ./olympus-bg/package.json ./olympus-bg/package-lock.json ./
-RUN npm install
-COPY ./olympus-bg/ .
-RUN npm run build
-WORKDIR /app/frontend
-COPY ./frontend/package.json ./frontend/package-lock.json ./
-RUN npm install
-COPY ./frontend/ .
-ARG VITE_BACKEND_URL
-RUN npm run build
+FROM node:alpine
 
-FROM nginx:alpine
-COPY --from=build /app/frontend/dist /usr/share/nginx/html
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
+
+COPY ./package.json ./package-lock.json ./
+COPY ./olympus-bg/package.json ./olympus-bg/package-lock.json ./olympus-bg/
+COPY ./frontend/package.json ./frontend/package-lock.json ./frontend/
+
+RUN npm install
+
+COPY ./olympus-bg/ ./olympus-bg/
+COPY ./frontend/ ./frontend/
+
+RUN npm run build --workspace=olympus-bg
+RUN npm run build --workspace=frontend
+
+CMD npm start --workspace=frontend
+EXPOSE 3000
