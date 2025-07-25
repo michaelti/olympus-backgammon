@@ -1,18 +1,18 @@
 FROM node:alpine
 
-WORKDIR /app/olympus-bg
+WORKDIR /app
 
-COPY ./olympus-bg/package.json ./olympus-bg/package-lock.json ./
+COPY ./package.json ./package-lock.json ./
+COPY ./olympus-bg/package.json ./olympus-bg/package-lock.json ./olympus-bg/
+COPY ./frontend/package.json ./frontend/package-lock.json ./frontend/
+
 RUN npm install
+
 COPY ./olympus-bg/ .
-RUN npm run build
-
-WORKDIR /app/frontend
-
-COPY ./frontend/package.json ./frontend/package-lock.json ./
-RUN npm install
 COPY ./frontend/ .
-RUN npm run build
+
+RUN npm run build --workspace=olympus-bg
+RUN npm run build --workspace=frontend
 
 CMD npm start
 EXPOSE 3000
