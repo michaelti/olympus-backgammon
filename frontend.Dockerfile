@@ -14,5 +14,5 @@ COPY ./frontend/ ./frontend/
 RUN npm run build --workspace=olympus-bg
 RUN npm run build --workspace=frontend
 
-CMD npm start
+CMD npm start --workspace=frontend
 EXPOSE 3000
