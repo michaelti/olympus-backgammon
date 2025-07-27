@@ -24,7 +24,7 @@ export class Portes extends Game {
 
     isMoveValid(from: number, to: number): boolean {
         to = clamp(to);
-        if (this.pips[from].owner !== this.player) return false;
+        if (this.pips[from].owner !== this.player) return false; // TODO: fix possible out-of-bounds error on `from`
 
         // Prevent backwards movements
         if (this.player === "black" && to >= from) return false;

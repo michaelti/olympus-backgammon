@@ -44,6 +44,7 @@ export type MoveData = {
     from: number;
     to: number;
     die: number;
+    // TODO: this is missing `effect`
 };
 
 export type PipData = {

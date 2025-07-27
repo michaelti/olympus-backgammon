@@ -8,6 +8,7 @@ export class Move {
         this.from = from;
         this.to = to;
         this.die = die;
+        // TODO: this has been renamed to `effect` elsewhere
         if (sideEffect) this.sideEffect = sideEffect;
     }
 }
