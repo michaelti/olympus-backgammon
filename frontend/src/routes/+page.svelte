@@ -12,7 +12,6 @@
     import DicesIcon from "@lucide/svelte/icons/dices";
     import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
     import GameTest from "$lib/GameTest.svelte";
-    import { stringToPips } from "olympus-bg/dist/util";
 
     let game = new Portes({
         player: "white",
