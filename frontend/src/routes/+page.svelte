@@ -16,11 +16,6 @@
 
     let game = new Portes({
         player: "white",
-        pips: stringToPips(`
-        0 0 0 0 0 0 0 0 0 0 0 15w
-        0 0 0 0 0 0 0 0 0 0 0 15b
-        1b
-    `),
     });
 
     let data: GameData = $state({ ...game });
