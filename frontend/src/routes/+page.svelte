@@ -1,7 +1,7 @@
 <script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
     import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
-    import GameTest from "$lib/GameTest.svelte";
+    import Board from "$lib/Board.svelte";
     import { animations } from "$lib/animation.svelte";
 
     let game = new Portes({
@@ -199,5 +199,5 @@
         </button>
     </div>
 
-    <GameTest {data} />
+    <Board {data} />
 </div>
