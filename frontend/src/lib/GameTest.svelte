@@ -23,7 +23,9 @@
             return {};
         }
 
-        const fromSnapshot = animationQueue.get(Number(dataCheckerPip));
+        const pipNum = Number(dataCheckerPip);
+        const fromSnapshot = animationQueue.get(pipNum);
+        animationQueue.delete(pipNum);
 
         if (!fromSnapshot) {
             console.error("No animation: fromSnapshot is undefined");
@@ -42,10 +44,6 @@
             css: (_t, u) => `transform: translateX(${diffX * u}px) translateY(${diffY * u}px)`,
         };
     }
-
-    function clearAnimation(pipNum: number) {
-        animationQueue.delete(pipNum);
-    }
 </script>
 
 <div class="grid w-full max-w-xl grid-cols-12 gap-2">
@@ -54,7 +52,6 @@
             {#each { length: pip.size } as foo, j (j + pip.owner)}
                 <div
                     in:animate={{}}
-                    onintroend={() => clearAnimation(i + 1)}
                     data-checker={j + 1}
                     data-checker-pip={i + 1}
                     class={[
@@ -83,7 +80,6 @@
         {#each { length: data.pips[0].size }, j}
             <div
                 in:animate={{}}
-                onintroend={() => clearAnimation(0)}
                 data-checker={j + 1}
                 data-checker-pip={0}
                 class={[
@@ -100,7 +96,6 @@
         {#each { length: data.pips[25].size }, j}
             <div
                 in:animate={{}}
-                onintroend={() => clearAnimation(25)}
                 data-checker={j + 1}
                 data-checker-pip={25}
                 class={[
@@ -124,7 +119,6 @@
         {#each { length: data.off.black }, j}
             <div
                 in:animate={{}}
-                onintroend={() => clearAnimation(0)}
                 data-checker={j + 1}
                 data-checker-pip={0}
                 class={["aspect-square w-full rounded-full shadow", { "bg-black": true }]}
@@ -135,7 +129,6 @@
         {#each { length: data.off.white }, j}
             <div
                 in:animate={{}}
-                onintroend={() => clearAnimation(25)}
                 data-checker={j + 1}
                 data-checker-pip={25}
                 class={["aspect-square w-full rounded-full shadow", { "bg-white": true }]}

@@ -177,7 +177,7 @@
     </div>
 
     <div
-        class="flex w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
+        class="flex h-40 w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
     >
         <p>
             player: {data.player}
