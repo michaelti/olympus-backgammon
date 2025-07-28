@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Player } from "olympus-bg";
-    import { otherPlayer } from "olympus-bg/dist/util"; // TODO: export this properly
+    import { otherPlayer } from "olympus-bg";
     import type { AnimationQueue } from "../routes/+page.svelte";
     import Checker from "./Checker.svelte";
 
