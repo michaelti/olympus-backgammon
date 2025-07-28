@@ -1,24 +1,21 @@
 <script module>
-    export type AnimationState =
-        | { status: "none"; pairs: null; pipSnapshot: null }
-        | {
-              status: "start" | "playing";
-              pairs: Map<number, number>; // key: to, value: from
-              pipSnapshot: Map<number, { x: number; y: number }>; // key: pip number, value: position
-          };
+    // <toPip, {fromX, fromY}>
+    // (future: <toChecker, {fromX, fromY}>)
+    export type AnimationQueue = Map<number, { x: number; y: number }>;
 </script>
 
 <script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
     import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
     import GameTest from "$lib/GameTest.svelte";
+    import { SvelteMap } from "svelte/reactivity";
 
     let game = new Portes({
         player: "white",
     });
 
     let data: GameData = $state({ ...game });
-    let animationState: AnimationState = $state({ status: "none", pairs: null, pipSnapshot: null });
+    let animationQueue: AnimationQueue = new SvelteMap();
 
     let move: {
         from: number | null;
@@ -63,24 +60,32 @@
             return;
         }
 
-        const topCheckers = document.querySelectorAll(`[data-pip] [data-checker]:last-child`);
-        const pairs = new Map([[madeMove.to, madeMove.from]]);
-        if (madeMove.sideEffect) {
-            pairs.set(madeMove.sideEffect.to, madeMove.sideEffect.from);
+        const topCheckerFrom = document.querySelector(
+            `[data-pip="${madeMove.from}"] [data-checker]:last-child`,
+        );
+
+        if (!topCheckerFrom) {
+            console.error("Animation failed: missing topCheckerFrom");
+            return;
         }
 
-        animationState = {
-            status: "start",
-            pairs: pairs,
-            // TODO: implement snapshot of *all* checkers, not just pips, so that we can animate game type shuffles
-            pipSnapshot: new Map(
-                [...topCheckers].map((checker) => [
-                    Number(checker.getAttribute("data-checker-pip")),
-                    checker.getBoundingClientRect(),
-                ]),
-            ),
-        };
-        // TODO: clear animationState after
+        animationQueue.set(move.to, topCheckerFrom.getBoundingClientRect());
+
+        if (madeMove.sideEffect) {
+            const topCheckerEffectFrom = document.querySelector(
+                `[data-pip="${madeMove.sideEffect.from}"] [data-checker]:last-child`,
+            );
+
+            if (!topCheckerEffectFrom) {
+                console.error("Animation failed: missing topCheckerFrom");
+                return;
+            }
+
+            animationQueue.set(
+                madeMove.sideEffect.to,
+                topCheckerEffectFrom.getBoundingClientRect(),
+            );
+        }
 
         move = { from: null, to: null };
         data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
@@ -89,22 +94,32 @@
     const undoMove = () => {
         const moveToUndo = game.moves.at(-1);
         if (moveToUndo) {
-            const pairs = new Map([[moveToUndo.from, moveToUndo.to]]);
-            if (moveToUndo.sideEffect) {
-                pairs.set(moveToUndo.sideEffect.from, moveToUndo.sideEffect.to);
+            const topCheckerFrom = document.querySelector(
+                `[data-pip="${moveToUndo.to}"] [data-checker]:last-child`,
+            );
+
+            if (!topCheckerFrom) {
+                console.error("Animation failed: missing topCheckerFrom");
+                return;
             }
 
-            const topCheckers = document.querySelectorAll(`[data-pip] [data-checker]:last-child`);
-            animationState = {
-                status: "start",
-                pairs: pairs,
-                pipSnapshot: new Map(
-                    [...topCheckers].map((checker) => [
-                        Number(checker.getAttribute("data-checker-pip")),
-                        checker.getBoundingClientRect(),
-                    ]),
-                ),
-            };
+            animationQueue.set(moveToUndo.from, topCheckerFrom.getBoundingClientRect());
+
+            if (moveToUndo.sideEffect) {
+                const topCheckerEffectFrom = document.querySelector(
+                    `[data-pip="${moveToUndo.sideEffect.to}"] [data-checker]:last-child`,
+                );
+
+                if (!topCheckerEffectFrom) {
+                    console.error("Animation failed: missing topCheckerFrom");
+                    return;
+                }
+
+                animationQueue.set(
+                    moveToUndo.sideEffect.from,
+                    topCheckerEffectFrom.getBoundingClientRect(),
+                );
+            }
         }
 
         // TODO: It would be helpful if doMove and undoMove returned the move they made/undid
@@ -227,5 +242,5 @@
         </button>
     </div>
 
-    <GameTest {data} {animationState} />
+    <GameTest {data} {animationQueue} />
 </div>

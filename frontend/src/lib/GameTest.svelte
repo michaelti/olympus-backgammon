@@ -1,25 +1,21 @@
 <script lang="ts">
     import type { GameData } from "olympus-bg";
     import { cubicOut } from "svelte/easing";
-    import type { AnimationState } from "../routes/+page.svelte";
+    import type { AnimationQueue } from "../routes/+page.svelte";
+    import type { TransitionConfig } from "svelte/transition";
 
     interface Props {
         data: GameData;
-        animationState: AnimationState;
+        animationQueue: AnimationQueue;
     }
 
-    let { data, animationState }: Props = $props();
+    let { data, animationQueue }: Props = $props();
 
     // Pips without 0 and 25 (bar)
     let pips = $derived(data.pips.slice(1, 25));
 
-    function animate(node: HTMLElement, params: {}) {
+    function animate(node: HTMLElement, params: {}): TransitionConfig {
         const { x, y } = node.getBoundingClientRect();
-
-        if (animationState.status !== "start") {
-            console.log("No animation: status is not start");
-            return {};
-        }
 
         const dataCheckerPip = node.getAttribute("data-checker-pip");
         if (!dataCheckerPip) {
@@ -27,14 +23,7 @@
             return {};
         }
 
-        const whereFrom = animationState.pairs.get(Number(dataCheckerPip));
-
-        if (whereFrom === undefined) {
-            console.log("No animation: whereFrom is undefined");
-            return {};
-        }
-
-        const fromSnapshot = animationState.pipSnapshot.get(whereFrom);
+        const fromSnapshot = animationQueue.get(Number(dataCheckerPip));
 
         if (!fromSnapshot) {
             console.error("No animation: fromSnapshot is undefined");
@@ -48,11 +37,14 @@
 
         return {
             delay: 0,
-            duration: 5000,
+            duration: 250,
             easing: cubicOut,
-            css: (t: number, u: number) =>
-                `transform: translateX(${diffX * u}px) translateY(${diffY * u}px)`,
+            css: (_t, u) => `transform: translateX(${diffX * u}px) translateY(${diffY * u}px)`,
         };
+    }
+
+    function clearAnimation(pipNum: number) {
+        animationQueue.delete(pipNum);
     }
 </script>
 
@@ -62,6 +54,7 @@
             {#each { length: pip.size } as foo, j (j + pip.owner)}
                 <div
                     in:animate={{}}
+                    onintroend={() => clearAnimation(i + 1)}
                     data-checker={j + 1}
                     data-checker-pip={i + 1}
                     class={[
@@ -90,6 +83,7 @@
         {#each { length: data.pips[0].size }, j}
             <div
                 in:animate={{}}
+                onintroend={() => clearAnimation(0)}
                 data-checker={j + 1}
                 data-checker-pip={0}
                 class={[
@@ -106,6 +100,7 @@
         {#each { length: data.pips[25].size }, j}
             <div
                 in:animate={{}}
+                onintroend={() => clearAnimation(25)}
                 data-checker={j + 1}
                 data-checker-pip={25}
                 class={[
@@ -129,6 +124,7 @@
         {#each { length: data.off.black }, j}
             <div
                 in:animate={{}}
+                onintroend={() => clearAnimation(0)}
                 data-checker={j + 1}
                 data-checker-pip={0}
                 class={["aspect-square w-full rounded-full shadow", { "bg-black": true }]}
@@ -139,6 +135,7 @@
         {#each { length: data.off.white }, j}
             <div
                 in:animate={{}}
+                onintroend={() => clearAnimation(25)}
                 data-checker={j + 1}
                 data-checker-pip={25}
                 class={["aspect-square w-full rounded-full shadow", { "bg-white": true }]}
