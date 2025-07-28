@@ -1,28 +1,26 @@
 <script lang="ts">
     import type { Player } from "olympus-bg";
-    import type { AnimationQueue } from "../routes/+page.svelte";
     import { cubicOut } from "svelte/easing";
     import type { TransitionConfig } from "svelte/transition";
+    import { animations } from "./animation.svelte";
 
     interface Props {
         pipNumber: number;
         color: Player;
         index: number;
-        animationQueue: AnimationQueue;
     }
 
-    let { pipNumber, color, index, animationQueue }: Props = $props();
+    let { pipNumber, color, index }: Props = $props();
 
     function animate(node: HTMLElement, params: { pip: number }): TransitionConfig {
-        const { x, y } = node.getBoundingClientRect();
-
-        const from = animationQueue.get(params.pip);
-        animationQueue.delete(params.pip);
+        const from = animations.dequeue(params.pip);
 
         if (!from) {
-            console.error("No animation: from is undefined");
+            console.warn(`Pip ${params.pip}: No animation in queue for pip`);
             return {};
         }
+
+        const { x, y } = node.getBoundingClientRect();
 
         // TODO: account for scale
         // TODO: account for rotation by making these relative to center of the board?
@@ -30,7 +28,8 @@
         const diffY = from.y - y;
 
         return {
-            // TODO: move delay and duration to the queue. Then we can do funky stuff.
+            // TODO: move delay and duration to the queue.
+            // Then we can do funky stuff.
             delay: 0,
             duration: 250,
             easing: cubicOut,

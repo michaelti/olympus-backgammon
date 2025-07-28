@@ -1,18 +1,16 @@
 <script lang="ts">
     import type { Player } from "olympus-bg";
     import { BAR, OFF, otherPlayer } from "olympus-bg";
-    import type { AnimationQueue } from "../routes/+page.svelte";
     import Checker from "./Checker.svelte";
 
     interface Props {
         isPinned: boolean;
         owner: Player;
         size: number;
-        animationQueue: AnimationQueue;
         pipNumber: number;
     }
 
-    let { isPinned, owner, size, animationQueue, pipNumber }: Props = $props();
+    let { isPinned, owner, size, pipNumber }: Props = $props();
 
     let checkers: Player[] = $derived.by(() => {
         if (owner === "neither") {
@@ -42,6 +40,6 @@
     </div>
 
     {#each checkers as checker, i (checker + i)}
-        <Checker color={checker} index={i} {pipNumber} {animationQueue} />
+        <Checker color={checker} index={i} {pipNumber} />
     {/each}
 </div>
