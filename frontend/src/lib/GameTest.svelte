@@ -14,28 +14,21 @@
     // Pips without 0 and 25 (bar)
     let pips = $derived(data.pips.slice(1, 25));
 
-    function animate(node: HTMLElement, params: {}): TransitionConfig {
+    function animate(node: HTMLElement, params: { pip: number }): TransitionConfig {
         const { x, y } = node.getBoundingClientRect();
 
-        const dataCheckerPip = node.getAttribute("data-checker-pip");
-        if (!dataCheckerPip) {
-            console.log("No animation: dataCheckerPip is missing");
-            return {};
-        }
+        const from = animationQueue.get(params.pip);
+        animationQueue.delete(params.pip);
 
-        const pipNum = Number(dataCheckerPip);
-        const fromSnapshot = animationQueue.get(pipNum);
-        animationQueue.delete(pipNum);
-
-        if (!fromSnapshot) {
-            console.error("No animation: fromSnapshot is undefined");
+        if (!from) {
+            console.error("No animation: from is undefined");
             return {};
         }
 
         // TODO: account for scale
         // TODO: account for rotation by making these relative to center of the board?
-        const diffX = fromSnapshot.x - x;
-        const diffY = fromSnapshot.y - y;
+        const diffX = from.x - x;
+        const diffY = from.y - y;
 
         return {
             delay: 0,
@@ -51,9 +44,8 @@
         <div class="grid aspect-[1/6] w-full grid-cols-1 grid-rows-6 bg-red-600" data-pip={i + 1}>
             {#each { length: pip.size } as foo, j (j + pip.owner)}
                 <div
-                    in:animate={{}}
+                    in:animate={{ pip: i + 1 }}
                     data-checker={j + 1}
-                    data-checker-pip={i + 1}
                     class={[
                         "aspect-square w-full rounded-full shadow",
                         {
@@ -79,9 +71,8 @@
     <div class="grid aspect-[1/6] min-h-32 w-full grid-rows-6 bg-blue-600" data-pip={0}>
         {#each { length: data.pips[0].size }, j}
             <div
-                in:animate={{}}
+                in:animate={{ pip: 0 }}
                 data-checker={j + 1}
-                data-checker-pip={0}
                 class={[
                     "aspect-square w-full rounded-full shadow",
                     {
@@ -95,9 +86,8 @@
     <div class="grid aspect-[1/6] min-h-32 w-full grid-rows-6 bg-blue-600" data-pip={25}>
         {#each { length: data.pips[25].size }, j}
             <div
-                in:animate={{}}
+                in:animate={{ pip: 25 }}
                 data-checker={j + 1}
-                data-checker-pip={25}
                 class={[
                     "aspect-square w-full rounded-full shadow",
                     {
@@ -118,9 +108,8 @@
     <div class="grid aspect-[1/6] min-h-32 w-full grid-rows-6 bg-green-600" data-pip={0}>
         {#each { length: data.off.black }, j}
             <div
-                in:animate={{}}
+                in:animate={{ pip: 0 }}
                 data-checker={j + 1}
-                data-checker-pip={0}
                 class={["aspect-square w-full rounded-full shadow", { "bg-black": true }]}
             ></div>
         {/each}
@@ -128,9 +117,8 @@
     <div class="grid aspect-[1/6] min-h-32 w-full grid-rows-6 bg-green-600" data-pip={25}>
         {#each { length: data.off.white }, j}
             <div
-                in:animate={{}}
+                in:animate={{ pip: 25 }}
                 data-checker={j + 1}
-                data-checker-pip={25}
                 class={["aspect-square w-full rounded-full shadow", { "bg-white": true }]}
             ></div>
         {/each}
