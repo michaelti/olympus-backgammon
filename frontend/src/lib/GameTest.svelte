@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { GameData } from "olympus-bg";
+    import { BAR, OFF, type GameData } from "olympus-bg";
     import type { AnimationQueue } from "../routes/+page.svelte";
     import Pip from "./Pip.svelte";
 
@@ -24,20 +24,18 @@
     {/each}
 
     <!-- BAR -->
-    Bar white:
     <Pip
-        isPinned={data.pips[0].isPinned}
-        owner={data.pips[0].owner}
-        size={data.pips[0].size}
-        pipNumber={0}
+        isPinned={data.pips[BAR.white].isPinned}
+        owner={data.pips[BAR.white].owner}
+        size={data.pips[BAR.white].size}
+        pipNumber={BAR.white}
         {animationQueue}
     />
-    Bar black:
     <Pip
-        isPinned={data.pips[25].isPinned}
-        owner={data.pips[25].owner}
-        size={data.pips[25].size}
-        pipNumber={25}
+        isPinned={data.pips[BAR.black].isPinned}
+        owner={data.pips[BAR.black].owner}
+        size={data.pips[BAR.black].size}
+        pipNumber={BAR.black}
         {animationQueue}
     />
 
@@ -47,8 +45,19 @@
       it shouldn't matter because off and bar can't usually have checkers on at the same time? or can they?
       anyway, we should split this apart
     -->
-    Off white:
-    <Pip isPinned={false} owner={"white"} size={data.off.white} pipNumber={25} {animationQueue} />
-    Off black:
-    <Pip isPinned={false} owner={"black"} size={data.off.black} pipNumber={0} {animationQueue} />
+    <!-- Also: watch out for Fevga -->
+    <Pip
+        isPinned={false}
+        owner={"white"}
+        size={data.off.white}
+        pipNumber={OFF.white}
+        {animationQueue}
+    />
+    <Pip
+        isPinned={false}
+        owner={"black"}
+        size={data.off.black}
+        pipNumber={OFF.black}
+        {animationQueue}
+    />
 </div>
