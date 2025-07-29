@@ -1,38 +1,30 @@
-import { SvelteMap } from "svelte/reactivity";
-
 // TODO:
 // 1. Add ability to animate individual *checkers* (not just pip/top)
+//    - Option 1: the parent manages this. that would give us full control.
+//    - **Option 2**: use `out` on each checker. if we assume moves only happen 1 at
+//      a time, we can just grab any pending (correct color) snapshot from the queue
 // 2. Make multi-usable (context, not global DOM)
+
+import type { PlayerBW } from "olympus-bg";
 
 /**
  * **Key:** The pip which will *receive* this animation
  *
  * **Value:** Snapshot of the pip *from which* the recipient will transition
  */
-type AnimationQueue = Map<number, Snapshot>;
+type AnimationQueue = { black: Snapshot[]; white: Snapshot[] };
 type Snapshot = { x: number; y: number };
 
 class AnimationSystem {
-    #queue: AnimationQueue = new SvelteMap();
+    #queue: AnimationQueue = { black: [], white: [] };
 
-    enqueue(fromPip: number, toPip: number): void {
-        const topCheckerFrom = document.querySelector(
-            `[data-pip="${fromPip}"] [data-checker]:last-child`,
-        );
-
-        if (!topCheckerFrom) {
-            console.error("Animation failed: missing topCheckerFrom");
-            return;
-        }
-
-        const { x, y } = topCheckerFrom.getBoundingClientRect();
-
-        this.#queue.set(toPip, { x, y });
+    enqueue(color: PlayerBW, node: HTMLElement): void {
+        const { x, y } = node.getBoundingClientRect();
+        this.#queue[color].push({ x, y });
     }
 
-    dequeue(pip: number): Snapshot | undefined {
-        const result = this.#queue.get(pip);
-        this.#queue.delete(pip);
+    dequeue(color: PlayerBW): Snapshot | undefined {
+        const result = this.#queue[color].shift();
         return result;
     }
 }

@@ -1,22 +1,22 @@
 <script lang="ts">
-    import type { Player } from "olympus-bg";
+    import type { PlayerBW } from "olympus-bg";
     import { cubicOut } from "svelte/easing";
     import type { TransitionConfig } from "svelte/transition";
     import { animations } from "./animation.svelte";
 
     interface Props {
         pipNumber: number;
-        color: Player;
+        color: PlayerBW;
         index: number;
     }
 
     let { pipNumber, color, index }: Props = $props();
 
-    function animate(node: HTMLElement, params: { pip: number }): TransitionConfig {
-        const from = animations.dequeue(params.pip);
+    function animate(node: HTMLElement): TransitionConfig {
+        const from = animations.dequeue(color);
 
         if (!from) {
-            console.warn(`Pip ${params.pip}: No animation in queue for pip`);
+            console.warn(`Pip ${pipNumber}: No animation in queue for pip`);
             return {};
         }
 
@@ -27,20 +27,28 @@
         const diffX = from.x - x;
         const diffY = from.y - y;
 
+        const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+
         return {
             // TODO: move delay and duration to the queue.
             // Then we can do funky stuff.
             delay: 0,
-            duration: 250,
+            duration: distance * 1.25,
             easing: cubicOut,
             css: (_t, u) => `transform: translateX(${diffX * u}px) translateY(${diffY * u}px)`,
         };
+    }
+
+    function foo(node: HTMLElement): TransitionConfig {
+        animations.enqueue(color, node);
+        return {};
     }
 </script>
 
 <!-- TODO: why doesn't {#key} work here instead of in the Pip each? -->
 <div
-    in:animate={{ pip: pipNumber }}
+    in:animate
+    out:foo
     data-checker
     class={[
         "aspect-square w-full rounded-full shadow",

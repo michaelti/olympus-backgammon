@@ -2,7 +2,7 @@
     import DicesIcon from "@lucide/svelte/icons/dices";
     import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
     import Board from "$lib/Board.svelte";
-    import { animations } from "$lib/animation.svelte";
+    // import { animations } from "$lib/animation.svelte";
 
     let game = new Portes({
         // TODO: it would be nice for this to default instead of required
@@ -57,11 +57,11 @@
             return;
         }
 
-        animations.enqueue(madeMove.from, madeMove.to);
-
-        if (madeMove.sideEffect) {
-            animations.enqueue(madeMove.sideEffect.from, madeMove.sideEffect.to);
-        }
+        // animations.enqueue(madeMove.from, madeMove.to);
+        //
+        // if (madeMove.sideEffect) {
+        //     animations.enqueue(madeMove.sideEffect.from, madeMove.sideEffect.to);
+        // }
 
         move = { from: null, to: null };
         data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
@@ -74,13 +74,13 @@
 
         game.undoMove();
 
-        if (moveToUndo) {
-            animations.enqueue(moveToUndo.to, moveToUndo.from);
-
-            if (moveToUndo.sideEffect) {
-                animations.enqueue(moveToUndo.sideEffect.to, moveToUndo.sideEffect.from);
-            }
-        }
+        // if (moveToUndo) {
+        //     animations.enqueue(moveToUndo.to, moveToUndo.from);
+        //
+        //     if (moveToUndo.sideEffect) {
+        //         animations.enqueue(moveToUndo.sideEffect.to, moveToUndo.sideEffect.from);
+        //     }
+        // }
 
         data = { ...game };
     };

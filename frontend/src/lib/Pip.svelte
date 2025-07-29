@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Player } from "olympus-bg";
+    import type { Player, PlayerBW } from "olympus-bg";
     import { BAR, OFF, otherPlayer } from "olympus-bg";
     import Checker from "./Checker.svelte";
 
@@ -12,7 +12,7 @@
 
     let { isPinned, owner, size, pipNumber }: Props = $props();
 
-    let checkers: Player[] = $derived.by(() => {
+    let checkers: PlayerBW[] = $derived.by(() => {
         if (owner === "neither") {
             return [];
         }
