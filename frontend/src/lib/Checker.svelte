@@ -13,7 +13,7 @@
     let { pipNumber, color, index }: Props = $props();
 
     function animate(node: HTMLElement): TransitionConfig {
-        const from = animations.dequeue(color);
+        const { from, delay, duration } = animations.dequeue(color);
 
         if (!from) {
             console.warn(`Pip ${pipNumber}: No animation in queue for pip`);
@@ -32,15 +32,18 @@
         return {
             // TODO: move delay and duration to the queue.
             // Then we can do funky stuff.
-            delay: 0,
-            duration: distance * 1.25,
+            delay,
+            duration,
             easing: cubicOut,
-            css: (_t, u) => `transform: translateX(${diffX * u}px) translateY(${diffY * u}px)`,
+            css: (_t, u) => `
+                transform: translateX(${diffX * u}px) translateY(${diffY * u}px);
+                z-index: ${u > 0.5 ? from.index : index};
+            `,
         };
     }
 
-    function foo(node: HTMLElement): TransitionConfig {
-        animations.enqueue(color, node);
+    function snapshot(node: HTMLElement): TransitionConfig {
+        animations.enqueue(color, index, node);
         return {};
     }
 </script>
@@ -48,22 +51,18 @@
 <!-- TODO: why doesn't {#key} work here instead of in the Pip each? -->
 <div
     in:animate
-    out:foo
-    data-checker
+    out:snapshot
+    style={`z-index:${index}`}
     class={[
-        "aspect-square w-full rounded-full shadow",
+        "relative aspect-square w-full rounded-full border-b-2 ring-2 ring-inset backdrop-blur",
         {
-            "bg-black": color === "black",
-            "bg-white": color === "white",
-        },
-        {
-            // Temp fix for pips becoming way too long
-            "col-start-1 row-start-1": index % 6 === 0,
-            "col-start-1 row-start-2": index % 6 === 1,
-            "col-start-1 row-start-3": index % 6 === 2,
-            "col-start-1 row-start-4": index % 6 === 3,
-            "col-start-1 row-start-5": index % 6 === 4,
-            "col-start-1 row-start-6": index % 6 === 5,
+            "border-b-neutral-800 bg-black/80 ring-neutral-400": color === "black",
+            "border-b-neutral-400 bg-white/80 ring-neutral-400": color === "white",
         },
     ]}
-></div>
+>
+    <!-- TEMP: debug -->
+    <div class="flex h-full items-center justify-center text-xs text-gray-400">
+        {pipNumber}.{index}
+    </div>
+</div>

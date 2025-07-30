@@ -82,7 +82,7 @@
         //     }
         // }
 
-        data = { ...game };
+        data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
     };
 
     const endTurn = () => {

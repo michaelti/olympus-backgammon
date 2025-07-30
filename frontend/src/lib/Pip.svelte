@@ -8,9 +8,10 @@
         owner: Player;
         size: number;
         pipNumber: number;
+        reverse?: boolean;
     }
 
-    let { isPinned, owner, size, pipNumber }: Props = $props();
+    let { isPinned, owner, size, pipNumber, reverse }: Props = $props();
 
     let checkers: PlayerBW[] = $derived.by(() => {
         if (owner === "neither") {
@@ -29,9 +30,16 @@
     });
 </script>
 
-<div class="grid aspect-[1/6] w-full grid-cols-1 grid-rows-6 bg-stone-300" data-pip={pipNumber}>
+<div
+    class={[
+        "flex aspect-[1/6] w-full bg-stone-300",
+        { "flex-col": !reverse },
+        { "flex-col-reverse": reverse },
+    ]}
+    data-pip={pipNumber}
+>
     <!-- TEMP: debug -->
-    <div class="absolute w-min">
+    <div class="absolute w-min text-gray-500">
         {pipNumber}<br />
         {pipNumber === BAR.black && owner === "black" ? "bar black" : ""}
         {pipNumber === BAR.white && owner === "white" ? "bar white" : ""}
@@ -40,6 +48,18 @@
     </div>
 
     {#each checkers as checker, i (checker + i)}
-        <Checker color={checker} index={i} {pipNumber} />
+        <div
+            class={[
+                "relative",
+                {
+                    "top-[8.33%] -mt-[200%]": i >= 6 && !reverse,
+                    "top-[83.33%]!": i >= 11 && !reverse,
+                    "bottom-[8.33%] -mb-[200%]": i >= 6 && reverse,
+                    "bottom-[83.33%]!": i >= 11 && reverse,
+                },
+            ]}
+        >
+            <Checker color={checker} index={i} {pipNumber} />
+        </div>
     {/each}
 </div>
