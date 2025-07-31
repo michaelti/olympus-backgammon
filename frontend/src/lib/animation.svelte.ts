@@ -13,22 +13,18 @@ import type { PlayerBW } from "olympus-bg";
  * **Value:** Snapshot of the pip *from which* the recipient will transition
  */
 type AnimationQueue = { black: Snapshot[]; white: Snapshot[] };
-type Snapshot = { x: number; y: number; index: number };
+type Snapshot = { x: number; y: number; zIndex: number };
 
 class AnimationSystem {
     #queue: AnimationQueue = { black: [], white: [] };
 
-    enqueue(color: PlayerBW, index: number, node: HTMLElement) {
+    enqueue(color: PlayerBW, zIndex: number, node: HTMLElement) {
         const { x, y } = node.getBoundingClientRect();
-        this.#queue[color].push({ x, y, index });
+        this.#queue[color].push({ x, y, zIndex });
     }
 
-    dequeue(color: PlayerBW): { from: Snapshot | undefined; delay: number; duration: number } {
-        const length = this.#queue[color].length;
-        const result = this.#queue[color].pop();
-
-        const maxDelay = 15 * 20;
-        const delay = maxDelay - length * 20;
+    dequeue(color: PlayerBW): { from: Snapshot | undefined } {
+        const result = this.#queue[color].shift();
 
         // Now something funky is happening with capturing in portes...
 
@@ -37,8 +33,6 @@ class AnimationSystem {
 
         return {
             from: result,
-            delay: 0 + delay,
-            duration: 250,
         };
     }
 }

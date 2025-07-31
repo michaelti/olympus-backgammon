@@ -13,7 +13,7 @@
     let { pipNumber, color, index }: Props = $props();
 
     function animate(node: HTMLElement): TransitionConfig {
-        const { from, delay, duration } = animations.dequeue(color);
+        const { from } = animations.dequeue(color);
 
         if (!from) {
             console.warn(`Pip ${pipNumber}: No animation in queue for pip`);
@@ -32,12 +32,12 @@
         return {
             // TODO: move delay and duration to the queue.
             // Then we can do funky stuff.
-            delay,
-            duration,
+            delay: 0,
+            duration: 25000 + distance + Math.random() * 100,
             easing: cubicOut,
             css: (_t, u) => `
                 transform: translateX(${diffX * u}px) translateY(${diffY * u}px);
-                z-index: ${u > 0.5 ? from.index : index};
+                z-index: ${u > 0.5 ? from.zIndex : index};
             `,
         };
     }
@@ -49,6 +49,7 @@
 </script>
 
 <!-- TODO: why doesn't {#key} work here instead of in the Pip each? -->
+
 <div
     in:animate
     out:snapshot
@@ -56,8 +57,8 @@
     class={[
         "relative aspect-square w-full rounded-full border-b-2 ring-2 ring-inset backdrop-blur",
         {
-            "border-b-neutral-800 bg-black/80 ring-neutral-400": color === "black",
-            "border-b-neutral-400 bg-white/80 ring-neutral-400": color === "white",
+            "border-b-neutral-500 bg-black/80 ring-neutral-400": color === "black",
+            "border-b-neutral-500 bg-white/80 ring-neutral-400": color === "white",
         },
     ]}
 >

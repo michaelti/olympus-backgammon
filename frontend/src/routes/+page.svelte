@@ -1,13 +1,27 @@
 <script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
-    import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
+    import {
+        Fevga,
+        Plakoto,
+        Portes,
+        pipsToString,
+        stringToPips,
+        type GameData,
+        type Variant,
+    } from "olympus-bg";
     import Board from "$lib/Board.svelte";
     // import { animations } from "$lib/animation.svelte";
 
     let game = new Portes({
         // TODO: it would be nice for this to default instead of required
-        player: "white",
+        player: "black",
+        dice: [1],
+        pips: stringToPips(`
+            0 0 0 0 0 0 0 0 0 0 0 0
+            1b 1b 1b 1b 1b 3b 1w 1w 1w 1w 1w 1w
+        `),
     });
+    game.startTurn();
 
     let data: GameData = $state({ ...game });
 
@@ -197,6 +211,12 @@
         >
             End turn
         </button>
+        <button
+            onclick={() => {
+                move = { from: 7, to: 6 };
+                doMove();
+            }}>debug 7to6</button
+        >
     </div>
 
     <Board {data} />
