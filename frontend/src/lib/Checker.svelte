@@ -3,6 +3,7 @@
     import { cubicOut } from "svelte/easing";
     import type { TransitionConfig } from "svelte/transition";
     import { animations } from "./animation.svelte";
+    import { getDistance } from "./util";
 
     interface Props {
         pipNumber: number;
@@ -10,60 +11,42 @@
         index: number;
     }
 
-    let { pipNumber, color, index }: Props = $props();
+    let { color }: Props = $props();
 
-    function animate(node: HTMLElement): TransitionConfig {
-        const { from } = animations.dequeue(color);
+    function animateIn(node: HTMLElement): TransitionConfig {
+        const { from, delay, duration } = animations.dequeue(color);
 
-        if (!from) {
-            console.warn(`Pip ${pipNumber}: No animation in queue for pip`);
-            return {};
-        }
+        // Don't animate if there was no checker in the queue
+        if (!from) return {};
 
         const { x, y } = node.getBoundingClientRect();
-
-        // TODO: account for scale
-        // TODO: account for rotation by making these relative to center of the board?
-        const diffX = from.x - x;
-        const diffY = from.y - y;
-
-        const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+        const { dX, dY, distance } = getDistance(from.x, from.y, x, y);
 
         return {
-            // TODO: move delay and duration to the queue.
-            // Then we can do funky stuff.
-            delay: 0,
-            duration: 25000 + distance + Math.random() * 100,
+            delay,
+            duration: duration + Math.random() * distance,
             easing: cubicOut,
             css: (_t, u) => `
-                transform: translateX(${diffX * u}px) translateY(${diffY * u}px);
-                z-index: ${u > 0.5 ? from.zIndex : index};
-            `,
+                transform: translateX(${dX * u}px) translateY(${dY * u}px);
+                z-index: calc(var(--offsetZ) + 1);
+            `, // TODO: do `from` zOffset to `to` zOffset
         };
     }
 
-    function snapshot(node: HTMLElement): TransitionConfig {
-        animations.enqueue(color, index, node);
+    function animateOut(node: HTMLElement): TransitionConfig {
+        animations.enqueue(color, node);
         return {};
     }
 </script>
 
-<!-- TODO: why doesn't {#key} work here instead of in the Pip each? -->
-
 <div
-    in:animate
-    out:snapshot
-    style={`z-index:${index}`}
+    in:animateIn
+    out:animateOut
     class={[
-        "relative aspect-square w-full rounded-full border-b-2 ring-2 ring-inset backdrop-blur",
+        "z-(--offsetZ) relative aspect-square w-full rounded-full ring-2 ring-inset ring-neutral-400",
         {
-            "border-b-neutral-500 bg-black/80 ring-neutral-400": color === "black",
-            "border-b-neutral-500 bg-white/80 ring-neutral-400": color === "white",
+            "bg-black": color === "black",
+            "bg-white": color === "white",
         },
     ]}
->
-    <!-- TEMP: debug -->
-    <div class="flex h-full items-center justify-center text-xs text-gray-400">
-        {pipNumber}.{index}
-    </div>
-</div>
+></div>

@@ -18,6 +18,7 @@ export type TurnValidity =
     | { valid: false; reason: "MorePossibleMoves" | "LargerPossibleMove" | "MustRoll" };
 
 // TODO: Refactor to Partial<GameData>
+// TODO: That means `player` will need a default value
 export type InitialGameData = {
     player: PlayerBW;
     moves?: MoveData[];

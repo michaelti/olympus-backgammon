@@ -40,6 +40,7 @@ export abstract class Game {
     }
 
     abstract isMoveValid(from: number, to: number): boolean;
+    // TODO: make doMove/undoMove return the move they did/undid
     abstract doMove(from: number, to: number): boolean;
     abstract getDestination(start: number, die: number): number;
     abstract clone(): Game;
