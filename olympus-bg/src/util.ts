@@ -4,6 +4,7 @@ import { PipData, Player, PlayerBW } from "./types.js";
  * Pip numbers representing each player's off
  */
 export const OFF = {
+    // TODO: would it be helpful for OFF, BAR, and START be static properties in variants?
     black: 0,
     white: 25,
 };

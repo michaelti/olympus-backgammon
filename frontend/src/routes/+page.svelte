@@ -1,10 +1,13 @@
 <script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
-    import { Fevga, Plakoto, Portes, pipsToString, type Variant } from "olympus-bg";
+    import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
+    import Board from "$lib/Board.svelte";
 
-    let game = new Portes({ player: "white" });
+    let game = new Portes({
+        player: "white",
+    });
 
-    let data = $state({ ...game });
+    let data: GameData = $state({ ...game });
 
     let move: {
         from: number | null;
@@ -36,19 +39,21 @@
         data = { ...game };
     };
 
-    const undoMove = () => {
-        game.undoMove();
-        data = { ...game };
-    };
-
     const doMove = () => {
         if (move.from === null || move.to === null) {
             return;
         }
 
         game.doMove(move.from, move.to);
+
         move = { from: null, to: null };
-        data = { ...game };
+        data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
+    };
+
+    const undoMove = () => {
+        game.undoMove();
+
+        data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
     };
 
     const endTurn = () => {
@@ -72,7 +77,7 @@
     };
 </script>
 
-<div class="flex min-h-dvh flex-col items-center justify-center gap-8">
+<div class="flex flex-col items-center gap-8 py-8">
     <h1 class="flex gap-1 text-lg font-bold">
         <DicesIcon aria-hidden="true" />
         Olympus Backgammon
@@ -81,26 +86,26 @@
     <div class="flex gap-2">
         <button
             onclick={() => newGame("Portes")}
-            class="cursor-pointer rounded border border-stone-300 px-2"
+            class="cursor-pointer rounded border border-stone-300 bg-white px-2"
         >
             New Portes
         </button>
         <button
             onclick={() => newGame("Plakoto")}
-            class="cursor-pointer rounded border border-stone-300 px-2"
+            class="cursor-pointer rounded border border-stone-300 bg-white px-2"
         >
             New Plakoto
         </button>
         <button
             onclick={() => newGame("Fevga")}
-            class="cursor-pointer rounded border border-stone-300 px-2"
+            class="cursor-pointer rounded border border-stone-300 bg-white px-2"
         >
             New Fevga
         </button>
     </div>
 
     <div
-        class="flex w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
+        class="flex h-40 w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
     >
         <p>
             player: {data.player}
@@ -117,21 +122,21 @@
     <div class="flex flex-wrap justify-center gap-2 px-2">
         <button
             onclick={roll}
-            class="cursor-pointer rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={!(!data.dice.length && !data.moves.length)}
         >
             Roll
         </button>
         <button
             onclick={undoMove}
-            class="cursor-pointer rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={!data.moves.length}
         >
             Undo
         </button>
         <input
             type="number"
-            class="w-24 rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="w-24 rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             placeholder="From"
             disabled={!data.dice.length}
             pattern="[0-9]*"
@@ -141,7 +146,7 @@
         />
         <input
             type="number"
-            class="w-24 rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="w-24 rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             placeholder="To"
             disabled={!data.dice.length}
             pattern="[0-9]*"
@@ -151,17 +156,19 @@
         />
         <button
             onclick={doMove}
-            class="cursor-pointer rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={!isMoveValid()}
         >
             Move
         </button>
         <button
             onclick={endTurn}
-            class="cursor-pointer rounded border border-stone-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={!isTurnValid()}
         >
             End turn
         </button>
     </div>
+
+    <Board {data} />
 </div>
