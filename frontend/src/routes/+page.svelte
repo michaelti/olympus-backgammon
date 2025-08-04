@@ -1,16 +1,7 @@
 <script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
-    import {
-        Fevga,
-        Plakoto,
-        Portes,
-        pipsToString,
-        type GameData,
-        type TurnValidity,
-        type Variant,
-    } from "olympus-bg";
+    import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
     import Board from "$lib/Board.svelte";
-    import { fromAction } from "svelte/attachments";
 
     let game = new Portes({
         player: "white",
@@ -80,6 +71,19 @@
         data = { ...game };
         turnValidity = game.getTurnValidity();
     };
+
+    const handleClickPip = (pip: number) => {
+        if (move.from !== null) {
+            if (game.isMoveValid(move.from, pip)) {
+                move.to = pip;
+                doMove();
+            } else {
+                move.from = null;
+            }
+        } else {
+            move.from = pip;
+        }
+    };
 </script>
 
 <div class="flex flex-col items-center gap-8 py-8">
@@ -109,28 +113,13 @@
         </button>
     </div>
 
-    <div
-        class="flex h-40 w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
-    >
-        <p>
-            player: {data.player}
-            | dice: {JSON.stringify(data.dice)}
-            | moves: {JSON.stringify(data.moves)}
-        </p>
-        <p>
-            off black: {data.off.black}
-            | off white: {data.off.white}
-        </p>
-        <pre class="text-center">{pipsToString(data.pips)}</pre>
-    </div>
-
     <div class="flex flex-wrap justify-center gap-2 px-2">
         <button
             onclick={roll}
             class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={!(!data.dice.length && !data.moves.length)}
         >
-            Roll
+            {data.dice.length > 0 ? data.dice : "Roll"}
         </button>
         <button
             onclick={undoMove}
@@ -175,5 +164,20 @@
         </button>
     </div>
 
-    <Board {data} />
+    <Board {data} onClickPip={handleClickPip} />
+
+    <div
+        class="flex h-40 w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
+    >
+        <p>
+            player: {data.player}
+            | dice: {JSON.stringify(data.dice)}
+            | moves: {JSON.stringify(data.moves)}
+        </p>
+        <p>
+            off black: {data.off.black}
+            | off white: {data.off.white}
+        </p>
+        <pre class="text-center">{pipsToString(data.pips)}</pre>
+    </div>
 </div>

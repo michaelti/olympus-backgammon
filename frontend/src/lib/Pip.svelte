@@ -9,9 +9,10 @@
         size: number;
         pipNumber: number;
         reverse?: boolean;
+        onClick?: (pip: number) => void;
     }
 
-    let { isPinned, owner, size, pipNumber, reverse }: Props = $props();
+    let { isPinned, owner, size, pipNumber, reverse, onClick }: Props = $props();
 
     let checkers: PlayerBW[] = $derived.by(() => {
         if (owner === "neither") {
@@ -68,9 +69,13 @@
 
     // TODO: logic to switch this for Fevga/Plakoto start
     const offsets = stackingOrder.normal;
+
+    const handleClick = () => {
+        onClick?.(pipNumber);
+    };
 </script>
 
-<div class={["relative aspect-[1/6] w-full bg-stone-300"]}>
+<button class={["relative aspect-[1/6] w-full bg-stone-300"]} onclick={handleClick}>
     {#each checkers as checker, i (checker + i)}
         <div
             class={[
@@ -85,11 +90,11 @@
     {/each}
 
     <!-- TEMP: debug pip numbers -->
-    <div class="absolute w-min text-gray-500">
+    <div class="absolute top-0 w-min text-gray-500">
         {pipNumber}<br />
         {pipNumber === BAR.black && owner === "black" ? "bar black" : ""}
         {pipNumber === BAR.white && owner === "white" ? "bar white" : ""}
         {pipNumber === OFF.black && owner === "black" ? "off black" : ""}
         {pipNumber === OFF.white && owner === "white" ? "off white" : ""}
     </div>
-</div>
+</button>

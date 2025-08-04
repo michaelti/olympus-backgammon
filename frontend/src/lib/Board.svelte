@@ -4,9 +4,10 @@
 
     interface Props {
         data: GameData;
+        onClickPip?: (pip: number) => void;
     }
 
-    let { data }: Props = $props();
+    let { data, onClickPip }: Props = $props();
 
     let pipOrder = {
         default: [
@@ -29,6 +30,7 @@
                 size={pip.size}
                 pipNumber={i + 1}
                 reverse={order > 12}
+                onClick={onClickPip}
             />
         </div>
     {/each}
