@@ -8,21 +8,27 @@
 
     let { data }: Props = $props();
 
-    let pipOrder = [
-        24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-    ];
+    let pipOrder = {
+        default: [
+            24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+        ],
+        rotated: [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13,
+        ],
+    };
 </script>
 
 <div class="grid w-full max-w-xl grid-cols-12 gap-2">
     <!-- PIPS -->
     {#each data.pips.slice(1, 25) as pip, i}
-        <div style={`order: ${pipOrder[i]}`}>
+        {@const order = pipOrder.default[i]}
+        <div style={`order: ${order}`}>
             <Pip
                 isPinned={pip.isPinned}
                 owner={pip.owner}
                 size={pip.size}
                 pipNumber={i + 1}
-                reverse={i < 12}
+                reverse={order > 12}
             />
         </div>
     {/each}
