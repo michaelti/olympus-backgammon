@@ -1,7 +1,16 @@
 <script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
-    import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
+    import {
+        Fevga,
+        Plakoto,
+        Portes,
+        pipsToString,
+        type GameData,
+        type TurnValidity,
+        type Variant,
+    } from "olympus-bg";
     import Board from "$lib/Board.svelte";
+    import { fromAction } from "svelte/attachments";
 
     let game = new Portes({
         player: "white",
@@ -16,6 +25,12 @@
         from: null,
         to: null,
     });
+
+    let isMoveValid = $derived(
+        move.from !== null && move.to !== null && game.isMoveValid(move.from, move.to),
+    );
+
+    let turnValidity = $state(game.getTurnValidity());
 
     const newGame = (variant: Variant) => {
         switch (variant) {
@@ -32,11 +47,13 @@
 
         data = { ...game };
         move = { from: null, to: null };
+        turnValidity = game.getTurnValidity();
     };
 
     const roll = () => {
         game.startTurn();
         data = { ...game };
+        turnValidity = game.getTurnValidity();
     };
 
     const doMove = () => {
@@ -48,32 +65,20 @@
 
         move = { from: null, to: null };
         data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
+        turnValidity = game.getTurnValidity();
     };
 
     const undoMove = () => {
         game.undoMove();
 
         data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
+        turnValidity = game.getTurnValidity();
     };
 
     const endTurn = () => {
         game.endTurn();
         data = { ...game };
-    };
-
-    const isMoveValid = () => {
-        if (move.from === null || move.to === null) {
-            return false;
-        }
-
-        console.log(data); // TODO: How to make these reactive?
-        return game.isMoveValid(move.from, move.to);
-    };
-
-    const isTurnValid = () => {
-        console.log(data); // TODO: How to make these reactive?
-        const validity = game.getTurnValidity();
-        return validity.valid;
+        turnValidity = game.getTurnValidity();
     };
 </script>
 
@@ -157,14 +162,14 @@
         <button
             onclick={doMove}
             class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
-            disabled={!isMoveValid()}
+            disabled={!isMoveValid}
         >
             Move
         </button>
         <button
             onclick={endTurn}
             class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
-            disabled={!isTurnValid()}
+            disabled={!turnValidity.valid}
         >
             End turn
         </button>
