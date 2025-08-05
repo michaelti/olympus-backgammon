@@ -11,6 +11,7 @@ export type Move = {
     from: number;
     to: number;
     effect?: { from: number; to: number };
+    // TODO: this is missing `die`
 };
 
 export type TurnValidity =

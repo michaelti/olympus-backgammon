@@ -1,13 +1,14 @@
 <script lang="ts">
-    import { BAR, OFF, type GameData } from "olympus-bg";
+    import { BAR, OFF, type GameData, type Move } from "olympus-bg";
     import Pip from "./Pip.svelte";
 
     interface Props {
         data: GameData;
         onClickPip?: (pip: number) => void;
+        destinations: Map<number, Move[]> | null;
     }
 
-    let { data, onClickPip }: Props = $props();
+    let { data, onClickPip, destinations }: Props = $props();
 
     let pipOrder = {
         default: [
@@ -31,6 +32,7 @@
                 pipNumber={i + 1}
                 reverse={order > 12}
                 onClick={onClickPip}
+                highlight={destinations?.has(i + 1)}
             />
         </div>
     {/each}

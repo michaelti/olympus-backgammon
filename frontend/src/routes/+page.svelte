@@ -2,6 +2,7 @@
     import DicesIcon from "@lucide/svelte/icons/dices";
     import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
     import Board from "$lib/Board.svelte";
+    import { getDestinations } from "$lib/game-util";
 
     let game = new Portes({
         player: "white",
@@ -20,6 +21,8 @@
     let isMoveValid = $derived(
         move.from !== null && move.to !== null && game.isMoveValid(move.from, move.to),
     );
+
+    let destinations = $derived(move.from !== null ? getDestinations(move.from, game) : null);
 
     let turnValidity = $state(game.getTurnValidity());
 
@@ -77,6 +80,14 @@
             if (game.isMoveValid(move.from, pip)) {
                 move.to = pip;
                 doMove();
+            } else if (destinations?.has(pip)) {
+                const moves = destinations.get(pip) ?? [];
+                // TODO: sort larger move first
+                for (const currentMove of moves) {
+                    move.from = currentMove.from;
+                    move.to = currentMove.to;
+                    doMove();
+                }
             } else {
                 move.from = null;
             }
@@ -164,7 +175,7 @@
         </button>
     </div>
 
-    <Board {data} onClickPip={handleClickPip} />
+    <Board {data} onClickPip={handleClickPip} {destinations} />
 
     <div
         class="flex h-40 w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
