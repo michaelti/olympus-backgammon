@@ -6,7 +6,7 @@ COPY ./package.json ./package-lock.json ./
 COPY ./olympus-bg/package.json ./olympus-bg/package-lock.json ./olympus-bg/
 COPY ./frontend/package.json ./frontend/package-lock.json ./frontend/
 
-RUN npm install
+RUN npm ci
 
 COPY ./olympus-bg/ ./olympus-bg/
 COPY ./frontend/ ./frontend/
