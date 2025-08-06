@@ -10,10 +10,12 @@
         pipNumber: number;
         reverse?: boolean;
         highlight?: boolean;
+        interactive?: boolean;
         onClick?: (pip: number) => void;
     }
 
-    let { isPinned, owner, size, pipNumber, reverse, highlight, onClick }: Props = $props();
+    let { isPinned, owner, size, pipNumber, reverse, highlight, interactive, onClick }: Props =
+        $props();
 
     let checkers: PlayerBW[] = $derived.by(() => {
         if (owner === "neither") {
@@ -77,7 +79,10 @@
 </script>
 
 <button
-    class={["relative aspect-[1/6] w-full bg-stone-300", { "bg-stone-400": highlight }]}
+    class={[
+        "relative aspect-[1/6] w-full bg-stone-300",
+        { "bg-stone-400": highlight, "cursor-pointer hover:bg-stone-400": interactive },
+    ]}
     onclick={handleClick}
 >
     {#each checkers as checker, i (checker + i)}

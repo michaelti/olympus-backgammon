@@ -1,14 +1,19 @@
 <script lang="ts">
     import { BAR, OFF, type GameData, type Move } from "olympus-bg";
     import Pip from "./Pip.svelte";
+    import { canMoveFrom } from "./game-util";
 
     interface Props {
         data: GameData;
         onClickPip?: (pip: number) => void;
         destinations: Map<number, Move[]> | null;
+        move: {
+            from: number | null;
+            to: number | null;
+        };
     }
 
-    let { data, onClickPip, destinations }: Props = $props();
+    let { data, onClickPip, destinations, move }: Props = $props();
 
     let pipOrder = {
         default: [
@@ -32,7 +37,8 @@
                 pipNumber={i + 1}
                 reverse={order > 12}
                 onClick={onClickPip}
-                highlight={destinations?.has(i + 1)}
+                highlight={destinations?.has(i + 1) || move.from === i + 1}
+                interactive={destinations?.has(i + 1) || canMoveFrom(i + 1, data)}
             />
         </div>
     {/each}

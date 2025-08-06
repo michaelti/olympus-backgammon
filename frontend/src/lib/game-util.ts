@@ -1,4 +1,4 @@
-import type { Move, Game } from "olympus-bg";
+import type { Move, Game, GameData } from "olympus-bg";
 
 /**
  * Determines where a player can go from a given pip
@@ -32,4 +32,12 @@ export const getDestinations = (
     }
 
     return map;
+};
+
+/**
+ * Determines whether current player can try to move from a given pip
+ */
+export const canMoveFrom = (from: number, game: GameData) => {
+    const pip = game.pips[from];
+    return game.dice.length > 0 && pip.size > 0 && pip.owner === game.player;
 };

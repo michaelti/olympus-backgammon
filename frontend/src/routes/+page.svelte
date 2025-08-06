@@ -2,7 +2,7 @@
     import DicesIcon from "@lucide/svelte/icons/dices";
     import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
     import Board from "$lib/Board.svelte";
-    import { getDestinations } from "$lib/game-util";
+    import { canMoveFrom, getDestinations } from "$lib/game-util";
 
     let game = new Portes({
         player: "white",
@@ -88,11 +88,17 @@
                     move.to = currentMove.to;
                     doMove();
                 }
+            } else if (canMoveFrom(pip, data)) {
+                move.from = pip;
             } else {
                 move.from = null;
             }
         } else {
-            move.from = pip;
+            if (canMoveFrom(pip, data)) {
+                move.from = pip;
+            } else {
+                move.from = null;
+            }
         }
     };
 </script>
@@ -175,7 +181,7 @@
         </button>
     </div>
 
-    <Board {data} onClickPip={handleClickPip} {destinations} />
+    <Board {data} onClickPip={handleClickPip} {destinations} {move} />
 
     <div
         class="flex h-40 w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
