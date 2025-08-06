@@ -51,12 +51,20 @@
         owner={data.pips[BAR.white].owner}
         size={data.pips[BAR.white].size}
         pipNumber={BAR.white}
+        reverse={false}
+        onClick={onClickPip}
+        highlight={destinations?.has(BAR.white) || move.from === BAR.white}
+        interactive={destinations?.has(BAR.white) || canMoveFrom(BAR.white, data)}
     />
     <Pip
         isPinned={data.pips[BAR.black].isPinned}
         owner={data.pips[BAR.black].owner}
         size={data.pips[BAR.black].size}
         pipNumber={BAR.black}
+        reverse={false}
+        onClick={onClickPip}
+        highlight={destinations?.has(BAR.black) || move.from === BAR.black}
+        interactive={destinations?.has(BAR.black) || canMoveFrom(BAR.black, data)}
     />
 
     <!-- OFF -->

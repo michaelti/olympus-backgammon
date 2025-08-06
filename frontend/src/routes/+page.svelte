@@ -18,10 +18,6 @@
         to: null,
     });
 
-    let isMoveValid = $derived(
-        move.from !== null && move.to !== null && game.isMoveValid(move.from, move.to),
-    );
-
     let destinations = $derived(move.from !== null ? getDestinations(move.from, game) : null);
 
     let turnValidity = $state(game.getTurnValidity());
@@ -133,68 +129,27 @@
     <div class="flex flex-wrap justify-center gap-2 px-2">
         <button
             onclick={roll}
-            class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="w-24 cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={!(!data.dice.length && !data.moves.length)}
         >
             {data.dice.length > 0 ? data.dice : "Roll"}
         </button>
         <button
             onclick={undoMove}
-            class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="w-24 cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={!data.moves.length}
         >
             Undo
         </button>
-        <input
-            type="number"
-            class="w-24 rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
-            placeholder="From"
-            disabled={!data.dice.length}
-            pattern="[0-9]*"
-            min="0"
-            max="25"
-            bind:value={move.from}
-        />
-        <input
-            type="number"
-            class="w-24 rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
-            placeholder="To"
-            disabled={!data.dice.length}
-            pattern="[0-9]*"
-            min="0"
-            max="25"
-            bind:value={move.to}
-        />
-        <button
-            onclick={doMove}
-            class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
-            disabled={!isMoveValid}
-        >
-            Move
-        </button>
+
         <button
             onclick={endTurn}
-            class="cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
+            class="w-24 cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-500"
             disabled={!turnValidity.valid}
         >
-            End turn
+            Finish
         </button>
     </div>
 
     <Board {data} onClickPip={handleClickPip} {destinations} {move} />
-
-    <div
-        class="flex h-40 w-full flex-col items-center gap-2 overflow-y-auto rounded bg-stone-200 p-4 text-sm"
-    >
-        <p>
-            player: {data.player}
-            | dice: {JSON.stringify(data.dice)}
-            | moves: {JSON.stringify(data.moves)}
-        </p>
-        <p>
-            off black: {data.off.black}
-            | off white: {data.off.white}
-        </p>
-        <pre class="text-center">{pipsToString(data.pips)}</pre>
-    </div>
 </div>
