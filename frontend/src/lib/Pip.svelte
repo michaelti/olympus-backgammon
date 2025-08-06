@@ -9,13 +9,23 @@
         size: number;
         pipNumber: number;
         reverse?: boolean;
+        stackMode?: "normal" | "3x5";
         highlight?: boolean;
         interactive?: boolean;
         onClick?: (pip: number) => void;
     }
 
-    let { isPinned, owner, size, pipNumber, reverse, highlight, interactive, onClick }: Props =
-        $props();
+    let {
+        isPinned,
+        owner,
+        size,
+        pipNumber,
+        reverse,
+        stackMode,
+        highlight,
+        interactive,
+        onClick,
+    }: Props = $props();
 
     let checkers: PlayerBW[] = $derived.by(() => {
         if (owner === "neither") {
@@ -51,7 +61,7 @@
             { y: 2, z: 3 },
             { y: 1, z: 3 },
         ],
-        start: [
+        "3x5": [
             { y: 0, z: 1 },
             { y: 1, z: 1 },
             { y: 2, z: 1 },
@@ -71,7 +81,7 @@
     };
 
     // TODO: logic to switch this for Fevga/Plakoto start
-    const offsets = stackingOrder.normal;
+    const offsets = $derived(stackMode ? stackingOrder[stackMode] : stackingOrder.normal);
 
     const handleClick = () => {
         onClick?.(pipNumber);

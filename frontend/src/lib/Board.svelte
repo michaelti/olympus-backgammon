@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { BAR, OFF, type GameData, type Move } from "olympus-bg";
+    import { BAR, OFF, type GameData, type Move, type Variant } from "olympus-bg";
     import Pip from "./Pip.svelte";
     import { canMoveFrom } from "./game-util";
 
     interface Props {
         data: GameData;
+        variant: Variant;
         onClickPip?: (pip: number) => void;
         destinations: Map<number, Move[]> | null;
         move: {
@@ -13,7 +14,7 @@
         };
     }
 
-    let { data, onClickPip, destinations, move }: Props = $props();
+    let { data, variant, onClickPip, destinations, move }: Props = $props();
 
     let pipOrder = {
         default: [
@@ -36,6 +37,9 @@
                 size={pip.size}
                 pipNumber={i + 1}
                 reverse={order > 12}
+                stackMode={variant === "Plakoto" && (i + 1 === 1 || i + 1 === 24)
+                    ? "3x5"
+                    : "normal"}
                 onClick={onClickPip}
                 highlight={destinations?.has(i + 1) || move.from === i + 1}
                 interactive={destinations?.has(i + 1) || canMoveFrom(i + 1, data)}

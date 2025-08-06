@@ -9,6 +9,7 @@
     });
 
     let data: GameData = $state({ ...game });
+    let gameVariant: Variant = $state("Portes");
 
     let move: {
         from: number | null;
@@ -36,6 +37,7 @@
         }
 
         data = { ...game };
+        gameVariant = variant;
         move = { from: null, to: null };
         turnValidity = game.getTurnValidity();
     };
@@ -151,5 +153,5 @@
         </button>
     </div>
 
-    <Board {data} onClickPip={handleClickPip} {destinations} {move} />
+    <Board {data} onClickPip={handleClickPip} {destinations} {move} variant={gameVariant} />
 </div>
