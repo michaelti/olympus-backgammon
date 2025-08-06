@@ -53,8 +53,8 @@
         pipNumber={BAR.white}
         reverse={false}
         onClick={onClickPip}
-        highlight={destinations?.has(BAR.white) || move.from === BAR.white}
-        interactive={destinations?.has(BAR.white) || canMoveFrom(BAR.white, data)}
+        highlight={move.from === BAR.white}
+        interactive={canMoveFrom(BAR.white, data)}
     />
     <Pip
         isPinned={data.pips[BAR.black].isPinned}
@@ -63,8 +63,8 @@
         pipNumber={BAR.black}
         reverse={false}
         onClick={onClickPip}
-        highlight={destinations?.has(BAR.black) || move.from === BAR.black}
-        interactive={destinations?.has(BAR.black) || canMoveFrom(BAR.black, data)}
+        highlight={move.from === BAR.black}
+        interactive={canMoveFrom(BAR.black, data)}
     />
 
     <!-- OFF -->
@@ -74,6 +74,24 @@
           anyway, we should split this apart
         -->
     <!-- Also: watch out for Fevga -->
-    <Pip isPinned={false} owner={"white"} size={data.off.white} pipNumber={OFF.white} />
-    <Pip isPinned={false} owner={"black"} size={data.off.black} pipNumber={OFF.black} />
+    <Pip
+        isPinned={false}
+        owner={"white"}
+        size={data.off.white}
+        pipNumber={OFF.white}
+        reverse={false}
+        onClick={onClickPip}
+        highlight={destinations?.has(OFF.white)}
+        interactive={destinations?.has(OFF.white)}
+    />
+    <Pip
+        isPinned={false}
+        owner={"black"}
+        size={data.off.black}
+        pipNumber={OFF.black}
+        reverse={false}
+        onClick={onClickPip}
+        highlight={destinations?.has(OFF.black)}
+        interactive={destinations?.has(OFF.black)}
+    />
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
-    import { Fevga, Plakoto, Portes, pipsToString, type GameData, type Variant } from "olympus-bg";
+    import { Fevga, Plakoto, Portes, type GameData, type Variant } from "olympus-bg";
     import Board from "$lib/Board.svelte";
     import { canMoveFrom, getDestinations } from "$lib/game-util";
 
