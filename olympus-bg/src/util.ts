@@ -52,11 +52,10 @@ export function clamp(to: number): number {
 }
 
 /**
- * Returns the distance between two pips (1-12)
+ * Returns the distance between two pips
  */
 export function pipDistance(from: number, to: number): number {
-    const distance = Math.abs(to - from);
-    return distance <= 12 ? distance : 24 - distance;
+    return Math.abs(to - from);
 }
 
 /**

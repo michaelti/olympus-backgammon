@@ -15,7 +15,7 @@ export class Plakoto extends Game {
     }
 
     isMoveValid(from: number, to: number): boolean {
-        to = clamp(to);
+        if (from < 1 || from > 24 || to < 0 || to > 25) return false;
         if (this.pips[from].owner !== this.player) return false;
 
         // Prevent backwards movements
@@ -57,7 +57,7 @@ export class Plakoto extends Game {
         }
         // Standard move
         else {
-            if (from < 1 || from > 24 || to < 1 || to > 24) return false;
+            if (to === OFF.black || to === OFF.white) return false;
             if (this.pips[to].owner !== this.player && this.pips[to].size > 1) return false;
             if (!this.dice.includes(pipDistance(from, to))) return false;
         }

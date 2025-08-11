@@ -23,8 +23,8 @@ export class Portes extends Game {
     }
 
     isMoveValid(from: number, to: number): boolean {
-        to = clamp(to);
-        if (this.pips[from].owner !== this.player) return false; // TODO: fix possible out-of-bounds error on `from`
+        if (from < 0 || from > 25 || to < 0 || to > 25) return false;
+        if (this.pips[from].owner !== this.player) return false;
 
         // Prevent backwards movements
         if (this.player === "black" && to >= from) return false;
@@ -60,7 +60,8 @@ export class Portes extends Game {
         }
         // Standard move
         else {
-            if (from < 1 || from > 24 || to < 1 || to > 24) return false;
+            if (from === BAR.black || from === BAR.white) return false;
+            if (to === OFF.black || to === OFF.white) return false;
             if (this.pips[to].owner !== this.player && this.pips[to].size > 1) return false;
             if (!this.dice.includes(pipDistance(from, to))) return false;
         }
@@ -74,8 +75,6 @@ export class Portes extends Game {
         }
 
         super.saveBoardHistory();
-
-        to = clamp(to);
 
         let sideEffect;
 
