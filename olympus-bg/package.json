@@ -10,7 +10,7 @@
     "scripts": {
         "dev": "tsc-watch --silent --onCompilationComplete 'npm run lint'",
         "lint": "eslint src/ ; tsc --noEmit",
-        "test": "vitest src/",
+        "test": "vitest",
         "build": "tsc"
     },
     "repository": {
@@ -31,6 +31,6 @@
         "tsc-watch": "^6.2.1",
         "typescript": "^5.7.2",
         "typescript-eslint": "^8.16.0",
-        "vitest": "^2.1.8"
+        "vitest": "^4.0.12"
     }
 }

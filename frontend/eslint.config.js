@@ -37,4 +37,11 @@ export default ts.config(
             },
         },
     },
+    {
+        languageOptions: {
+            parserOptions: {
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
+    },
 );
