@@ -8,13 +8,10 @@
         variant: Variant;
         onClickPip?: (pip: number) => void;
         destinations: Map<number, Move[]> | null;
-        move: {
-            from: number | null;
-            to: number | null;
-        };
+        moveFrom: number | null;
     }
 
-    let { data, variant, onClickPip, destinations, move }: Props = $props();
+    let { data, variant, onClickPip, destinations, moveFrom }: Props = $props();
 
     let pipOrder = {
         default: [
@@ -28,7 +25,7 @@
 
 <div class="grid w-full max-w-xl grid-cols-12 gap-2">
     <!-- PIPS -->
-    {#each data.pips.slice(1, 25) as pip, i}
+    {#each data.pips.slice(1, 25) as pip, i (i)}
         {@const order = pipOrder.default[i]}
         <div style={`order: ${order}`}>
             <Pip
@@ -41,7 +38,7 @@
                     ? "3x5"
                     : "normal"}
                 onClick={onClickPip}
-                highlight={destinations?.has(i + 1) || move.from === i + 1}
+                highlight={destinations?.has(i + 1) || moveFrom === i + 1}
                 interactive={destinations?.has(i + 1) || canMoveFrom(i + 1, data)}
             />
         </div>
@@ -57,7 +54,7 @@
         pipNumber={BAR.white}
         reverse={false}
         onClick={onClickPip}
-        highlight={move.from === BAR.white}
+        highlight={moveFrom === BAR.white}
         interactive={canMoveFrom(BAR.white, data)}
     />
     <Pip
@@ -67,7 +64,7 @@
         pipNumber={BAR.black}
         reverse={false}
         onClick={onClickPip}
-        highlight={move.from === BAR.black}
+        highlight={moveFrom === BAR.black}
         interactive={canMoveFrom(BAR.black, data)}
     />
 
@@ -80,7 +77,7 @@
     <!-- Also: watch out for Fevga -->
     <Pip
         isPinned={false}
-        owner={"white"}
+        owner="white"
         size={data.off.white}
         pipNumber={OFF.white}
         reverse={false}
@@ -90,7 +87,7 @@
     />
     <Pip
         isPinned={false}
-        owner={"black"}
+        owner="black"
         size={data.off.black}
         pipNumber={OFF.black}
         reverse={false}

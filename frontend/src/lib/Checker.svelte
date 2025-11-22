@@ -6,9 +6,7 @@
     import { getDistance } from "./util";
 
     interface Props {
-        pipNumber: number;
         color: PlayerBW;
-        index: number;
     }
 
     let { color }: Props = $props();
