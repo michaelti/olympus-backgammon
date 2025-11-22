@@ -153,5 +153,11 @@
         </button>
     </div>
 
-    <Board {data} onClickPip={handleClickPip} {destinations} {move} variant={gameVariant} />
+    <Board
+        {data}
+        onClickPip={handleClickPip}
+        {destinations}
+        moveFrom={move.from}
+        variant={gameVariant}
+    />
 </div>

@@ -104,7 +104,7 @@
             ]}
             style={`--offset: calc(${offsets[i].y * (1 / 6) * 100}% + ${reverse ? offsets[i].z - 1 : 1 - offsets[i].z} * 2%)`}
         >
-            <Checker color={checker} index={i} {pipNumber} --offsetZ={offsets[i].z} />
+            <Checker color={checker} --offsetZ={offsets[i].z} />
         </div>
     {/each}
 

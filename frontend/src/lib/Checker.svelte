@@ -6,9 +6,7 @@
     import { getDistance } from "./util";
 
     interface Props {
-        pipNumber: number;
         color: PlayerBW;
-        index: number;
     }
 
     let { color }: Props = $props();
@@ -43,7 +41,7 @@
     in:animateIn
     out:animateOut
     class={[
-        "z-(--offsetZ) relative aspect-square w-full rounded-full ring-2 ring-inset ring-neutral-400",
+        "relative z-(--offsetZ) aspect-square w-full rounded-full ring-2 ring-neutral-400 ring-inset",
         {
             "bg-black": color === "black",
             "bg-white": color === "white",
