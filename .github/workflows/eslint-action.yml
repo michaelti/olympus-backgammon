@@ -9,14 +9,6 @@ jobs:
             - uses: actions/setup-node@v3
             - run: npm ci --workspace=frontend
             - run: npm run lint --workspace=frontend
-    lint-backend:
-        name: lint / backend
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-            - run: npm ci --workspace=backend
-            - run: npm run lint --workspace=backend
     lint-olympus-bg:
         name: lint / olympus-bg
         runs-on: ubuntu-latest
