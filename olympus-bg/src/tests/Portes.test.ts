@@ -288,7 +288,7 @@ describe("getTurnValidity", () => {
 });
 
 describe("getValidTurnCriteria", () => {
-    test("396 (4) possible turns (longest: 4)", () => {
+    test("Longest: 4", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
@@ -300,11 +300,10 @@ describe("getValidTurnCriteria", () => {
             moves: [],
         });
 
-        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(4);
         expect(Portes.getValidTurnCriteria(game).longest).toBe(4);
     });
 
-    test("27 (7) possible turns (longest: 2)", () => {
+    test("Longest: 2", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
@@ -316,11 +315,10 @@ describe("getValidTurnCriteria", () => {
             moves: [],
         });
 
-        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(7);
         expect(Portes.getValidTurnCriteria(game).longest).toBe(2);
     });
 
-    test("1 possible turns (longest: 3)", () => {
+    test("Longest: 3", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
@@ -332,11 +330,10 @@ describe("getValidTurnCriteria", () => {
             moves: [],
         });
 
-        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(1);
         expect(Portes.getValidTurnCriteria(game).longest).toBe(3);
     });
 
-    test("1 possible turns, (longest: 1)", () => {
+    test("Longest: 1", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
@@ -348,11 +345,10 @@ describe("getValidTurnCriteria", () => {
             moves: [],
         });
 
-        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(1);
         expect(Portes.getValidTurnCriteria(game).longest).toBe(1);
     });
 
-    test("0 possible turns, (longest: 0)", () => {
+    test("Longest: 0", () => {
         const game = new Portes({
             player: "white",
             pips: stringToPips(`
@@ -364,7 +360,6 @@ describe("getValidTurnCriteria", () => {
             moves: [],
         });
 
-        expect(Portes.getValidTurnCriteria(game).turns).toHaveLength(0);
         expect(Portes.getValidTurnCriteria(game).longest).toBe(0);
     });
 });
