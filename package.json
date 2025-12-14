@@ -28,7 +28,6 @@
         "printWidth": 100
     },
     "workspaces": [
-        "backend",
         "frontend",
         "olympus-bg"
     ]
