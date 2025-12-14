@@ -7,5 +7,17 @@ export default tseslint.config(
     eslint.configs.recommended,
     tseslint.configs.recommended,
     eslintConfigPrettier,
-    eslintPluginPrettierRecommended
+    eslintPluginPrettierRecommended,
+    {
+        rules: {
+            "prettier/prettier": "warn",
+        },
+    },
+    {
+        languageOptions: {
+            parserOptions: {
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
+    },
 );

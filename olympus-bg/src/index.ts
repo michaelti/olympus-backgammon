@@ -1,7 +1,7 @@
-import { Variant, Player, rollDie } from "./util.js";
-import { Board } from "./game.js";
-import * as portes from "./variants/portes.js";
-import * as plakoto from "./variants/plakoto.js";
-import * as fevga from "./variants/fevga.js";
-
-export { Variant, Player, rollDie, Board, portes, plakoto, fevga };
+export type * from "./types.js";
+export * from "./util.js";
+export { Tavli } from "./Tavli.js";
+export { Game } from "./Game.js";
+export { Portes } from "./Portes.js";
+export { Plakoto } from "./Plakoto.js";
+export { Fevga } from "./Fevga.js";

@@ -4,14 +4,10 @@
     "description": "",
     "main": "",
     "scripts": {
-        "start": "concurrently --names frontend,backend,olympus-bg 'npm run dev:frontend' 'npm run dev:backend' 'npm run dev:olympus-bg'",
-        "postinstall": "npm run install:frontend && npm run install:backend && npm run install:olympus-bg",
-        "install:frontend": "npm install --prefix frontend",
-        "install:backend": "npm install --prefix backend",
-        "install:olympus-bg": "npm install --prefix olympus-bg",
-        "dev:frontend": "npm run dev --prefix frontend",
-        "dev:backend": "npm start --prefix backend",
-        "dev:olympus-bg": "npm run dev --prefix olympus-bg"
+        "dev": "concurrently --names frontend,olympus-bg 'npm run dev:frontend' 'npm run dev:olympus-bg'",
+        "test": "npm run test --workspace=olympus-bg",
+        "dev:frontend": "npm run dev --workspace=frontend",
+        "dev:olympus-bg": "npm run dev --workspace=olympus-bg"
     },
     "repository": {
         "type": "git",
@@ -25,6 +21,14 @@
     },
     "homepage": "https://github.com/michaelti/olympus-backgammon#readme",
     "devDependencies": {
-        "concurrently": "^6.2.0"
-    }
+        "concurrently": "^9.2.0"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "printWidth": 100
+    },
+    "workspaces": [
+        "frontend",
+        "olympus-bg"
+    ]
 }

@@ -3,6 +3,7 @@ node_modules
 
 # Misc
 .DS_Store
+.vscode
 
 # Environment
 .env
