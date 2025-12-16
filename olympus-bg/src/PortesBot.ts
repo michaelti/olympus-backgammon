@@ -1,10 +1,10 @@
-import { Portes } from "./Portes.js";
+import { Game } from "./Game.js";
 import { Move } from "./types.js";
 
 /**
  * The "endgame" is when there is no possibility of either player being sent to the bar
  */
-function isEndGame(game: Portes): boolean {
+function isEndGame(game: Game): boolean {
     let sawBlack = false;
     let isEndGame = true;
 
@@ -28,7 +28,7 @@ function isEndGame(game: Portes): boolean {
  * Heuristic function to rank a board state based on how "good" it is for Player.black
  * Returns a score (higher is better)
  */
-export function rankBoard(game: Portes): number {
+function rankBoard(game: Game): number {
     let rank = 0;
 
     if (isEndGame(game)) {
@@ -71,8 +71,9 @@ export function rankBoard(game: Portes): number {
 }
 
 // TODO: test this
-export function getBestTurn(game: Portes): Move[] {
-    const turns = Portes.getAllPossibleValidTurns(game);
+export function getBestTurn(game: Game): Move[] {
+    const turns = Game.getAllPossibleValidTurns(game);
+
     let bestRank = -Infinity;
     let bestTurn: Move[] = [];
 
