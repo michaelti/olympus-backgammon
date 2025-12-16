@@ -1,5 +1,6 @@
 import { Game } from "./Game.js";
 import { Move } from "./types.js";
+import { BAR, OFF, pipDistance, range } from "./util.js";
 
 /**
  * The "endgame" is when there is no possibility of either player being sent to the bar
@@ -23,9 +24,8 @@ function isEndGame(game: Game): boolean {
     return isEndGame;
 }
 
-// TODO: make this work for either player white or black
 /**
- * Heuristic function to rank a board state based on how "good" it is for Player.black
+ * Heuristic function to rank a board state based on how "good" it is for the current player
  * Returns a score (higher is better)
  */
 function rankBoard(game: Game): number {
@@ -33,22 +33,24 @@ function rankBoard(game: Game): number {
 
     if (isEndGame(game)) {
         // While in endgame, the priority should be moving all checkers to home quadrant
-        game.pips.forEach((pip, i) => {
+        for (const [i, pip] of game.pips.entries()) {
             // A penalty of 1 point per space from home is applied
-            const spacesFromHome = i < 6 ? 0 : i - 6;
+            const isHome = pipDistance(OFF[game.player], i) <= 6;
+            const distanceFromHome = pipDistance(OFF[game.player], i) - 6;
+            const penalty = isHome ? 0 : distanceFromHome;
 
             if (pip.owner === game.player) {
-                rank -= pip.size * spacesFromHome;
+                rank -= pip.size * penalty;
             }
-        });
+        }
     } else {
-        game.pips.forEach((pip, i) => {
+        for (const [i, pip] of game.pips.entries()) {
             // An open checker deducts points based on distance it could be sent back
             if (pip.owner === game.player && pip.size === 1) {
-                for (let j = i - 1; j >= 0; j--) {
-                    // If a white checker exists ahead
-                    if (game.pips[j].owner === "white") {
-                        rank -= 24 - i;
+                for (const j of range(i, OFF[game.player])) {
+                    // If an opposing checker exists ahead
+                    if (game.pips[j].owner === game.otherPlayer() && game.pips[j].size >= 1) {
+                        rank -= pipDistance(BAR[game.player], i);
                         break;
                     }
                 }
@@ -58,19 +60,22 @@ function rankBoard(game: Game): number {
             if (pip.owner === game.player && pip.size > 1) {
                 rank += 5;
             }
-        });
+        }
 
         // If we send the opponent to the bar
-        rank += game.pips[0].size * 20;
+        rank += game.pips[BAR[game.otherPlayer()]].size * 20;
     }
 
     // If we bear off
-    rank += game.off.black * 20;
+    rank += game.off[game.player] * 20;
 
     return rank;
 }
 
-// TODO: test this
+/**
+ * Returns the best sequence of moves for the current player
+ * Must be called at the beginning of a turn
+ */
 export function getBestTurn(game: Game): Move[] {
     const turns = Game.getAllPossibleValidTurns(game);
 
