@@ -26,7 +26,7 @@
 
     let botEnabled = $state({
         black: false,
-        white: false
+        white: false,
     });
 
     const newGame = (variant: Variant) => {
@@ -114,7 +114,7 @@
             roll();
         }
 
-        if (game.dice.length > 0 && game.moves.length === 0){
+        if (game.dice.length > 0 && game.moves.length === 0) {
             await sleep();
 
             const moves = getBestTurn(game);
@@ -130,10 +130,10 @@
         }
     };
 
-    onMount(()=>{
+    onMount(() => {
         let botPlaying = false;
 
-        setInterval(async ()=>{
+        setInterval(async () => {
             if (botEnabled.black && data.player === "black" && !botPlaying) {
                 botPlaying = true;
                 await botPlay();
@@ -146,7 +146,7 @@
                 botPlaying = false;
             }
         }, 10);
-    })
+    });
 </script>
 
 <div class="flex touch-manipulation flex-col items-center gap-8 py-8">
@@ -202,15 +202,23 @@
     </div>
 
     <div class="flex justify-center gap-2 px-2">
-        <span class={["border border-gray-200 px-1 rounded text-sm",{"bg-white text-black": data.player==="white", "bg-black text-white": data.player==="black"}]}>
+        <span
+            class={[
+                "rounded border border-gray-200 px-1 text-sm",
+                {
+                    "bg-white text-black": data.player === "white",
+                    "bg-black text-white": data.player === "black",
+                },
+            ]}
+        >
             Turn: {data.player}
         </span>
         <label>
-            <input type="checkbox" bind:checked={botEnabled.black}>
+            <input type="checkbox" bind:checked={botEnabled.black} />
             Bot black
         </label>
         <label>
-            <input type="checkbox" bind:checked={botEnabled.white}>
+            <input type="checkbox" bind:checked={botEnabled.white} />
             Bot white
         </label>
     </div>
