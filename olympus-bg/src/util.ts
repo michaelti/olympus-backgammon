@@ -71,15 +71,16 @@ export function range(start: number, end: number): number[] {
 
 /**
  * Returns an array of pips based on a serialized string
- * E.g. stringToPips(`
-            5b 0 0 0 3w 0 5w 0 0 0 0 2b
-            5w 0 0 0 3b 0 5b 0 0 0 0 2w
-            2b 1w
-        `)
- * E.g. stringToPips(`
-            0 0 0 0 0 0 0 0 0 0 0 14b
-            0 2b* 0 0 0 0 0 0 0 0 0 14w
-        `)
+ * @example
+ * stringToPips(`
+        5b 0 0 0 3w 0 5w 0 0 0 0 2b
+        5w 0 0 0 3b 0 5b 0 0 0 0 2w
+        2b 1w
+    `)
+ * stringToPips(`
+        0 0 0 0 0 0 0 0 0 0 0 14b
+        0 2b* 0 0 0 0 0 0 0 0 0 14w
+    `)
  */
 export function stringToPips(string: string): PipData[] {
     const rows = string.trim().split("\n");
@@ -133,7 +134,7 @@ export function stringToPips(string: string): PipData[] {
 
 /**
  * Returns a serialized string based on an array of pips
- * See stringToPips for more info.
+ * @see {@link stringToPips} for more info.
  */
 export function pipsToString(pips: PipData[]): string {
     const playerMap = new Map([
