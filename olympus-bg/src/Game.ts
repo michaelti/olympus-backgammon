@@ -54,7 +54,7 @@ export abstract class Game {
             this.#rollDice();
         }
 
-        const { longest, largest } = Game.getValidTurnCriteria(this);
+        const { longest, largest } = Game.getValidTurnCriteria(this, true);
         this.#validTurnCriteria = {
             longestPossibleTurn: longest,
             largestPossibleDie: largest,
@@ -183,6 +183,29 @@ export abstract class Game {
         return { valid: true, reason: "Valid" };
     }
 
+    // TODO: Refactor, options:
+    // - A: Move into getValidTurnCriteria so that function only ever returns valid turns
+    // - B: Split it differently so we do 1) get all turns, 2) get the valid criteria, 3) get the valid turns
+    static getAllPossibleValidTurns(game: Game): Move[][] {
+        const { longest, largest, turns } = this.getValidTurnCriteria(game);
+
+        const validTurns = turns.filter((turn) => {
+            if (turn.length !== longest) {
+                return false;
+            }
+
+            const turnUsesLargestDie = turn.some((move) => move.die === largest);
+
+            if (!turnUsesLargestDie) {
+                return false;
+            }
+
+            return true;
+        });
+
+        return validTurns;
+    }
+
     /**
      * Must be called at the beginning of a turn
      *
@@ -191,7 +214,10 @@ export abstract class Game {
      *  - The largest die that must be played in the case of a single-move turn
      *  - The list of turns that were generated to produce these values
      */
-    static getValidTurnCriteria(game: Game): {
+    static getValidTurnCriteria(
+        game: Game,
+        optimize = false,
+    ): {
         longest: number;
         largest: number;
         turns: Move[][];
@@ -248,7 +274,7 @@ export abstract class Game {
                         if (turn.length > maxTurnLength) {
                             maxTurnLength = turn.length;
                             // Optimization: if we've used all dice, we can't do better
-                            if (maxTurnLength === diceLength) {
+                            if (optimize && maxTurnLength === diceLength) {
                                 foundTurnThatUsesAllDice = true;
                                 break;
                             }

@@ -60,10 +60,13 @@ export function pipDistance(from: number, to: number): number {
 
 /**
  * Returns an array of integers within the inclusive range of start to end
+ * @example
+ * range(1,3) -> [1,2,3]
+ * range(3,1) -> [3,2,1]
  */
 export function range(start: number, end: number): number[] {
-    const length = end - start + 1;
-    return Array.from({ length }, (_, i) => start + i);
+    const length = Math.abs(end - start) + 1;
+    return Array.from({ length }, (_, i) => start + (start < end ? i : -i));
 }
 
 /**

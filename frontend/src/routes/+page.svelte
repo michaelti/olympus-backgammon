@@ -1,8 +1,9 @@
 <script lang="ts">
     import DicesIcon from "@lucide/svelte/icons/dices";
-    import { Fevga, Plakoto, Portes, type GameData, type Variant } from "olympus-bg";
+    import { Fevga, Plakoto, Portes, getBestTurn, type GameData, type Variant } from "olympus-bg";
     import Board from "$lib/Board.svelte";
     import { canMoveFrom, getDestinations } from "$lib/game-util";
+    import { onMount } from "svelte";
 
     let game = new Portes({
         player: "white",
@@ -22,6 +23,11 @@
     let destinations = $derived(move.from !== null ? getDestinations(move.from, game) : null);
 
     let turnValidity = $state(game.getTurnValidity());
+
+    let botEnabled = $state({
+        black: false,
+        white: false,
+    });
 
     const newGame = (variant: Variant) => {
         switch (variant) {
@@ -69,7 +75,7 @@
 
     const endTurn = () => {
         game.endTurn();
-        data = { ...game };
+        data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
         turnValidity = game.getTurnValidity();
     };
 
@@ -99,6 +105,48 @@
             }
         }
     };
+
+    // Bot
+    const sleep = () => new Promise((r) => setTimeout(r, 500));
+    const botPlay = async () => {
+        if (game.dice.length === 0 && game.moves.length === 0) {
+            await sleep();
+            roll();
+        }
+
+        if (game.dice.length > 0 && game.moves.length === 0) {
+            await sleep();
+
+            const moves = getBestTurn(game);
+
+            for (const move of moves) {
+                await sleep();
+                game.doMove(move.from, move.to);
+                data = { ...game, pips: game.pips.map((pip) => ({ ...pip })) };
+                turnValidity = game.getTurnValidity();
+            }
+
+            endTurn();
+        }
+    };
+
+    onMount(() => {
+        let botPlaying = false;
+
+        setInterval(async () => {
+            if (botEnabled.black && data.player === "black" && !botPlaying) {
+                botPlaying = true;
+                await botPlay();
+                botPlaying = false;
+            }
+
+            if (botEnabled.white && data.player === "white" && !botPlaying) {
+                botPlaying = true;
+                await botPlay();
+                botPlaying = false;
+            }
+        }, 10);
+    });
 </script>
 
 <div class="flex touch-manipulation flex-col items-center gap-8 py-8">
@@ -151,6 +199,28 @@
         >
             Finish
         </button>
+    </div>
+
+    <div class="flex justify-center gap-2 px-2">
+        <span
+            class={[
+                "rounded border border-gray-200 px-1 text-sm",
+                {
+                    "bg-white text-black": data.player === "white",
+                    "bg-black text-white": data.player === "black",
+                },
+            ]}
+        >
+            Turn: {data.player}
+        </span>
+        <label>
+            <input type="checkbox" bind:checked={botEnabled.black} />
+            Bot black
+        </label>
+        <label>
+            <input type="checkbox" bind:checked={botEnabled.white} />
+            Bot white
+        </label>
     </div>
 
     <Board
