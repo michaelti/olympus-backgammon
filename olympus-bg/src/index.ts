@@ -5,3 +5,4 @@ export { Game } from "./Game.js";
 export { Portes } from "./Portes.js";
 export { Plakoto } from "./Plakoto.js";
 export { Fevga } from "./Fevga.js";
+export { getBestTurn } from "./PortesBot.js";

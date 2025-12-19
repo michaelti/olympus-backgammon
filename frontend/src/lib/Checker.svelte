@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PlayerBW } from "olympus-bg";
-    import { cubicOut } from "svelte/easing";
+    import { cubicInOut } from "svelte/easing";
     import type { TransitionConfig } from "svelte/transition";
     import { animations } from "./animation.svelte";
     import { getDistance } from "./util";
@@ -22,8 +22,8 @@
 
         return {
             delay,
-            duration: duration + Math.random() * distance,
-            easing: cubicOut,
+            duration: duration + distance,
+            easing: cubicInOut,
             css: (_t, u) => `
                 transform: translateX(${dX * u}px) translateY(${dY * u}px);
                 z-index: calc(var(--offsetZ) + 1);

@@ -21,8 +21,8 @@ class AnimationSystem {
     dequeue(color: PlayerBW): { from: Snapshot | undefined; delay: number; duration: number } {
         const result = this.#queue[color].shift();
 
-        const delay = Math.random() * 50 * this.#queue[color].length;
-        const duration = delay + 250;
+        const delay = 50 * this.#queue[color].length;
+        const duration = delay + 50;
 
         return {
             from: result,
