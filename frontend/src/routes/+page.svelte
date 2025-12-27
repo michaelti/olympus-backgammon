@@ -5,6 +5,7 @@
     import { canMoveFrom, getDestinations } from "$lib/game-util";
     import { onMount } from "svelte";
     import Dice from "$lib/Dice.svelte";
+    import Switch from "$lib/Switch.svelte";
 
     let game = new Portes({
         player: "white",
@@ -218,14 +219,8 @@
         >
             Turn: {data.player}
         </span>
-        <label>
-            <input type="checkbox" bind:checked={botEnabled.black} />
-            Bot black
-        </label>
-        <label>
-            <input type="checkbox" bind:checked={botEnabled.white} />
-            Bot white
-        </label>
+        <Switch label="Bot black" bind:checked={botEnabled.black} />
+        <Switch label="Bot white" bind:checked={botEnabled.white} />
     </div>
 
     <Board
