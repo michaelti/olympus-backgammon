@@ -22,7 +22,7 @@ class AnimationSystem {
         const result = this.#queue[color].shift();
 
         const delay = 50 * this.#queue[color].length;
-        const duration = delay + 50;
+        const duration = 250;
 
         return {
             from: result,

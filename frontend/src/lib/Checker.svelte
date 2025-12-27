@@ -18,11 +18,11 @@
         if (!from) return {};
 
         const { x, y } = node.getBoundingClientRect();
-        const { dX, dY, distance } = getDistance(from.x, from.y, x, y);
+        const { dX, dY } = getDistance(from.x, from.y, x, y);
 
         return {
             delay,
-            duration: duration + distance,
+            duration,
             easing: cubicInOut,
             css: (_t, u) => `
                 transform: translateX(${dX * u}px) translateY(${dY * u}px);
