@@ -4,6 +4,7 @@
     import Board from "$lib/Board.svelte";
     import { canMoveFrom, getDestinations } from "$lib/game-util";
     import { onMount } from "svelte";
+    import Dice from "$lib/Dice.svelte";
 
     let game = new Portes({
         player: "white",
@@ -179,14 +180,18 @@
     <div class="flex flex-wrap justify-center gap-2 px-2">
         <button
             onclick={roll}
-            class="w-24 cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 aria-disabled:cursor-not-allowed aria-disabled:bg-stone-200 aria-disabled:text-stone-500"
+            class="w-32 cursor-pointer rounded border border-stone-300 bg-white px-2 py-2 aria-disabled:cursor-not-allowed aria-disabled:bg-stone-200 aria-disabled:text-stone-500"
             aria-disabled={!(!data.dice.length && !data.moves.length)}
         >
-            {data.dice.length > 0 ? data.dice : "Roll"}
+            {#if data.dice.length}
+                <Dice numbers={data.dice} />
+            {:else}
+                Roll
+            {/if}
         </button>
         <button
             onclick={undoMove}
-            class="w-24 cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 aria-disabled:cursor-not-allowed aria-disabled:bg-stone-200 aria-disabled:text-stone-500"
+            class="w-24 cursor-pointer rounded border border-stone-300 bg-white px-2 py-2 aria-disabled:cursor-not-allowed aria-disabled:bg-stone-200 aria-disabled:text-stone-500"
             aria-disabled={!data.moves.length}
         >
             Undo
@@ -194,7 +199,7 @@
 
         <button
             onclick={endTurn}
-            class="w-24 cursor-pointer rounded border border-stone-300 bg-white px-4 py-2 aria-disabled:cursor-not-allowed aria-disabled:bg-stone-200 aria-disabled:text-stone-500"
+            class="w-24 cursor-pointer rounded border border-stone-300 bg-white px-2 py-2 aria-disabled:cursor-not-allowed aria-disabled:bg-stone-200 aria-disabled:text-stone-500"
             aria-disabled={!turnValidity.valid}
         >
             Finish
