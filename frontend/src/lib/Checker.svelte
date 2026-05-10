@@ -7,9 +7,10 @@
 
     interface Props {
         color: PlayerBW;
+        offsetZ: number;
     }
 
-    let { color }: Props = $props();
+    let { color, offsetZ }: Props = $props();
 
     function animateIn(node: HTMLElement): TransitionConfig {
         const { from, delay, duration } = animations.dequeue(color);
@@ -40,8 +41,9 @@
 <div
     in:animateIn
     out:animateOut
+    style={`--offsetZ: ${offsetZ}`}
     class={[
-        "relative z-(--offsetZ) aspect-square w-full rounded-full ring-2 ring-neutral-400 ring-inset",
+        "relative z-(--offsetZ) aspect-square w-full rounded-full ring-1 ring-stone-400 ring-inset",
         {
             "bg-black": color === "black",
             "bg-white": color === "white",

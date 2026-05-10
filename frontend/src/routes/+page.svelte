@@ -8,7 +8,7 @@
     import Switch from "$lib/Switch.svelte";
 
     let game = new Portes({
-        player: "white",
+        player: "black",
     });
 
     let data: GameData = $state({ ...game });
@@ -178,6 +178,11 @@
         </button>
     </div>
 
+    <div class="flex justify-center gap-4 px-2">
+        <Switch label="Bot black" bind:checked={botEnabled.black} />
+        <Switch label="Bot white" bind:checked={botEnabled.white} />
+    </div>
+
     <div class="flex flex-wrap justify-center gap-2 px-2">
         <button
             onclick={roll}
@@ -187,7 +192,7 @@
             {#if data.dice.length}
                 <Dice numbers={data.dice} />
             {:else}
-                Roll
+                Roll ({data.player})
             {/if}
         </button>
         <button
@@ -205,22 +210,6 @@
         >
             Finish
         </button>
-    </div>
-
-    <div class="flex justify-center gap-2 px-2">
-        <span
-            class={[
-                "rounded border border-gray-200 px-1 text-sm",
-                {
-                    "bg-white text-black": data.player === "white",
-                    "bg-black text-white": data.player === "black",
-                },
-            ]}
-        >
-            Turn: {data.player}
-        </span>
-        <Switch label="Bot black" bind:checked={botEnabled.black} />
-        <Switch label="Bot white" bind:checked={botEnabled.white} />
     </div>
 
     <Board
