@@ -90,12 +90,12 @@
 
 <button
     class={[
-        "relative aspect-[1/6] w-full bg-stone-300",
+        "relative block aspect-[1/6] w-full bg-stone-300",
         { "bg-stone-400": highlight, "cursor-pointer hover:bg-stone-400": interactive },
     ]}
     onclick={handleClick}
 >
-    {#each checkers as checker, i (checker + i)}
+    {#each checkers as checker, i (checker + i + stackMode)}
         <div
             class={[
                 "absolute aspect-square w-full",
@@ -104,16 +104,16 @@
             ]}
             style={`--offset: calc(${offsets[i].y * (1 / 6) * 100}% + ${reverse ? offsets[i].z - 1 : 1 - offsets[i].z} * 2%)`}
         >
-            <Checker color={checker} --offsetZ={offsets[i].z} />
+            <Checker color={checker} offsetZ={offsets[i].z} />
         </div>
     {/each}
 
     <!-- TEMP: debug pip numbers -->
-    <div class="absolute top-0 w-min text-gray-500">
+    <div class="absolute top-0 w-full text-xs text-stone-400">
         {pipNumber}<br />
-        {pipNumber === BAR.black && owner === "black" ? "bar black" : ""}
-        {pipNumber === BAR.white && owner === "white" ? "bar white" : ""}
-        {pipNumber === OFF.black && owner === "black" ? "off black" : ""}
-        {pipNumber === OFF.white && owner === "white" ? "off white" : ""}
+        {pipNumber === BAR.black && owner === "black" ? "bar b" : ""}
+        {pipNumber === BAR.white && owner === "white" ? "bar w" : ""}
+        {pipNumber === OFF.black && owner === "black" ? "off b" : ""}
+        {pipNumber === OFF.white && owner === "white" ? "off w" : ""}
     </div>
 </button>
